@@ -26,6 +26,7 @@ import CardSwipe from '../components/CardSwipe';
 import TextEffect from '../components/TextEffect';
 import SplitActionButton from '../components/SplitActionButton';
 import { FpoLogisticsAndBuyerHub } from '../components/FpoLogisticsAndBuyerHub';
+import { KisanVoiceSpeaker } from '../components/KisanVoiceSpeaker';
 import { useLanguage } from '../context/LanguageContext';
 import {
   GlassCard,
@@ -224,7 +225,7 @@ function SmartMoveScreen({ navigation, route }: any) {
           <View style={[styles.contextSummaryCard, { alignItems: 'center', padding: 30 }]}>
             <MaterialIcons name="error-outline" size={40} color={Colors.warning} />
             <Text style={{ fontFamily: FontFamily.semibold, fontSize: Typography.body.fontSize, color: Colors.textSecondary, marginTop: 12 }}>{error}</Text>
-            <AnimatedPressable
+            <TouchableOpacity
               style={{ backgroundColor: Colors.primary, borderRadius: BorderRadius.xl, paddingHorizontal: 20, paddingVertical: 10, marginTop: 12 }}
               onPress={() => {
                 if (error?.includes('log in')) {
@@ -233,220 +234,245 @@ function SmartMoveScreen({ navigation, route }: any) {
                   fetchData();
                 }
               }}
-              haptic="medium"
+              activeOpacity={0.8}
             >
               <Text style={{ fontFamily: FontFamily.semibold, fontSize: Typography.bodyMd.fontSize, color: Colors.textOnPrimary }}>{error?.includes('log in') ? 'Go to Login' : 'Retry'}</Text>
-            </AnimatedPressable>
+            </TouchableOpacity>
           </View>
         )}
 
-        {/* Context Badge & Subtitle */}
+        {/* Content loaded */}
         {!loading && !error && (
-        <FadeIn delay={50} duration={MotionTokens.duration.standard} direction="down" reducedMotion={reducedMotion}>
-        <View style={styles.contextSection}>
-          <View style={styles.cropBadge}>
-            <Text style={styles.cropBadgeText}>
-              {cropName.toUpperCase()} • {fieldName.toUpperCase()}
-            </Text>
-          </View>
-          <Text style={styles.contextSubtitle}>
-            {t('choose_best_step', 'Choose the best next step for your crop')}
-          </Text>
-        </View>
-        </FadeIn>
-        )}
-
-        {/* Current Context Summary Row */}
-        <FadeIn delay={100} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
-        <View style={styles.contextSummaryCard}>
-          <View style={styles.summaryCol}>
-            <Text style={styles.summaryLabel}>{t('condition', 'Condition')}</Text>
-            <Text style={[styles.summaryValue, { color: whatIfData?.visual_score && whatIfData.visual_score < 50 ? Colors.error : Colors.success }]}>
-              {whatIfData?.visual_score && whatIfData.visual_score < 50 ? t('needs_attention', 'Needs Attention') : t('healthy', 'Good')}
-            </Text>
-          </View>
-          <View style={styles.summaryCol}>
-            <Text style={styles.summaryLabel}>{t('spoilage_risk', 'Spoilage Risk')}</Text>
-            <Text style={[styles.summaryValue, { color: whatIfData?.decay_velocity && whatIfData.decay_velocity > 2 ? Colors.warning : Colors.success }]}>
-              {whatIfData?.decay_velocity && whatIfData.decay_velocity > 2 ? t('risk_medium', 'Moderate') : t('risk_low', 'Low')}
-            </Text>
-          </View>
-          <View style={styles.summaryCol}>
-            <Text style={styles.summaryLabel}>{t('decay_rate', 'Decay Rate')}</Text>
-            <Text style={[styles.summaryValue, { color: Colors.success }]}>x{whatIfData?.decay_velocity?.toFixed(1) || '1.0'}</Text>
-          </View>
-          <View style={styles.summaryCol}>
-            <Text style={styles.summaryLabel}>{t('shelf_life', 'Shelf Life')}</Text>
-            <Text style={styles.summaryValue}>{shelfLife.toFixed(0)} {t('days_unit', 'days')}</Text>
-          </View>
-        </View>
-        </FadeIn>
-
-        {/* Primary Recommendation Card — ScaleIn */}
-        <ScaleIn delay={200} duration={MotionTokens.duration.moderate} reducedMotion={reducedMotion}>
-        <GlassCard level="level2" style={styles.recommendationCard}>
-          <View style={styles.recommendationHeader}>
-            <Text style={styles.recommendationSuperText}>{t('best_move_super', 'BEST MOVE RIGHT NOW')}</Text>
-            <GlassBadge variant="success" size="sm" style={styles.highlyRecommendedBadge}>
-              <MaterialIcons name="verified" size={14} color="#00210B" />
-              <Text style={styles.highlyRecommendedText}>{t('highly_recommended', 'Highly Recommended')}</Text>
-            </GlassBadge>
-          </View>
-
-          <TextEffect style={styles.recommendationHeroText} delay={120} stagger={20}>
-            {recommendedScenario?.title || 'Sell within 2-3 days'}
-          </TextEffect>
-
-          <Text style={styles.recommendationDesc}>
-            {recommendedScenario?.reasoning?.[0] || 'Current crop condition and spoilage risk make early selling safer than waiting.'}
-          </Text>
-          <SplitActionButton
-            label={t('view_market_details', 'View Market Details')}
-            onPress={() => navigation?.navigate('Market', { crop: cropName })}
-            externalUrl="https://www.enam.gov.in/web/dashboard/agmarknet"
-            externalLabel="Open official Agmarknet price dashboard"
-          />
-        </GlassCard>
-        </ScaleIn>
-
-        {/* Why This Recommendation? — Explainability */}
-        <FadeIn delay={300} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
-        <GlassCard level="level1" style={styles.whyCard}>
-          <Text style={styles.whyTitle}>{t('why_this_rec', 'Why this recommendation?')}</Text>
-          <View style={styles.whyList}>
-            {(recommendedScenario?.reasoning || ['No reasoning available']).map((reason: string, idx: number) => (
-              <View key={idx} style={styles.whyRow}>
-                <View style={[styles.whyDot, { backgroundColor: idx < 2 ? Colors.warningBg : Colors.successBg }]}>
-                  <MaterialIcons name={idx < 2 ? 'warning' : 'check-circle'} size={14} color={idx < 2 ? Colors.warning : Colors.success} />
-                </View>
-                <Text style={styles.whyText}>{reason}</Text>
+          <>
+            {/* Context Badge & Subtitle */}
+            <FadeIn delay={50} duration={MotionTokens.duration.standard} direction="down" reducedMotion={reducedMotion}>
+            <View style={styles.contextSection}>
+              <View style={styles.cropBadge}>
+                <Text style={styles.cropBadgeText}>
+                  {cropName.toUpperCase()} • {fieldName.toUpperCase()}
+                </Text>
               </View>
-            ))}
-          </View>
-        </GlassCard>
-        </FadeIn>
+              <Text style={styles.contextSubtitle}>
+                {t('choose_best_step', 'Choose the best next step for your crop')}
+              </Text>
+            </View>
+            </FadeIn>
 
-        {/* FPO Group Freight Pooling, Direct B2B Off-takers & Emergency Storage Hub */}
-        <FadeIn delay={350} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
-          <FpoLogisticsAndBuyerHub
-            cropType={cropName}
-            farmerWeightKg={whatIfData?.quantity_kg || 500}
-            originVillage="Dindori, Nashik"
-            targetMandi="Vashi Navi Mumbai Terminal"
-          />
-        </FadeIn>
+            {/* Current Context Summary Row */}
+            <FadeIn delay={100} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
+            <View style={styles.contextSummaryCard}>
+              <View style={styles.summaryCol}>
+                <Text style={styles.summaryLabel}>{t('condition', 'Condition')}</Text>
+                <Text style={[styles.summaryValue, { color: whatIfData?.visual_score && whatIfData.visual_score < 50 ? Colors.error : Colors.success }]}>
+                  {whatIfData?.visual_score && whatIfData.visual_score < 50 ? t('needs_attention', 'Needs Attention') : t('healthy', 'Good')}
+                </Text>
+              </View>
+              <View style={styles.summaryCol}>
+                <Text style={styles.summaryLabel}>{t('spoilage_risk', 'Spoilage Risk')}</Text>
+                <Text style={[styles.summaryValue, { color: whatIfData?.decay_velocity && whatIfData.decay_velocity > 2 ? Colors.warning : Colors.success }]}>
+                  {whatIfData?.decay_velocity && whatIfData.decay_velocity > 2 ? t('risk_medium', 'Moderate') : t('risk_low', 'Low')}
+                </Text>
+              </View>
+              <View style={styles.summaryCol}>
+                <Text style={styles.summaryLabel}>{t('decay_rate', 'Decay Rate')}</Text>
+                <Text style={[styles.summaryValue, { color: Colors.success }]}>x{whatIfData?.decay_velocity?.toFixed(1) || '1.0'}</Text>
+              </View>
+              <View style={styles.summaryCol}>
+                <Text style={styles.summaryLabel}>{t('shelf_life', 'Shelf Life')}</Text>
+                <Text style={styles.summaryValue}>{shelfLife.toFixed(0)} {t('days_unit', 'days')}</Text>
+              </View>
+            </View>
+            </FadeIn>
 
-        {/* Explore Options Section — Staggered entrance */}
-        <FadeIn delay={400} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
-        <View style={styles.optionsSection}>
-          <Text style={styles.optionsSectionTitle}>{t('explore_options', 'Explore Options')}</Text>
+            {/* Primary Recommendation Card */}
+            <ScaleIn delay={200} duration={MotionTokens.duration.moderate} reducedMotion={reducedMotion}>
+            <GlassCard level="level2" style={styles.recommendationCard}>
+              <View style={styles.recommendationHeader}>
+                <View>
+                  <Text style={styles.recommendationSuperText}>{t('best_move_super', 'BEST MOVE RIGHT NOW')}</Text>
+                  <GlassBadge variant="success" size="sm" style={styles.highlyRecommendedBadge}>
+                    <MaterialIcons name="verified" size={14} color="#00210B" />
+                    <Text style={styles.highlyRecommendedText}>{t('highly_recommended', 'Highly Recommended')}</Text>
+                  </GlassBadge>
+                </View>
+                <KisanVoiceSpeaker
+                  textToSpeak={`${recommendedScenario?.title || 'Dispatch to Mumbai Vashi APMC'}. Estimated price is ${recommendedScenario?.estimated_price_per_kg || 34} rupees per kg. Safe remaining shelf-life is ${shelfLife.toFixed(1)} days.`}
+                  size="small"
+                  variant="filled"
+                />
+              </View>
 
-          <CardSwipe gap={16} maxCardWidth={320}>
-            {(whatIfData?.scenarios || []).map((scenario: any, index: number) => {
-              // Map scenario ID to selection key and icon
-              const selectionKey = scenario.id || `option-${index}`;
-              const iconName = scenario.id === 'sell_local' ? 'storefront'
-                : scenario.id === 'store_overnight' ? 'inventory-2'
-                : scenario.id === 'transport_distant' ? 'local-shipping'
-                : scenario.id === 'processing' ? 'factory'
-                : 'help-outline';
-              const iconBg = scenario.risk_level === 'LOW' ? Colors.successBg
-                : scenario.risk_level === 'MEDIUM' ? Colors.warningBg
-                : Colors.errorBg;
-              const iconColor = scenario.risk_level === 'LOW' ? Colors.primaryDeep
-                : scenario.risk_level === 'MEDIUM' ? Colors.warning
-                : Colors.error;
-              const isRecommended = scenario.is_recommended;
+              <TextEffect style={styles.recommendationHeroText} delay={120}>
+                {recommendedScenario?.title || 'Dispatch to Mumbai Vashi APMC'}
+              </TextEffect>
 
-              // Border styling based on risk
-              const cardBorder = isRecommended ? styles.optionCardGreen
-                : scenario.risk_level === 'HIGH' ? styles.optionCardRed
-                : {};
-              const isSelected = selectedOption === selectionKey;
-              const selectedBorder = isSelected ? (isRecommended ? styles.optionCardSelectedGreen
-                : scenario.risk_level === 'HIGH' ? styles.optionCardSelectedRed
-                : styles.optionCardSelected)
-                : {};
+              {/* High-Impact Profit Surge Highlight */}
+              <View style={styles.profitGainHighlight}>
+                <MaterialCommunityIcons name="cash-fast" size={26} color="#15803D" />
+                <View style={{ flex: 1, marginLeft: 8 }}>
+                  <Text style={styles.profitGainTitle}>Net Profit Surge: +₹4,875 (₹15,800 Total)</Text>
+                  <Text style={styles.profitGainSub}>+54% higher cash vs local distress selling after ₹840 freight</Text>
+                </View>
+              </View>
 
-              return (
-                <FadeIn delay={index * MotionTokens.stagger.delay} duration={MotionTokens.duration.fast} direction="up" reducedMotion={reducedMotion}>
-                <AnimatedPressable
-                  key={selectionKey}
-                  onPress={() => setSelectedOption(selectionKey)}
-                  style={[styles.optionCard, cardBorder, selectedBorder]}
-                  haptic="light"
+              <Text style={styles.recommendationDesc}>
+                {recommendedScenario?.reasoning?.[0] || 'Current crop condition and spoilage risk make early selling safer than waiting.'}
+              </Text>
+
+              <View style={{ gap: Spacing.xs, marginTop: Spacing.sm }}>
+                <SplitActionButton
+                  label={t('view_market_details', 'View Market Details')}
+                  onPress={() => navigation?.navigate('Market', { crop: cropName })}
+                  externalUrl="https://www.enam.gov.in/web/dashboard/agmarknet"
+                  externalLabel="Open official Agmarknet price dashboard"
+                />
+
+                <TouchableOpacity
+                  style={styles.dispatchQrBtn}
+                  onPress={() => navigation?.navigate('CropBatches')}
+                  activeOpacity={0.85}
                 >
-                  <View style={styles.optionHeaderRow}>
-                    <View style={styles.optionTitleLeft}>
-                      <View style={[styles.optionIconCircle, { backgroundColor: iconBg }]}>
-                        <MaterialIcons name={iconName} size={22} color={iconColor} />
-                      </View>
-                      <View style={{ flex: 1 }}>
-                        <Text style={isRecommended ? styles.optionTitleGreen : styles.optionTitle}>{scenario.title}</Text>
-                        <Text style={styles.optionSubtitle}>{scenario.subtitle}</Text>
-                      </View>
+                  <MaterialIcons name="qr-code-2" size={20} color="#FFFFFF" />
+                  <Text style={styles.dispatchQrBtnText}>Generate Kisan QR & Dispatch Batch</Text>
+                </TouchableOpacity>
+              </View>
+            </GlassCard>
+            </ScaleIn>
+
+            {/* Why This Recommendation? */}
+            <FadeIn delay={300} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
+            <GlassCard level="level1" style={styles.whyCard}>
+              <Text style={styles.whyTitle}>{t('why_this_rec', 'Why this recommendation?')}</Text>
+              <View style={styles.whyList}>
+                {(recommendedScenario?.reasoning || ['No reasoning available']).map((reason: string, idx: number) => (
+                  <View key={idx} style={styles.whyRow}>
+                    <View style={[styles.whyDot, { backgroundColor: idx < 2 ? Colors.warningBg : Colors.successBg }]}>
+                      <MaterialIcons name={idx < 2 ? 'warning' : 'check-circle'} size={14} color={idx < 2 ? Colors.warning : Colors.success} />
                     </View>
-                    {isRecommended && (
-                      <GlassBadge variant="success" size="sm" style={styles.recommendedPill}>
-                        {t('recommended', 'Recommended')}
-                      </GlassBadge>
-                    )}
-                    {scenario.risk_level === 'HIGH' && !isRecommended && (
-                      <GlassBadge variant="error" size="sm" style={styles.highRiskPill}>
-                        {t('high_risk', 'High Risk')}
-                      </GlassBadge>
-                    )}
+                    <Text style={styles.whyText}>{reason}</Text>
                   </View>
+                ))}
+              </View>
+            </GlassCard>
+            </FadeIn>
 
-                  {/* Real metrics from API */}
-                  <View style={styles.optionMetricsRow}>
-                    <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>{t('price_per_kg', 'Price/kg')}</Text>
-                      <Text style={styles.optionMetricValue}>₹{scenario.estimated_price_per_kg}</Text>
-                    </View>
-                    <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>{t('card_potential_rev', 'Net Profit')}</Text>
-                      <Text style={styles.optionMetricValue}>₹{Math.round(scenario.expected_net_profit_inr).toLocaleString()}</Text>
-                    </View>
-                    <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>{t('shelf_life', 'Shelf Life')}</Text>
-                      <Text style={styles.optionMetricValue}>{scenario.shelf_life_remaining_days?.toFixed(1)}d</Text>
-                    </View>
-                    <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>{t('risk_tier', 'Risk')}</Text>
-                      <Text style={[styles.optionMetricValue, {
-                        color: iconColor
-                      }]}>{scenario.risk_level}</Text>
-                    </View>
-                  </View>
+            {/* FPO Group Freight Pooling */}
+            <FadeIn delay={350} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
+              <FpoLogisticsAndBuyerHub
+                cropType={cropName}
+                farmerWeightKg={whatIfData?.quantity_kg || 500}
+                originVillage="Dindori, Nashik"
+                targetMandi="Vashi Navi Mumbai Terminal"
+              />
+            </FadeIn>
 
-                  {/* First reasoning point */}
-                  {scenario.reasoning?.[0] && (
-                    <View style={styles.optionFeaturesRow}>
-                      <MaterialIcons name="info-outline" size={14} color={Colors.textSecondary} />
-                      <Text style={styles.optionFeatureText} numberOfLines={1}>{scenario.reasoning[0]}</Text>
-                    </View>
-                  )}
+            {/* Explore Options Section */}
+            <FadeIn delay={400} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
+            <View style={styles.optionsSection}>
+              <Text style={styles.optionsSectionTitle}>{t('explore_options', 'Explore Options')}</Text>
 
-                  {/* Route Button */}
-                  {scenario.destination && (
+              <CardSwipe gap={16} maxCardWidth={320}>
+                {(whatIfData?.scenarios || []).map((scenario: any, index: number) => {
+                  const selectionKey = scenario.id || `option-${index}`;
+                  const iconName = scenario.id === 'sell_local' ? 'storefront'
+                    : scenario.id === 'store_overnight' ? 'inventory-2'
+                    : scenario.id === 'transport_distant' ? 'local-shipping'
+                    : scenario.id === 'processing' ? 'factory'
+                    : 'help-outline';
+                  const iconBg = scenario.risk_level === 'LOW' ? Colors.successBg
+                    : scenario.risk_level === 'MEDIUM' ? Colors.warningBg
+                    : Colors.errorBg;
+                  const iconColor = scenario.risk_level === 'LOW' ? Colors.primaryDeep
+                    : scenario.risk_level === 'MEDIUM' ? Colors.warning
+                    : Colors.error;
+                  const isRecommended = scenario.is_recommended;
+
+                  const cardBorder = isRecommended ? styles.optionCardGreen
+                    : scenario.risk_level === 'HIGH' ? styles.optionCardRed
+                    : {};
+                  const isSelected = selectedOption === selectionKey;
+                  const selectedBorder = isSelected ? (isRecommended ? styles.optionCardSelectedGreen
+                    : scenario.risk_level === 'HIGH' ? styles.optionCardSelectedRed
+                    : styles.optionCardSelected)
+                    : {};
+
+                  return (
                     <TouchableOpacity
-                      style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}
-                      onPress={() => navigation.navigate('Route', { destination: scenario.destination })}
+                      key={selectionKey}
+                      onPress={() => setSelectedOption(selectionKey)}
+                      style={[styles.optionCard, cardBorder, selectedBorder]}
+                      activeOpacity={0.88}
                     >
-                      <MaterialIcons name="map" size={16} color={Colors.primaryDark} />
-                      <Text style={{ fontFamily: 'PlusJakartaSans_600SemiBold', fontSize: 13, color: Colors.primaryDark, marginLeft: 4 }}>
-                        View Route to {scenario.destination.name}
-                      </Text>
+                      <View style={styles.optionHeaderRow}>
+                        <View style={styles.optionTitleLeft}>
+                          <View style={[styles.optionIconCircle, { backgroundColor: iconBg }]}>
+                            <MaterialIcons name={iconName} size={22} color={iconColor} />
+                          </View>
+                          <View style={{ flex: 1 }}>
+                            <Text style={isRecommended ? styles.optionTitleGreen : styles.optionTitle}>{scenario.title}</Text>
+                            <Text style={styles.optionSubtitle}>{scenario.subtitle}</Text>
+                          </View>
+                        </View>
+                        {isRecommended && (
+                          <GlassBadge variant="success" size="sm" style={styles.recommendedPill}>
+                            <Text style={styles.recommendedPillText}>{t('recommended', 'Recommended')}</Text>
+                          </GlassBadge>
+                        )}
+                        {scenario.risk_level === 'HIGH' && !isRecommended && (
+                          <GlassBadge variant="error" size="sm" style={styles.highRiskPill}>
+                            <Text style={styles.highRiskPillText}>{t('high_risk', 'High Risk')}</Text>
+                          </GlassBadge>
+                        )}
+                      </View>
+
+                      {/* 2x2 Clean Metrics Grid */}
+                      <View style={styles.optionMetricsGrid}>
+                        <View style={styles.optionMetricCell}>
+                          <Text style={styles.optionMetricLabel}>{t('price_per_kg', 'Price/kg')}</Text>
+                          <Text style={styles.optionMetricValue}>₹{scenario.estimated_price_per_kg}</Text>
+                        </View>
+                        <View style={[styles.optionMetricCell, { backgroundColor: '#DCFCE7' }]}>
+                          <Text style={[styles.optionMetricLabel, { color: '#15803D' }]}>{t('card_potential_rev', 'Net Profit')}</Text>
+                          <Text style={[styles.optionMetricValue, { color: '#15803D', fontWeight: '800' }]}>₹{Math.round(scenario.expected_net_profit_inr).toLocaleString()}</Text>
+                        </View>
+                        <View style={styles.optionMetricCell}>
+                          <Text style={styles.optionMetricLabel}>{t('shelf_life', 'Safe Life')}</Text>
+                          <Text style={styles.optionMetricValue}>{scenario.shelf_life_remaining_days?.toFixed(1)} days</Text>
+                        </View>
+                        <View style={styles.optionMetricCell}>
+                          <Text style={styles.optionMetricLabel}>{t('risk_tier', 'Risk Level')}</Text>
+                          <Text style={[styles.optionMetricValue, { color: iconColor }]}>{scenario.risk_level}</Text>
+                        </View>
+                      </View>
+
+                      {/* First reasoning point */}
+                      {scenario.reasoning?.[0] ? (
+                        <View style={styles.optionFeaturesRow}>
+                          <MaterialIcons name="info-outline" size={14} color={Colors.textSecondary} />
+                          <Text style={styles.optionFeatureText} numberOfLines={2}>{scenario.reasoning[0]}</Text>
+                        </View>
+                      ) : null}
+
+                      {/* Route Button */}
+                      {scenario.destination ? (
+                        <TouchableOpacity
+                          style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}
+                          onPress={() => navigation.navigate('Route', { destination: scenario.destination })}
+                        >
+                          <MaterialIcons name="map" size={16} color={Colors.primaryDark} />
+                          <Text style={{ fontFamily: 'PlusJakartaSans_600SemiBold', fontSize: 12, color: Colors.primaryDark, marginLeft: 4 }}>
+                            View Route to {scenario.destination.name}
+                          </Text>
+                        </TouchableOpacity>
+                      ) : null}
                     </TouchableOpacity>
-                  )}
-                </AnimatedPressable>
-                </FadeIn>
-              );
-            })}
-          </CardSwipe>
-        </View>
-        </FadeIn>
+                  );
+                })}
+              </CardSwipe>
+            </View>
+            </FadeIn>
+          </>
+        )}
 
         {/* Action Buttons Section */}
         <FadeIn delay={500} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
@@ -745,30 +771,34 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginTop: 2,
   },
-  optionMetricsRow: {
+  optionMetricsGrid: {
     flexDirection: 'row',
-    gap: 12,
-    paddingVertical: 8,
-    borderTopWidth: 1,
-    borderTopColor: Colors.divider,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.divider,
+    flexWrap: 'wrap',
+    gap: 8,
+    marginVertical: 4,
   },
-  optionMetric: {
-    flex: 1,
-    gap: 2,
+  optionMetricCell: {
+    width: '48%',
+    backgroundColor: '#F9FAF8',
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   optionMetricLabel: {
     fontFamily: FontFamily.bold,
     fontSize: 10,
-    letterSpacing: 0.5,
+    letterSpacing: 0.4,
     color: Colors.textSecondary,
     textTransform: 'uppercase',
   },
   optionMetricValue: {
-    fontFamily: FontFamily.semibold,
+    fontFamily: FontFamily.bold,
     fontSize: 13,
+    fontWeight: '700',
     color: Colors.textPrimary,
+    marginTop: 2,
   },
   recommendedPill: {
     backgroundColor: Colors.successBg,
@@ -845,5 +875,45 @@ const styles = StyleSheet.create({
     fontSize: Typography.body.fontSize,
     fontWeight: '600',
     color: Colors.primary,
+  },
+  profitGainHighlight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DCFCE7',
+    padding: Spacing.sm,
+    borderRadius: 14,
+    marginVertical: Spacing.xs,
+    borderWidth: 1,
+    borderColor: '#86EFAC',
+  },
+  profitGainTitle: {
+    fontFamily: FontFamily.bold,
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#15803D',
+  },
+  profitGainSub: {
+    fontFamily: FontFamily.medium,
+    fontSize: 11,
+    color: '#166534',
+    marginTop: 2,
+  },
+  dispatchQrBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#059669',
+    paddingVertical: 14,
+    borderRadius: BorderRadius.xl || 16,
+    borderWidth: 1,
+    borderColor: '#34D399',
+    ...Shadows.glass2,
+  },
+  dispatchQrBtnText: {
+    fontFamily: FontFamily.bold,
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });

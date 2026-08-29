@@ -178,8 +178,8 @@ export default function LoginScreen({ navigation }: any) {
                   onPress={handleQuickDemo}
                   activeOpacity={0.8}
                 >
-                  <MaterialIcons name="flash-on" size={16} color="#145C2E" />
-                  <Text style={styles.quickAccessText}>1-Tap Demo / Guest Login</Text>
+                  <MaterialIcons name="bolt" size={18} color="#059669" />
+                  <Text style={styles.quickAccessText}>⚡ 1-Tap SIH Demo (Kisan Ramesh Login)</Text>
                 </TouchableOpacity>
               </FadeIn>
 
@@ -264,18 +264,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    backgroundColor: '#E8F5E9',
+    gap: 8,
+    backgroundColor: '#ECFDF5',
     borderRadius: BorderRadius.xl,
-    paddingVertical: 12,
-    marginTop: 4,
-    borderWidth: 1,
-    borderColor: 'rgba(20, 92, 46, 0.15)',
+    paddingVertical: 14,
+    marginTop: 6,
+    borderWidth: 1.5,
+    borderColor: '#34D399',
   },
   quickAccessText: {
     fontFamily: FontFamily.bold,
-    fontSize: 13,
-    color: '#145C2E',
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#065F46',
   },
   registerLink: {
     flexDirection: 'row',

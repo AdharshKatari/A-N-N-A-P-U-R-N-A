@@ -42,6 +42,9 @@ import VoiceAssistantModal from '../components/VoiceAssistantModal';
 import FloatingVoiceButton from '../components/FloatingVoiceButton';
 import { CalendarWidget } from '../components/CalendarWidget';
 import { FloatingDisclosure } from '../components/FloatingDisclosure';
+import { DemoScenarioModal } from '../components/DemoScenarioModal';
+import { BiologicalExpiryClock } from '../components/BiologicalExpiryClock';
+import { KisanVoiceSpeaker } from '../components/KisanVoiceSpeaker';
 
 const AVATAR_URL =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDAoI8pXqz5UIVImYP4_1U_SYCwn0-QyQaKO_oL7FRLJDHZcnXOiEVFZ00nEXT1FEOIIaEHzJGKZZw2EhEllzfNebbmYmgB26uUxHLLZCcyD95hQzxvAfdiKnsNS3zqLyQkyo3tCNxyK5-3NBgLUcQzh7SrabAfONySEkNe0yck4gstrbqO86Jw3xCT9Y_wEYxLaB3EnS6O8-MiYGXcdWDnODUkfOz5yPPxRtdmo8rs120wYsHGfw8fJQ';
@@ -109,6 +112,7 @@ function HomeScreen({ navigation }: any) {
   const [weatherAlerts, setWeatherAlerts] = useState<WeatherAlert[]>([]);
   const [username, setUsername] = useState('Farmer');
   const [voiceModalVisible, setVoiceModalVisible] = useState(false);
+  const [demoModalVisible, setDemoModalVisible] = useState(false);
   const [faqCategories, setFaqCategories] = useState<FAQCategory[]>(() => getLocalizedFaqCategories(t));
 
   useEffect(() => {
@@ -404,10 +408,55 @@ function HomeScreen({ navigation }: any) {
                 ]}
               </TextLoop>
             </View>
-            </FadeIn>
+        </FadeIn>
 
-            {/* Weather Summary Card */}
-            <ScaleIn delay={100} duration={MotionTokens.duration.standard} reducedMotion={false}>
+        {/* ⚡ 1-Tap SIH Hackathon Live Demo Hero Banner */}
+        <FadeIn delay={70} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
+          <TouchableOpacity
+            activeOpacity={0.88}
+            style={styles.sihDemoHeroCard}
+            onPress={() => {
+              hapticMedium();
+              setDemoModalVisible(true);
+            }}
+          >
+            <View style={styles.sihDemoTopRow}>
+              <View style={styles.sihDemoBadge}>
+                <MaterialCommunityIcons name="trophy-award" size={15} color="#B45309" />
+                <Text style={styles.sihDemoBadgeText}>SIH 2026 LIVE DEMO</Text>
+              </View>
+              <View style={styles.sihDemoProfitPill}>
+                <Text style={styles.sihDemoProfitText}>+₹4,875 Net Gain</Text>
+              </View>
+            </View>
+            
+            <Text style={styles.sihDemoTitle}>⚡ 1-Tap Showcase: Kisan Ramesh</Text>
+            <Text style={styles.sihDemoSub}>
+              500kg Nashik Tomatoes → AGMARK 88/100 → ISRO NDVI → Q10 6.8 Days → Vashi APMC Arbitrage
+            </Text>
+
+            <View style={styles.sihDemoActionRow}>
+              <View style={styles.sihDemoBtn}>
+                <Text style={styles.sihDemoBtnText}>Launch 60s End-to-End Walkthrough</Text>
+                <MaterialIcons name="arrow-forward" size={16} color="#FFFFFF" />
+              </View>
+            </View>
+          </TouchableOpacity>
+        </FadeIn>
+
+        {/* Interactive Q10 Biological Shelf-Life & Temperature Decay Clock */}
+        <FadeIn delay={100} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
+          <BiologicalExpiryClock
+            cropType="Tomatoes"
+            initialTemp={typeof weather?.temp === 'number' ? weather.temp : 34}
+            baseShelfLifeDays={12.0}
+            visualQualityScore={88}
+            showSlider={true}
+          />
+        </FadeIn>
+
+        {/* Weather Summary Card */}
+        <ScaleIn delay={120} duration={MotionTokens.duration.standard} reducedMotion={false}>
               <TouchableOpacity
                 style={styles.weatherCardWrapper}
                 onPress={() => {
@@ -582,21 +631,21 @@ function HomeScreen({ navigation }: any) {
             </FadeIn>
       </ScrollView>
 
-      {/* Floating Speed Dial Quick Action Button */}
-      <FloatingDisclosure navigation={navigation} />
-
-      {/* Floating 1-Tap Multilingual Voice Assistant Button */}
-      <FloatingVoiceButton
-        onPress={() => setVoiceModalVisible(true)}
-        label="Ask Vaani"
-      />
-
       {/* Multilingual Voice Assistant Modal */}
       <VoiceAssistantModal
         visible={voiceModalVisible}
         onClose={() => setVoiceModalVisible(false)}
         navigation={navigation}
         defaultLanguage="te"
+      />
+
+      {/* 1-Tap SIH Hackathon Kisan Ramesh Showcase Modal */}
+      <DemoScenarioModal
+        visible={demoModalVisible}
+        onClose={() => setDemoModalVisible(false)}
+        onNavigateToSmartMove={() => navigation?.navigate('SmartMove', { crop: 'Tomatoes', field: 'East Field' })}
+        onNavigateToScan={() => navigation?.navigate('Scan', { cropType: 'Tomatoes', fieldId: 'East Field' })}
+        onNavigateToBatches={() => navigation?.navigate('CropBatches')}
       />
     </SafeAreaView>
   );
@@ -994,5 +1043,84 @@ const styles = StyleSheet.create({
     color: '#374151',
     flex: 1,
     fontWeight: '500',
+  },
+  // --- SIH 2026 Demo Hero Card ---
+  sihDemoHeroCard: {
+    backgroundColor: '#0F291E',
+    borderRadius: 22,
+    padding: Spacing.md,
+    marginVertical: Spacing.xs,
+    borderWidth: 1.5,
+    borderColor: '#34D399',
+    shadowColor: '#059669',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+  sihDemoTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  sihDemoBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#FEF3C7',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  sihDemoBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#B45309',
+    letterSpacing: 0.5,
+  },
+  sihDemoProfitPill: {
+    backgroundColor: '#10B981',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+  sihDemoProfitText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  sihDemoTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  sihDemoSub: {
+    fontSize: 12,
+    color: '#D1FAE5',
+    lineHeight: 16,
+    marginBottom: 12,
+  },
+  sihDemoActionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  sihDemoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#059669',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#6EE7B7',
+  },
+  sihDemoBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });

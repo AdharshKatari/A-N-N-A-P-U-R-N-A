@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   AccessibilityInfo,
   Animated,
@@ -17,62 +17,69 @@ interface TextEffectProps {
   accessibilityLabel?: string;
 }
 
-/** Native equivalent of a per-character fade text effect. */
+/**
+ * Indic-safe animated text effect.
+ * Animates text with smooth fade and subtle lift without splitting
+ * complex Indic glyphs (Telugu, Hindi, Marathi, etc.) into broken graphemes.
+ */
 export default function TextEffect({
   children,
   style,
   delay = 0,
-  stagger = 22,
-  duration = 280,
+  duration = 350,
   numberOfLines,
   accessibilityLabel,
 }: TextEffectProps) {
-  const characters = useMemo(() => Array.from(children), [children]);
-  const values = useRef<Animated.Value[]>([]);
-  if (values.current.length !== characters.length) {
-    values.current = characters.map(() => new Animated.Value(0));
-  }
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateYAnim = useRef(new Animated.Value(4)).current;
 
   useEffect(() => {
     let cancelled = false;
     AccessibilityInfo.isReduceMotionEnabled().then((reduceMotion) => {
       if (cancelled) return;
-      values.current.forEach((value) => value.setValue(reduceMotion ? 1 : 0));
-      if (reduceMotion) return;
-      Animated.stagger(stagger, values.current.map((value) =>
-        Animated.timing(value, { toValue: 1, duration, delay, useNativeDriver: true }),
-      )).start();
+      if (reduceMotion) {
+        fadeAnim.setValue(1);
+        translateYAnim.setValue(0);
+        return;
+      }
+      fadeAnim.setValue(0);
+      translateYAnim.setValue(4);
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration,
+          delay,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateYAnim, {
+          toValue: 0,
+          duration,
+          delay,
+          useNativeDriver: true,
+        }),
+      ]).start();
     });
     return () => {
       cancelled = true;
-      values.current.forEach((value) => value.stopAnimation());
+      fadeAnim.stopAnimation();
+      translateYAnim.stopAnimation();
     };
-  }, [children, delay, duration, stagger]);
+  }, [children, delay, duration, fadeAnim, translateYAnim]);
 
   return (
-    <Text
-      style={style}
+    <Animated.Text
+      style={[
+        style,
+        {
+          opacity: fadeAnim,
+          transform: [{ translateY: translateYAnim }],
+        },
+      ]}
       numberOfLines={numberOfLines}
       accessible
       accessibilityLabel={accessibilityLabel ?? children}
     >
-      {characters.map((character, index) => (
-        <Animated.Text
-          key={`${index}-${character}`}
-          accessible={false}
-          style={{
-            opacity: values.current[index],
-            transform: [{
-              translateY: values.current[index].interpolate({
-                inputRange: [0, 1],
-                outputRange: [4, 0],
-              }),
-            }],
-          }}
-        >
-          {character === ' ' ? '\u00A0' : character}
-        </Animated.Text>
-      ))}
-    </Text>
+      {children}
+    </Animated.Text>
   );
 }
