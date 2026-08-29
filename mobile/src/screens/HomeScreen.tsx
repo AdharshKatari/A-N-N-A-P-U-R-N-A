@@ -522,7 +522,7 @@ function HomeScreen({ navigation }: any) {
             </ScaleIn>
 
             {/* Actionable crop/weather warning */}
-            {(dashboard?.pathogen_alerts || (weatherAlerts.length > 0 && weatherAlerts[0].severity !== 'LOW')) && (
+            {Boolean((dashboard?.pathogen_alerts && dashboard.pathogen_alerts > 0) || (weatherAlerts.length > 0 && weatherAlerts[0].severity !== 'LOW')) ? (
               <FadeIn delay={300} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
                 <ActionAlert
                   severity={dashboard?.pathogen_alerts ? 'error' : 'warning'}
@@ -532,7 +532,7 @@ function HomeScreen({ navigation }: any) {
                   onPress={() => navigation?.navigate(dashboard?.pathogen_alerts ? 'CropBatches' : 'Weather')}
                 />
               </FadeIn>
-            )}
+            ) : null}
 
             {/* Farm Activity & Harvest Schedule Calendar */}
             <FadeIn delay={320} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
