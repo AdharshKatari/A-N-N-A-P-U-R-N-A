@@ -57,10 +57,9 @@ export default function AnalyzingCropView({
 
   // Stage progression timer (0s -> 25% -> 50% -> 75% -> 100%)
   useEffect(() => {
-    let t1: NodeJS.Timeout;
-    let t2: NodeJS.Timeout;
-    let t3: NodeJS.Timeout;
-    let t4: NodeJS.Timeout;
+    let t1: NodeJS.Timeout | undefined;
+    let t2: NodeJS.Timeout | undefined;
+    let t3: NodeJS.Timeout | undefined;
 
     // Step 1: 0 to 25%
     Animated.timing(animatedProgress, {
@@ -109,10 +108,9 @@ export default function AnalyzingCropView({
     }, 2400);
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
+      if (t1) clearTimeout(t1);
+      if (t2) clearTimeout(t2);
+      if (t3) clearTimeout(t3);
     };
   }, [animatedProgress]);
 
