@@ -188,6 +188,129 @@ export default function PestScreen({ navigation }: any) {
         )}
         </FadeInUp>
 
+        {/* Common Crop Problems & AI Remedies Section — FadeInUp */}
+        <FadeInUp delay={260} duration={500}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>{t('crop_problems_title', 'Common Crop Problems & Remedies')}</Text>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation?.navigate('Scan')}>
+              <Text style={styles.viewHistoryLink}>{t('scan_leaf', 'Scan Leaf')}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ gap: Spacing.md, marginBottom: Spacing.lg }}>
+            {/* Problem 1: Early Blight in Tomato */}
+            <View style={styles.problemCard}>
+              <View style={styles.problemHeader}>
+                <View style={styles.problemIconBadge}>
+                  <MaterialIcons name="bug-report" size={20} color={Colors.error} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text style={styles.problemTitle}>Early Blight (Alternaria solani)</Text>
+                    <View style={styles.severityBadge}>
+                      <Text style={styles.severityText}>High Risk</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.problemCrop}>Tomato • Target Leaf Spots & Stem Cankers</Text>
+                </View>
+              </View>
+              <Text style={styles.problemSymptoms}>
+                <Text style={{ fontWeight: '700', color: Colors.textPrimary }}>Symptoms: </Text>
+                Concentric dark brown rings on lower leaves, yellowing halos, premature defoliation.
+              </Text>
+              <View style={styles.remedyBox}>
+                <MaterialIcons name="healing" size={18} color={Colors.primary} />
+                <Text style={styles.remedyText}>
+                  <Text style={{ fontWeight: '700', color: Colors.primaryDeep }}>AI Solution: </Text>
+                  Spray Mancozeb 75% WP @ 2.5g/L or Copper Oxychloride. Improve field aeration and avoid overhead watering.
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.problemScanBtn}
+                activeOpacity={0.8}
+                onPress={() => navigation?.navigate('Scan')}
+              >
+                <MaterialIcons name="camera-alt" size={16} color={Colors.primary} />
+                <Text style={styles.problemScanBtnText}>Scan Leaf for Early Blight</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Problem 2: Purple Blotch in Onion */}
+            <View style={styles.problemCard}>
+              <View style={styles.problemHeader}>
+                <View style={styles.problemIconBadge}>
+                  <MaterialIcons name="opacity" size={20} color={Colors.warning} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text style={styles.problemTitle}>Purple Blotch (Alternaria porri)</Text>
+                    <View style={[styles.severityBadge, { backgroundColor: Colors.warningBg }]}>
+                      <Text style={[styles.severityText, { color: Colors.warning }]}>Moderate</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.problemCrop}>Red Onion • Sunken Purple Foliar Lesions</Text>
+                </View>
+              </View>
+              <Text style={styles.problemSymptoms}>
+                <Text style={{ fontWeight: '700', color: Colors.textPrimary }}>Symptoms: </Text>
+                Small water-soaked lesions turning purple-brown with yellow margins on onion tops.
+              </Text>
+              <View style={styles.remedyBox}>
+                <MaterialIcons name="healing" size={18} color={Colors.primary} />
+                <Text style={styles.remedyText}>
+                  <Text style={{ fontWeight: '700', color: Colors.primaryDeep }}>AI Solution: </Text>
+                  Apply Difenoconazole 25% EC @ 1ml/L + sticking agent. Maintain 48-hour spray intervals post heavy rain.
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.problemScanBtn}
+                activeOpacity={0.8}
+                onPress={() => navigation?.navigate('Scan')}
+              >
+                <MaterialIcons name="camera-alt" size={16} color={Colors.primary} />
+                <Text style={styles.problemScanBtnText}>Scan Onion for Purple Blotch</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Problem 3: Blossom End Rot */}
+            <View style={styles.problemCard}>
+              <View style={styles.problemHeader}>
+                <View style={styles.problemIconBadge}>
+                  <MaterialIcons name="grass" size={20} color={Colors.info} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text style={styles.problemTitle}>Blossom End Rot (Calcium Deficiency)</Text>
+                    <View style={[styles.severityBadge, { backgroundColor: '#E0F2FE' }]}>
+                      <Text style={[styles.severityText, { color: '#0284C7' }]}>Nutrient</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.problemCrop}>Tomato • Black Sunken Fruit Base</Text>
+                </View>
+              </View>
+              <Text style={styles.problemSymptoms}>
+                <Text style={{ fontWeight: '700', color: Colors.textPrimary }}>Symptoms: </Text>
+                Flat, black leathery patch at the bottom of ripening fruit caused by irregular soil moisture.
+              </Text>
+              <View style={styles.remedyBox}>
+                <MaterialIcons name="healing" size={18} color={Colors.primary} />
+                <Text style={styles.remedyText}>
+                  <Text style={{ fontWeight: '700', color: Colors.primaryDeep }}>AI Solution: </Text>
+                  Foliar spray of Calcium Nitrate (CaCl2) @ 3g/L during early fruit set. Maintain steady drip irrigation.
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.problemScanBtn}
+                activeOpacity={0.8}
+                onPress={() => navigation?.navigate('Scan')}
+              >
+                <MaterialIcons name="camera-alt" size={16} color={Colors.primary} />
+                <Text style={styles.problemScanBtnText}>Verify Fruit Calcium Balance</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </FadeInUp>
+
         {/* Nearby Support Section — FadeInUp */}
         <FadeInUp delay={320} duration={500}>
         <Text style={styles.sectionTitle}>{t('nearby_support', 'Nearby Support')}</Text>
@@ -513,5 +636,90 @@ const styles = StyleSheet.create({
     fontSize: Typography.small.fontSize,
     lineHeight: Typography.small.lineHeight,
     color: Colors.textSecondary,
+  },
+  problemCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    borderWidth: 1,
+    borderColor: Colors.divider,
+    gap: Spacing.sm,
+    ...Shadows.card,
+  },
+  problemHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: Spacing.sm,
+  },
+  problemIconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: BorderRadius.md,
+    backgroundColor: '#FEE2E2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  problemTitle: {
+    fontFamily: FontFamily.bold,
+    fontSize: Typography.body.fontSize,
+    color: Colors.textPrimary,
+    flex: 1,
+  },
+  severityBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: BorderRadius.sm,
+    backgroundColor: '#FEE2E2',
+  },
+  severityText: {
+    fontFamily: FontFamily.semibold,
+    fontSize: Typography.caption.fontSize,
+    color: Colors.error,
+  },
+  problemCrop: {
+    fontFamily: FontFamily.medium,
+    fontSize: Typography.caption.fontSize,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+  problemSymptoms: {
+    fontFamily: FontFamily.regular,
+    fontSize: Typography.small.fontSize,
+    lineHeight: 18,
+    color: Colors.textSecondary,
+  },
+  remedyBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: Spacing.xs,
+    backgroundColor: Colors.surfaceAlt,
+    padding: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.primary,
+  },
+  remedyText: {
+    flex: 1,
+    fontFamily: FontFamily.medium,
+    fontSize: Typography.small.fontSize,
+    lineHeight: 18,
+    color: Colors.textPrimary,
+  },
+  problemScanBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xxs,
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.primaryLight,
+    backgroundColor: Colors.surface,
+    marginTop: Spacing.xxs,
+  },
+  problemScanBtnText: {
+    fontFamily: FontFamily.semibold,
+    fontSize: Typography.small.fontSize,
+    color: Colors.primary,
   },
 });

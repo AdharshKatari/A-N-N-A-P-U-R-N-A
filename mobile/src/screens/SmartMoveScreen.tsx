@@ -41,13 +41,87 @@ import {
   MotionTokens,
 } from '../components/GlassPrimitives';
 
+const DEFAULT_WHATIF: WhatIfResponse = {
+  crop_type: 'Paddy',
+  quantity_kg: 500,
+  visual_score: 78,
+  ambient_temp_c: 28,
+  decay_velocity: 1.1,
+  base_shelf_life_days: 4.5,
+  weather: { temp: 28, humidity: 60, condition: 'Sunny' },
+  timestamp: new Date().toISOString(),
+  scenarios: [
+    {
+      id: 'sell_local',
+      title: 'Sell at Local Mandi',
+      subtitle: 'Recommended — Lowest transit spoilage',
+      icon: 'store',
+      estimated_price_per_kg: 28,
+      expected_net_profit_inr: 13400,
+      shelf_life_remaining_days: 4.5,
+      risk_level: 'Low',
+      risk_score: 18,
+      decay_velocity: 1.0,
+      is_recommended: true,
+      reasoning: [
+        'Zero transit delay keeps crop quality high',
+        'Immediate cash liquidity within 24 hours',
+        'No refrigerated transport overhead required',
+      ],
+      transit_hours: 1,
+      freight_cost_inr: 400,
+      storage_cost_inr: 0,
+    },
+    {
+      id: 'distant_market',
+      title: 'Ship to City Terminal',
+      subtitle: 'Higher modal rate with moderate transit risk',
+      icon: 'local-shipping',
+      estimated_price_per_kg: 34,
+      expected_net_profit_inr: 14800,
+      shelf_life_remaining_days: 3.0,
+      risk_level: 'Medium',
+      risk_score: 42,
+      decay_velocity: 1.6,
+      is_recommended: false,
+      reasoning: [
+        'Requires ventilated crate packing to avoid thermal stress',
+        '₹6/kg premium justifies additional transport cost',
+      ],
+      transit_hours: 6,
+      freight_cost_inr: 1800,
+      storage_cost_inr: 0,
+    },
+    {
+      id: 'cold_storage',
+      title: 'Store in Cold Chain Hub',
+      subtitle: 'Preserve for 5-7 days for price recovery',
+      icon: 'ac-unit',
+      estimated_price_per_kg: 36,
+      expected_net_profit_inr: 14200,
+      shelf_life_remaining_days: 12.0,
+      risk_level: 'Low',
+      risk_score: 22,
+      decay_velocity: 0.3,
+      is_recommended: false,
+      reasoning: [
+        'Controlled atmosphere (8°C, 85% RH) slows biological decay by 75%',
+        'Storage cost estimated at ₹1.50/kg/week',
+      ],
+      transit_hours: 2,
+      freight_cost_inr: 600,
+      storage_cost_inr: 1500,
+    },
+  ],
+};
+
 function SmartMoveScreen({ navigation, route }: any) {
   const { t, language } = useLanguage();
   const cropName = route?.params?.crop || 'Paddy';
   const fieldName = route?.params?.field || 'East Field';
   const [selectedOption, setSelectedOption] = useState<string>('sell');
-  const [whatIfData, setWhatIfData] = useState<WhatIfResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [whatIfData, setWhatIfData] = useState<WhatIfResponse>(DEFAULT_WHATIF);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
@@ -210,14 +284,7 @@ function SmartMoveScreen({ navigation, route }: any) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primaryDeep} />
         }
       >
-        {/* Loading Skeleton */}
-        {loading && (
-          <View style={styles.skeletonContainer}>
-            <GlassSkeletonCard />
-            <GlassSkeletonCard />
-            <GlassSkeletonCard />
-          </View>
-        )}
+
 
         {/* Error State */}
         {error && !loading && (
@@ -241,7 +308,7 @@ function SmartMoveScreen({ navigation, route }: any) {
         )}
 
         {/* Context Badge & Subtitle */}
-        {!loading && !error && (
+        {!error && (
         <FadeIn delay={50} duration={MotionTokens.duration.standard} direction="down" reducedMotion={reducedMotion}>
         <View style={styles.contextSection}>
           <View style={styles.cropBadge}>
@@ -339,36 +406,38 @@ function SmartMoveScreen({ navigation, route }: any) {
         {/* Explore Options Section — Staggered entrance */}
         <FadeIn delay={400} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
         <View style={styles.optionsSection}>
-          <Text style={styles.optionsSectionTitle}>{t('explore_options', 'Explore Options')}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+            <Text style={styles.optionsSectionTitle}>{t('explore_options', 'Explore Options')}</Text>
+            <Text style={{ fontFamily: FontFamily.regular, fontSize: 12, color: Colors.textSecondary }}>
+              Tap to select scenario
+            </Text>
+          </View>
 
           {(whatIfData?.scenarios || []).map((scenario: any, index: number) => {
             const selectionKey = scenario.id || `option-${index}`;
             const iconName = scenario.id === 'sell_local' ? 'storefront'
-              : scenario.id === 'store_overnight' ? 'inventory-2'
-              : scenario.id === 'transport_distant' ? 'local-shipping'
+              : scenario.id === 'store_overnight' || scenario.id === 'cold_storage' ? 'ac-unit'
+              : scenario.id === 'transport_distant' || scenario.id === 'distant_market' ? 'local-shipping'
               : scenario.id === 'processing' ? 'factory'
-              : 'help-outline';
-            const iconBg = scenario.risk_level === 'LOW' ? Colors.successBg
-              : scenario.risk_level === 'MEDIUM' ? Colors.warningBg
+              : 'store';
+            const iconBg = scenario.risk_level === 'Low' || scenario.risk_level === 'LOW' ? Colors.successBg
+              : scenario.risk_level === 'Medium' || scenario.risk_level === 'MEDIUM' ? Colors.warningBg
               : Colors.errorBg;
-            const iconColor = scenario.risk_level === 'LOW' ? Colors.primaryDeep
-              : scenario.risk_level === 'MEDIUM' ? Colors.warning
+            const iconColor = scenario.risk_level === 'Low' || scenario.risk_level === 'LOW' ? Colors.primaryDeep
+              : scenario.risk_level === 'Medium' || scenario.risk_level === 'MEDIUM' ? Colors.warning
               : Colors.error;
             const isRecommended = scenario.is_recommended;
-            const cardBorder = isRecommended ? styles.optionCardGreen
-              : scenario.risk_level === 'HIGH' ? styles.optionCardRed : {};
             const isSelected = selectedOption === selectionKey;
-            const selectedBorder = isSelected
-              ? (isRecommended ? styles.optionCardSelectedGreen
-                : scenario.risk_level === 'HIGH' ? styles.optionCardSelectedRed
-                : styles.optionCardSelected)
-              : {};
 
             return (
               <FadeIn key={selectionKey} delay={index * MotionTokens.stagger.delay} duration={MotionTokens.duration.fast} direction="up" reducedMotion={reducedMotion}>
               <AnimatedPressable
                 onPress={() => setSelectedOption(selectionKey)}
-                style={[styles.optionCard, cardBorder, selectedBorder]}
+                style={[
+                  styles.optionCard,
+                  isRecommended ? styles.optionCardGreen : {},
+                  isSelected ? styles.optionCardSelected : {},
+                ]}
                 haptic="light"
               >
                 {/* Header row */}
@@ -377,56 +446,53 @@ function SmartMoveScreen({ navigation, route }: any) {
                     <MaterialIcons name={iconName} size={22} color={iconColor} />
                   </View>
                   <View style={styles.optionHeaderText}>
-                    <Text style={isRecommended ? styles.optionTitleGreen : styles.optionTitle} numberOfLines={2}>{scenario.title}</Text>
-                    <Text style={styles.optionSubtitle} numberOfLines={2}>{scenario.subtitle}</Text>
+                    <Text style={isRecommended ? styles.optionTitleGreen : styles.optionTitle} numberOfLines={1}>
+                      {scenario.title}
+                    </Text>
+                    <Text style={styles.optionSubtitle} numberOfLines={2}>
+                      {scenario.subtitle}
+                    </Text>
                   </View>
-                  {isRecommended && (
-                    <GlassBadge variant="success" size="sm">{t('recommended', 'Rec.')}</GlassBadge>
-                  )}
-                  {scenario.risk_level === 'HIGH' && !isRecommended && (
-                    <GlassBadge variant="error" size="sm">{t('high_risk', 'High Risk')}</GlassBadge>
-                  )}
+                  {isRecommended ? (
+                    <GlassBadge variant="success" size="sm">
+                      {t('recommended', 'Best')}
+                    </GlassBadge>
+                  ) : isSelected ? (
+                    <View style={styles.selectedPill}>
+                      <MaterialIcons name="check" size={14} color="#145C2E" />
+                      <Text style={styles.selectedPillText}>Selected</Text>
+                    </View>
+                  ) : null}
                 </View>
 
-                {/* 2×2 metrics grid */}
+                {/* Metrics 2x2 grid with dedicated pill boxes */}
                 <View style={styles.optionMetricsGrid}>
                   <View style={styles.optionMetricCell}>
-                    <Text style={styles.optionMetricLabel} numberOfLines={1}>{t('price_per_kg', 'PRICE/KG')}</Text>
-                    <Text style={styles.optionMetricValue} numberOfLines={1}>₹{scenario.estimated_price_per_kg}</Text>
+                    <Text style={styles.optionMetricLabel}>{t('price_per_kg', 'Price / kg')}</Text>
+                    <Text style={styles.optionMetricValue}>₹{scenario.estimated_price_per_kg}</Text>
                   </View>
                   <View style={styles.optionMetricCell}>
-                    <Text style={styles.optionMetricLabel} numberOfLines={1}>{t('card_potential_rev', 'NET PROFIT')}</Text>
-                    <Text style={styles.optionMetricValue} numberOfLines={1}>₹{Math.round(scenario.expected_net_profit_inr).toLocaleString()}</Text>
+                    <Text style={styles.optionMetricLabel}>{t('card_potential_rev', 'Net Profit')}</Text>
+                    <Text style={[styles.optionMetricValue, { color: Colors.primaryDeep }]}>
+                      ₹{Math.round(scenario.expected_net_profit_inr || 0).toLocaleString()}
+                    </Text>
                   </View>
                   <View style={styles.optionMetricCell}>
-                    <Text style={styles.optionMetricLabel} numberOfLines={1}>{t('shelf_life', 'SHELF LIFE')}</Text>
-                    <Text style={styles.optionMetricValue} numberOfLines={1}>{scenario.shelf_life_remaining_days?.toFixed(1)}d</Text>
+                    <Text style={styles.optionMetricLabel}>{t('shelf_life', 'Shelf Life')}</Text>
+                    <Text style={styles.optionMetricValue}>{scenario.shelf_life_remaining_days?.toFixed(1)}d</Text>
                   </View>
                   <View style={styles.optionMetricCell}>
-                    <Text style={styles.optionMetricLabel} numberOfLines={1}>{t('risk_tier', 'RISK')}</Text>
-                    <Text style={[styles.optionMetricValue, { color: iconColor }]} numberOfLines={1}>{scenario.risk_level}</Text>
+                    <Text style={styles.optionMetricLabel}>{t('risk_tier', 'Risk Level')}</Text>
+                    <Text style={[styles.optionMetricValue, { color: iconColor }]}>{scenario.risk_level}</Text>
                   </View>
                 </View>
 
-                {/* Reasoning */}
+                {/* Reasoning bullet */}
                 {scenario.reasoning?.[0] && (
                   <View style={styles.optionFeaturesRow}>
-                    <MaterialIcons name="info-outline" size={14} color={Colors.textSecondary} />
+                    <MaterialIcons name="info-outline" size={14} color={Colors.textSecondary} style={{ marginTop: 2 }} />
                     <Text style={styles.optionFeatureText} numberOfLines={2}>{scenario.reasoning[0]}</Text>
                   </View>
-                )}
-
-                {/* Route link */}
-                {scenario.destination && (
-                  <TouchableOpacity
-                    style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}
-                    onPress={() => navigation.navigate('Route', { destination: scenario.destination })}
-                  >
-                    <MaterialIcons name="map" size={16} color={Colors.primaryDark} />
-                    <Text style={{ fontFamily: 'PlusJakartaSans_600SemiBold', fontSize: 12, color: Colors.primaryDark, marginLeft: 4 }} numberOfLines={1}>
-                      {scenario.destination.name}
-                    </Text>
-                  </TouchableOpacity>
                 )}
               </AnimatedPressable>
               </FadeIn>
@@ -670,8 +736,8 @@ const styles = StyleSheet.create({
   optionCard: {
     width: '100%',
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.cardPaddingSm,
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.md,
     gap: Spacing.sm,
     borderWidth: 1.5,
     borderColor: Colors.divider,
@@ -680,19 +746,13 @@ const styles = StyleSheet.create({
   },
   // Semantic border variants
   optionCardGreen: {
-    borderColor: Colors.successBg,
-  },
-  optionCardSelectedGreen: {
-    borderColor: Colors.success,
-  },
-  optionCardRed: {
-    borderColor: Colors.errorBg,
-  },
-  optionCardSelectedRed: {
-    borderColor: Colors.error,
+    borderColor: '#ABF3B6',
+    backgroundColor: 'rgba(171, 243, 182, 0.08)',
   },
   optionCardSelected: {
     borderColor: Colors.primaryDeep,
+    backgroundColor: 'rgba(20, 92, 46, 0.04)',
+    borderWidth: 2,
   },
   optionHeaderRow: {
     flexDirection: 'row' as const,
@@ -703,13 +763,28 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  selectedPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: BorderRadius.full,
+  },
+  selectedPillText: {
+    fontFamily: FontFamily.bold,
+    fontSize: 11,
+    color: '#145C2E',
+    fontWeight: '700',
+  },
   badgeRow: {
     flexDirection: 'row' as const,
     gap: Spacing.xs,
   },
   optionIconCircle: {
-    width: 40,
-    height: 40,
+    width: 42,
+    height: 42,
     borderRadius: BorderRadius.full,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
@@ -739,21 +814,21 @@ const styles = StyleSheet.create({
   optionMetricsGrid: {
     flexDirection: 'row' as const,
     flexWrap: 'wrap' as const,
-    borderTopWidth: 1,
-    borderTopColor: Colors.divider,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.divider,
-    paddingVertical: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.02)',
+    borderRadius: BorderRadius.md,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginTop: 2,
   },
   optionMetricCell: {
     width: '50%' as any,
     paddingVertical: 4,
-    paddingRight: 8,
+    paddingRight: 6,
     gap: 2,
   },
   optionMetricLabel: {
     fontFamily: FontFamily.bold,
-    fontSize: 9,
+    fontSize: 10,
     letterSpacing: 0.5,
     color: Colors.textSecondary,
     textTransform: 'uppercase' as const,

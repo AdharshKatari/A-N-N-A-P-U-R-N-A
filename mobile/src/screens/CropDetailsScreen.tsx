@@ -59,11 +59,27 @@ function CropDetailsScreen({ navigation, route }: any) {
   const plantingDate = route?.params?.plantingDate as string | undefined;
   const expectedHarvestDate = route?.params?.expectedHarvestDate as string | undefined;
 
-  const [batchData, setBatchData] = useState<any>(null);
-  const [logs, setLogs] = useState<any[]>([]);
-  const [analytics, setAnalytics] = useState<any>(null);
+  const [batchData, setBatchData] = useState<any>(() => ({
+    batch_id: batchId || 'BAT-2026-TOM-01',
+    field_id: cropName ? `${cropName} - Field Plot 1` : 'Tomato (Hybrid Roma) - East Field',
+    initial_weight_kg: 500,
+    harvest_timestamp: new Date().toISOString(),
+    initial_visual_score: 88,
+    detected_ripeness_stage: 'Turning / Light Red',
+    fungal_pathogen_presence: false,
+    macro_satellite_modifier: 1.05,
+    micro_drone_modifier: 1.0,
+    logistics_road_penalty: 1.0,
+    current_status: 'ACTIVE',
+    qr_code_secure_token: 'QR-TOM-98234-PASSPORT',
+  }));
+  const [logs, setLogs] = useState<any[]>([
+    { timestamp: new Date(Date.now() - 3600000).toISOString(), temperature_c: 26.5, humidity_rh: 62.0, condition: 'Optimal' },
+    { timestamp: new Date(Date.now() - 7200000).toISOString(), temperature_c: 28.1, humidity_rh: 58.4, condition: 'Normal' },
+  ]);
+  const [analytics, setAnalytics] = useState<any>({ thermal_degree_hours: 142.5, spoilage_risk_index: 12, cumulative_shelf_loss_days: 0.4 });
   const [passportData, setPassportData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mapCenter, setMapCenter] = useState<{ latitude: number; longitude: number }>(DEFAULT_FIELD_COORDS);

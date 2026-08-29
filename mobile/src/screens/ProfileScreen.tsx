@@ -59,13 +59,13 @@ export default function ProfileScreen({ navigation }: any) {
 
   // Farmer profile editable state
   const [farmerData, setFarmerData] = useState<FarmerProfileData>({
-    name: user?.username || 'Ramesh Patel',
+    name: user?.username || FARMER_NAME,
     handle: `@${(user?.username || 'ramesh.patel').toLowerCase().replace(/\s+/g, '.')}`,
-    avatarUrl: PROFILE_AVATAR,
-    role: 'Lead Cultivator & Farm Manager • Tomato & Onion Specialist',
-    farmLocation: 'East Field Area, Nashik Zone',
+    avatarUrl: FARMER_AVATAR,
+    role: FARMER_ROLE,
+    farmLocation: FARMER_LOCATION,
     joinedDate: 'December 2023',
-    kisanId: 'ANN-98234',
+    kisanId: FARMER_KISAN_ID,
     totalAcreage: '12.5 Acres',
     activeBatchesCount: 4,
     marketRating: '4.9 ★',

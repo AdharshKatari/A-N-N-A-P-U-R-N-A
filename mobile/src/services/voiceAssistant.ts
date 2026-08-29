@@ -129,10 +129,10 @@ const LOCAL_FALLBACK_KNOWLEDGE: Record<string, Record<string, { text: string; en
       label: 'పంట స్కాన్ ప్రారంభించండి',
     },
     default: {
-      text: 'నమస్కారం! నేను అన్నపూర్ణ వాణిని. మీ టమోటా బ్యాచ్ (500 కిలోలు), మార్కెట్ ధరలు లేదా స్మార్ట్ మూవ్ రవాణా కోసం నన్ను అడగండి.',
-      en: 'Namaste! I am Annapurna Vaani. Ask me about your crop batches, mandi prices, weather, or Smart Move logistics.',
-      action: 'NAVIGATE_SMART_MOVE',
-      label: 'స్మార్ట్ మూవ్ సలహాలు',
+      text: 'మీరు నాసిక్ లోని రమేష్ పటేల్. మీ వద్ద ఈస్ట్ ఫీల్డ్ టమోటా (500 కిలోలు) మరియు నార్త్ ఫీల్డ్ ఉల్లిపాయల (1200 కిలోలు) పంటలు క్రియాశీలంగా ఉన్నాయి. నాసిక్ మరియు వాషి మార్కెట్ ధరలు అనుకూలంగా ఉన్నాయి.',
+      en: 'You are Ramesh Patel from Nashik. You have 500kg Tomatoes in East Field and 1200kg Onions in North Field. Current market rates in Nashik and Vashi are favorable.',
+      action: 'NAVIGATE_CROPS',
+      label: 'పంట బ్యాచ్ లు చూడండి',
     },
   },
   hi: {
@@ -155,10 +155,10 @@ const LOCAL_FALLBACK_KNOWLEDGE: Record<string, Record<string, { text: string; en
       label: 'फसल स्कैन करें',
     },
     default: {
-      text: 'नमस्ते! मैं अन्नपूर्णा वाणी हूँ। अपनी फसल, आज के मंडी भाव, मौसम या स्मार्ट मूव के बारे में मुझसे पूछें।',
-      en: 'Namaste! I am Annapurna Vaani. Ask me about your crops, mandi prices, weather, or Smart Move transport.',
-      action: 'NAVIGATE_SMART_MOVE',
-      label: 'स्मार्ट मूव सलाह',
+      text: 'आप नासिक के किसान रमेश पटेल हैं। आपके पास ईस्ट फील्ड में 500 किलो टमाटर और नॉर्थ फील्ड में 1200 किलो प्याज की फसल सक्रिय है। आज नासिक और वाशी में मंडी भाव बहुत अच्छे हैं।',
+      en: 'You are Ramesh Patel from Nashik. You have active batches of 500kg Tomatoes in East Field and 1200kg Onions in North Field with strong mandi demand.',
+      action: 'NAVIGATE_CROPS',
+      label: 'फसल विवरण देखें',
     },
   },
   mr: {
@@ -181,10 +181,10 @@ const LOCAL_FALLBACK_KNOWLEDGE: Record<string, Record<string, { text: string; en
       label: 'पीक स्कॅन करा',
     },
     default: {
-      text: 'नमस्कार! मी अन्नपूर्णा वाणी आहे. शेतातील पिके, आजचे बाजार भाव किंवा स्मार्ट वाहतुकीबद्दल विचारा.',
-      en: 'Namaste! I am Annapurna Vaani. Ask me about crop health, mandi prices, or transport.',
-      action: 'NAVIGATE_SMART_MOVE',
-      label: 'स्मार्ट वाहतूक सल्ला',
+      text: 'तुम्ही नाशिकचे शेतकरी रमेश पटेल आहात. तुमच्याकडे पूर्व शेतात 500 किलो टोमॅटो आणि उत्तर शेतात 1200 किलो कांदा पीक सक्रिय आहे.',
+      en: 'You are farmer Ramesh Patel from Nashik with 500kg Tomatoes and 1200kg Onions under active monitoring.',
+      action: 'NAVIGATE_CROPS',
+      label: 'पिके पहा',
     },
   },
   en: {
@@ -207,10 +207,10 @@ const LOCAL_FALLBACK_KNOWLEDGE: Record<string, Record<string, { text: string; en
       label: 'Scan Crop Quality',
     },
     default: {
-      text: 'Hello! I am Annapurna Vaani, your intelligent farm assistant. I can help with mandi rates, weather, crop health, or Smart Move logistics.',
-      en: 'Hello! I am Annapurna Vaani. Ask me about mandi rates, weather, crop health, or Smart Move logistics.',
-      action: 'NAVIGATE_SMART_MOVE',
-      label: 'Smart Move Advice',
+      text: 'You are Ramesh Patel (Kisan ID: ANN-98234) located in Nashik, Maharashtra. You have 500kg of Roma Tomatoes in East Field and 1200kg of Red Onions in North Field under active telemetry.',
+      en: 'You are Ramesh Patel (Kisan ID: ANN-98234) located in Nashik, Maharashtra. You have 500kg of Roma Tomatoes in East Field and 1200kg of Red Onions in North Field under active telemetry.',
+      action: 'NAVIGATE_CROPS',
+      label: 'View Farm Crops',
     },
   },
 };
@@ -388,7 +388,7 @@ class VoiceAssistantService {
   ): Promise<VoiceAssistantResult> {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4500);
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
 
       const payload = {
         query,

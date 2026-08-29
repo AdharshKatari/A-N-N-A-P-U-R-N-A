@@ -95,14 +95,14 @@ function getLocalizedFaqCategories(t: (k: string, fb?: string) => string): FAQCa
 function HomeScreen({ navigation }: any) {
   const { t, language } = useLanguage();
   const [weather, setWeather] = useState<WeatherData | null>({
-    temp: 28,
-    humidity: 55,
-    description: 'Sunny',
-    location_name: 'Nashik, MH',
+    temp: 22,
+    humidity: 75,
+    description: 'Overcast Clouds',
+    location_name: 'Madanapalle, AP',
   });
   const [loadingWeather, setLoadingWeather] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [locationName, setLocationName] = useState('Nashik, MH');
+  const [locationName, setLocationName] = useState('Madanapalle, AP');
   const [isLoading, setIsLoading] = useState(false);
   const [weatherAlerts, setWeatherAlerts] = useState<WeatherAlert[]>([]);
   const [username, setUsername] = useState('Farmer');
@@ -130,7 +130,7 @@ function HomeScreen({ navigation }: any) {
     {
       id: 'init-mandi-update',
       icon: 'trending-up',
-      text: t('act_mandi_update', 'Mandi price updates received for Nashik & Maharashtra'),
+      text: t('act_mandi_update', 'Mandi price updates received for Madanapalle & AP'),
       color: Colors.secondary,
       onPress: () => navigation?.navigate('Market'),
     },
@@ -153,8 +153,8 @@ function HomeScreen({ navigation }: any) {
       const storedName = await AsyncStorage.getItem('username');
       if (storedName) setUsername(storedName);
 
-      let lat = 19.9975;
-      let lng = 73.7898;
+      let lat = 13.5560;
+      let lng = 78.5010;
 
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
@@ -167,7 +167,7 @@ function HomeScreen({ navigation }: any) {
           const geocode = await Location.reverseGeocodeAsync({ latitude: lat, longitude: lng });
           if (geocode.length > 0) {
             const place = geocode[0];
-            const loc = `${place.city || place.district || place.subregion || 'Nashik'}, ${place.region || 'MH'}`;
+            const loc = `${place.city || place.district || place.subregion || 'Madanapalle'}, ${place.region || 'AP'}`;
             setLocationName(loc);
           }
         }
@@ -334,7 +334,7 @@ function HomeScreen({ navigation }: any) {
           accessibilityLabel="Open Farmer Profile"
         >
           <View style={styles.avatarContainer}>
-            <Image source={{ uri: AVATAR_URL }} style={styles.avatar} resizeMode="cover" />
+            <Image source={FARMER_AVATAR} style={styles.avatar} resizeMode="cover" />
           </View>
           <View style={styles.titleContainer}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>

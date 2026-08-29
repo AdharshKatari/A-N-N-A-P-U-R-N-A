@@ -87,7 +87,7 @@ function CropBatchesScreen({ navigation }: any) {
   const [batches, setBatches] = useState<Batch[]>(FALLBACK_BATCHES);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
   const [selectedPassportBatch, setSelectedPassportBatch] = useState<Batch | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();

@@ -82,11 +82,20 @@ function MarketScreen({ navigation }: any) {
     { key: 'cheap', label: t('highest_profit', 'Best Price'), icon: 'attach-money' },
     { key: 'premium', label: 'Premium', icon: 'diamond' },
   ];
+  const DEFAULT_TOMATO_PRICES: MarketWithCoords[] = [
+    { id: 'default-0', market: 'Pimpalgaon APMC', state: 'Maharashtra', price: 2800, min_price: 2400, max_price: 3200, isRecommended: true, distance: 28, latitude: 20.1702, longitude: 73.9845, geocoding: 'success' },
+    { id: 'default-1', market: 'Nashik Mandi', state: 'Maharashtra', price: 2650, min_price: 2200, max_price: 3000, isRecommended: false, distance: 12, latitude: 19.9975, longitude: 73.7898, geocoding: 'success' },
+    { id: 'default-2', market: 'Lasalgaon Market', state: 'Maharashtra', price: 2500, min_price: 2100, max_price: 2900, isRecommended: false, distance: 45, latitude: 20.1448, longitude: 74.2323, geocoding: 'success' },
+    { id: 'default-3', market: 'Pune Market Yard', state: 'Maharashtra', price: 3100, min_price: 2700, max_price: 3500, isRecommended: false, distance: 165, latitude: 18.5204, longitude: 73.8567, geocoding: 'success' },
+    { id: 'default-4', market: 'Vashi Navi Mumbai', state: 'Maharashtra', price: 3400, min_price: 2900, max_price: 3800, isRecommended: false, distance: 155, latitude: 19.0771, longitude: 72.9986, geocoding: 'success' },
+    { id: 'default-5', market: 'Kurnool APMC', state: 'Andhra Pradesh', price: 2400, min_price: 2000, max_price: 2700, isRecommended: false, distance: 420, latitude: 15.8281, longitude: 78.0373, geocoding: 'success' },
+  ];
+
   const [selectedCrop, setSelectedCrop] = useState('Tomato');
   const [batches, setBatches] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [locationName, setLocationName] = useState('Nashik area');
-  const [prices, setPrices] = useState<MarketWithCoords[]>([]);
+  const [prices, setPrices] = useState<MarketWithCoords[]>(DEFAULT_TOMATO_PRICES);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userCoords, setUserCoords] = useState<{ latitude: number; longitude: number }>({ latitude: 19.9975, longitude: 73.7898 });
@@ -318,7 +327,8 @@ function MarketScreen({ navigation }: any) {
 
   const displayPrices = filteredPrices.length > 0 ? filteredPrices : prices;
 
-  const currentPrice = prices.length > 0 ? prices[0].price.toLocaleString() : '2,350';
+  const currentPrice = prices.length > 0 ? prices[0].price.toLocaleString() : '2,800';
+  const numericPrice = prices.length > 0 ? Number(prices[0].price) || 2800 : 2800;
 
   // Generate market markers based on filtered prices with contextual badges & icons
   const marketMarkers: MapMarker[] = displayPrices
@@ -543,18 +553,19 @@ function MarketScreen({ navigation }: any) {
           <GlowingAreaChart
             title={`${selectedCrop} — Last 7 Days`}
             subtitle="Daily APMC modal price (₹/quintal)"
-            badgeLabel={prices.length > 0 ? `₹${currentPrice}/qtl` : 'Loading...'}
+            badgeLabel={prices.length > 0 ? `₹${currentPrice}/qtl` : '₹2,800/qtl'}
             badgePositive={true}
             unit="₹"
-            color={Colors.primaryDark}
+            color="#145C2E"
+            chartHeight={180}
             data={[
-              { label: 'Mon', value: Math.max(100, (currentPrice || 2600) * 0.88) },
-              { label: 'Tue', value: Math.max(100, (currentPrice || 2600) * 0.92) },
-              { label: 'Wed', value: Math.max(100, (currentPrice || 2600) * 0.87) },
-              { label: 'Thu', value: Math.max(100, (currentPrice || 2600) * 0.95) },
-              { label: 'Fri', value: Math.max(100, (currentPrice || 2600) * 0.97) },
-              { label: 'Sat', value: Math.max(100, (currentPrice || 2600) * 0.99) },
-              { label: 'Sun', value: currentPrice || 2600 },
+              { label: 'Mon', value: Math.round(numericPrice * 0.88) },
+              { label: 'Tue', value: Math.round(numericPrice * 0.93) },
+              { label: 'Wed', value: Math.round(numericPrice * 0.89) },
+              { label: 'Thu', value: Math.round(numericPrice * 0.96) },
+              { label: 'Fri', value: Math.round(numericPrice * 0.94) },
+              { label: 'Sat', value: Math.round(numericPrice * 0.98) },
+              { label: 'Sun', value: numericPrice },
             ]}
           />
         </FadeIn>

@@ -96,20 +96,24 @@ export function GlowingAreaChart({
   const selectedPoint = data[selectedIndex] || data[data.length - 1];
 
   const values = data.map((d) => d.value);
-  const minVal = Math.min(...values) * 0.8;
-  const maxVal = Math.max(...values) * 1.15 || 1;
+  const dataMin = Math.min(...values);
+  const dataMax = Math.max(...values);
+  const range = dataMax - dataMin || dataMax * 0.1 || 1;
+  const minVal = Math.max(0, dataMin - range * 0.4);
+  const maxVal = dataMax + range * 0.3;
 
-  const paddingLeft = 14;
-  const paddingRight = 14;
-  const paddingTop = 20;
-  const paddingBottom = 24;
+  const paddingLeft = 16;
+  const paddingRight = 16;
+  const paddingTop = 28;
+  const paddingBottom = 30;
 
   const graphWidth = Math.max(100, containerWidth - paddingLeft - paddingRight);
-  const graphHeight = Math.max(60, chartHeight - paddingTop - paddingBottom);
+  const graphHeight = Math.max(80, chartHeight - paddingTop - paddingBottom);
 
   const points = data.map((d, i) => {
-    const x = paddingLeft + (i / (data.length - 1)) * graphWidth;
-    const y = paddingTop + (1 - (d.value - minVal) / (maxVal - minVal)) * graphHeight;
+    const x = paddingLeft + (i / Math.max(1, data.length - 1)) * graphWidth;
+    const normalized = (d.value - minVal) / (maxVal - minVal || 1);
+    const y = paddingTop + (1 - Math.min(1, Math.max(0, normalized))) * graphHeight;
     return { x, y, data: d };
   });
 

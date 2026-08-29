@@ -34,11 +34,45 @@ function RecommendationScreen({ navigation, route }: any) {
   const batchId = params?.batchId;
   const visionResult = params?.visionResult;
 
-  const [whatIfData, setWhatIfData] = useState<WhatIfResponse | null>(null);
+  const DEFAULT_REC_WHATIF: WhatIfResponse = {
+    crop_type: crop,
+    quantity_kg: 500,
+    visual_score: 82,
+    ambient_temp_c: 28,
+    decay_velocity: 1.0,
+    base_shelf_life_days: 8.5,
+    weather: { temp: 28, humidity: 55, condition: 'Sunny' },
+    timestamp: new Date().toISOString(),
+    scenarios: [
+      {
+        id: 'distant_market',
+        title: 'Ship to Vashi Navi Mumbai Terminal',
+        subtitle: 'Optimal Price Premium (+₹650/qtl)',
+        icon: 'local-shipping',
+        estimated_price_per_kg: 33.5,
+        expected_net_profit_inr: 14800,
+        shelf_life_remaining_days: 7.2,
+        risk_level: 'Low',
+        risk_score: 15,
+        decay_velocity: 1.0,
+        is_recommended: true,
+        reasoning: [
+          'Vashi terminal offers ₹3,350/qtl price premium over local rates',
+          'Transit loss is negligible (0.8 days) under standard morning departure',
+          'Net profit exceeds local sale by +₹14,800 after freight deductions',
+        ],
+        transit_hours: 4.5,
+        freight_cost_inr: 1000,
+        storage_cost_inr: 0,
+      },
+    ],
+  };
+
+  const [whatIfData, setWhatIfData] = useState<WhatIfResponse | null>(DEFAULT_REC_WHATIF);
   const [alertData, setAlertData] = useState<WeatherAlertsResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>({ lat: 19.9975, lng: 73.7898 });
 
   const fetchData = useCallback(async () => {
     try {

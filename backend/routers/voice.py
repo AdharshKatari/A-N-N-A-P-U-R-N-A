@@ -154,10 +154,10 @@ FALLBACK_KNOWLEDGE: Dict[str, Dict[str, Dict[str, Any]]] = {
             "followups": ["How to store safely?", "When to harvest next batch?"]
         },
         "default": {
-            "text": "Hello! I am Annapurna Vaani, your intelligent farm assistant. I have live access to your East Field tomatoes (500kg), North Field onions (1200kg), regional mandi prices, and weather forecasts.",
-            "en": "Hello! I am Annapurna Vaani, your intelligent farm assistant. I have live access to your East Field tomatoes (500kg), North Field onions (1200kg), regional mandi prices, and weather forecasts.",
-            "action": "NAVIGATE_SMART_MOVE",
-            "action_label": "View Smart Move Advice",
+            "text": "You are Ramesh Patel (Kisan ID: ANN-98234) located in Nashik, Maharashtra. You have 500kg of Roma Tomatoes in East Field and 1200kg of Red Onions in North Field under active telemetry.",
+            "en": "You are Ramesh Patel (Kisan ID: ANN-98234) located in Nashik, Maharashtra. You have 500kg of Roma Tomatoes in East Field and 1200kg of Red Onions in North Field under active telemetry.",
+            "action": "NAVIGATE_CROPS",
+            "action_label": "View Farm Crops",
             "followups": ["What is today's tomato mandi price?", "How is my crop health?", "Should I sell locally or transport?"]
         }
     }
@@ -190,7 +190,9 @@ def _get_fallback_response(query: str, language: str) -> VoiceAssistantResponse:
 
 async def _query_inworld_ai(query_text: str, system_context: str, lang_code: str) -> Optional[Dict[str, Any]]:
     """
-    Direct Real-Time Inworld AI agent integration with Basic Auth.
+    Inworld AI LLM Router — OpenAI-compatible /v1/chat/completions endpoint.
+    Uses Basic Auth with the INWORLD_BASE64_AUTH credential.
+    Supports 220+ models via Inworld's unified gateway.
     """
     import base64
     base64_auth = os.getenv("INWORLD_BASE64_AUTH")
@@ -206,32 +208,49 @@ async def _query_inworld_ai(query_text: str, system_context: str, lang_code: str
         return None
 
     try:
-        # Inworld AI REST / Session endpoint
-        inworld_url = "https://api.inworld.ai/v1/workspaces/default/characters/annapurna-vaani:simpleSendText"
+        # Inworld AI OpenAI-compatible Chat Completions endpoint
+        inworld_url = "https://api.inworld.ai/v1/chat/completions"
         headers = {
             "Authorization": f"Basic {base64_auth}",
             "Content-Type": "application/json",
         }
         payload = {
-            "character": settings.INWORLD_CHARACTER or "annapurna_vaani",
-            "text": f"{system_context}\n\nFarmer says: {query_text}",
+            "model": "google/gemini-2.5-flash",
+            "messages": [
+                {"role": "system", "content": system_context},
+                {"role": "user", "content": f"Farmer says: {query_text}"},
+            ],
+            "temperature": 0.3,
+            "max_tokens": 400,
+            "response_format": {"type": "json_object"},
         }
-        async with httpx.AsyncClient(timeout=6.0) as client:
+        async with httpx.AsyncClient(timeout=15.0) as client:
             res = await client.post(inworld_url, json=payload, headers=headers)
+            logger.info(f"Inworld AI response status: {res.status_code}")
             if res.status_code == 200:
                 data = res.json()
-                text_chunks = data.get("textList", [])
-                if text_chunks:
-                    combined_text = " ".join(text_chunks)
+                content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                if content:
+                    # Parse the JSON response from the LLM
+                    clean = content.strip()
+                    if clean.startswith("```json"):
+                        clean = clean.split("```json")[1].split("```")[0].strip()
+                    elif clean.startswith("```"):
+                        clean = clean.split("```")[1].split("```")[0].strip()
+                    parsed = json.loads(clean)
                     return {
-                        "spoken_text": combined_text,
-                        "english_translation": combined_text,
-                        "action": "NAVIGATE_SMART_MOVE",
-                        "action_label": "Smart Move",
-                        "suggested_followups": ["Market Prices", "Weather Forecast"]
+                        "spoken_text": parsed.get("spoken_text", content),
+                        "english_translation": parsed.get("english_translation", content),
+                        "action": parsed.get("action"),
+                        "action_label": parsed.get("action_label"),
+                        "suggested_followups": parsed.get("suggested_followups", []),
                     }
+            else:
+                logger.warning(f"Inworld AI returned {res.status_code}: {res.text[:300]}")
+    except json.JSONDecodeError as e:
+        logger.warning(f"Inworld AI JSON parse error: {e}")
     except Exception as e:
-        logger.warning(f"Inworld AI call note: {e}")
+        logger.warning(f"Inworld AI call error: {e}")
     return None
 
 
@@ -249,65 +268,61 @@ async def voice_assistant(req: VoiceQueryRequest):
     # Build Comprehensive Live Farmer Context
     farmer_ctx = req.farmer_context or {}
     crop_info = req.crop or "Tomato (Hybrid Roma)"
-    location_info = req.location or "Nashik, Maharashtra"
+    location_info = req.location or "Madanapalle, Andhra Pradesh"
     active_batches_summary = (
         farmer_ctx.get("batches_summary") or 
-        "Active batches: 1. Tomato (East Field, 500kg, Sown: 15 July, Ripeness: Pink/Firm, Quality: 82%, Shelf-life: 9 days, No Pathogen); 2. Red Onion (North Field, 1200kg, Harvest Ready, Quality: 89%)."
+        "Active batches: 1. Tomato (Madanapalle Plot 1, 500kg, Sown: 15 July, Ripeness: Turning Pink/Firm, Quality: 88%, Shelf-life: 8 days, No Pathogen); 2. Red Onion (North Plot, 1200kg, Harvest Ready, Quality: 91%)."
     )
     mandi_summary = (
         farmer_ctx.get("mandi_summary") or 
-        "Live APMC Mandi Rates: Nashik: ₹2,400/qtl (Rising +8%); Vashi Mumbai: ₹3,350/qtl (+40% premium); Pune: ₹2,800/qtl; Lasalgaon Onion: ₹1,850/qtl."
+        "Live APMC Mandi Rates: Madanapalle APMC: ₹2,800/qtl (Rising +12%); Kolar Mandi: ₹2,650/qtl; Chennai APMC: ₹3,400/qtl (+30% premium); Bangalore Market: ₹3,200/qtl."
     )
     weather_summary = (
         farmer_ctx.get("weather_summary") or 
-        "Current Weather: 29°C, 62% humidity, clear skies, 15% precipitation chance, favorable harvest/transport conditions."
+        "Current Weather in Madanapalle: 22°C, 75% humidity, overcast clouds, 20% precipitation chance, favorable harvest conditions."
     )
     logistics_summary = (
         farmer_ctx.get("logistics_summary") or 
-        "Smart Move Recommendation: Send to distant market (Vashi Mumbai). Net profit gain is +₹14,800 after ₹1,000 freight at ₹5/km. Transit loss is only 0.8 days."
+        "Smart Move Recommendation: Send to Chennai APMC / Bangalore Terminal for maximum profit. Net profit gain is +₹16,200."
     )
 
     system_context = (
-        f"You are Annapurna Vaani (అన్నపూర్ణ వాణి / अन्नपूर्णा वाणी), the expert AI farm assistant for Indian farmers. "
-        f"You have FULL LIVE ACCESS to all farm records for this farmer:\n"
+        f"You are Annapurna Vaani (అన్నపూర్ణ వాణి / अन्नपूर्णा वाणी), the conversational AI assistant for Indian farmers. "
+        f"You have FULL REAL-TIME ACCESS to all farm records for this farmer:\n"
+        f"- Farmer Name: Ramesh Patel (Kisan ID: ANN-98234)\n"
         f"- Location: {location_info} ({req.latitude}, {req.longitude})\n"
         f"- Farmer's Active Crops & Batches: {active_batches_summary}\n"
         f"- Live Regional Mandi Prices: {mandi_summary}\n"
         f"- Live Microclimate & Weather: {weather_summary}\n"
         f"- Best Logistics Decision: {logistics_summary}\n\n"
-        f"Language requirement: Respond in authentic, natural, respectful {target_lang_name} (language code: {req.language}). "
-        f"Rules: "
-        f"1. Directly answer the farmer's question using their real farm data above. "
-        f"2. Keep the spoken response concise (under 50 words) so it is clear when spoken aloud. "
-        f"3. Provide the English translation as well. "
-        f"4. Assign the navigation action: 'NAVIGATE_MARKET' (for price/rates), 'NAVIGATE_SCAN' (for health/disease/quality), 'NAVIGATE_WEATHER' (for weather/rain), 'NAVIGATE_SMART_MOVE' (for transport/selling), or 'NAVIGATE_CROPS' (for batch tracking). "
-        f"5. Output STRICTLY JSON matching this schema: "
+        f"Language requirement: Respond in authentic, natural, conversational {target_lang_name} (language code: {req.language}).\n"
+        f"STRICT RULES:\n"
+        f"1. NEVER say 'Hello! I am Annapurna Vaani' or introduce yourself repeatedly. Jump straight into the direct answer or advice.\n"
+        f"2. Speak naturally like an experienced agricultural friend and expert.\n"
+        f"3. When asked about what you know about the farmer, tell them about their farm, crops (Tomatoes, Onions), land in Nashik, and active batches.\n"
+        f"4. Keep the spoken response concise (under 45 words) so it is clear and quick when spoken aloud.\n"
+        f"5. Provide the English translation as well.\n"
+        f"6. Assign the best navigation action: 'NAVIGATE_MARKET' (for price/rates), 'NAVIGATE_SCAN' (for health/disease/quality), 'NAVIGATE_WEATHER' (for weather/rain), 'NAVIGATE_SMART_MOVE' (for transport/selling), or 'NAVIGATE_CROPS' (for batch tracking).\n"
+        f"7. Output STRICTLY JSON matching this schema: "
         f'{{"spoken_text": "...", "english_translation": "...", "action": "NAVIGATE_MARKET" | "NAVIGATE_SCAN" | "NAVIGATE_WEATHER" | "NAVIGATE_SMART_MOVE" | "NAVIGATE_CROPS" | null, "action_label": "short button label", "suggested_followups": ["followup 1", "followup 2"]}}'
     )
 
-    # 1. Try Inworld AI if configured
-    inworld_res = await _query_inworld_ai(query_text, system_context, req.language)
-    if inworld_res:
-        return VoiceAssistantResponse(
-            spoken_text=inworld_res["spoken_text"],
-            english_translation=inworld_res["english_translation"],
-            language=req.language,
-            action=inworld_res.get("action"),
-            action_label=inworld_res.get("action_label"),
-            suggested_followups=inworld_res.get("suggested_followups", []),
-            engine="inworld-ai-realtime"
-        )
-
-    # 2. Try Cascading Gemini Models
+    # 1. Direct High-Speed Async Gemini Multimodal Engine
     client = get_genai_client()
     if client:
-        for candidate_model in ["gemini-flash-latest", "gemini-3.5-flash", "gemini-flash-lite-latest", "gemini-2.5-flash"]:
+        # Prioritize fastest lightweight flash models with token limits
+        for candidate_model in ["gemini-2.5-flash", "gemini-flash-latest"]:
             try:
-                prompt = f"Farmer query: \"{query_text}\""
-                response = client.models.generate_content(
+                # Use non-blocking async call
+                response = await client.aio.models.generate_content(
                     model=candidate_model,
-                    contents=[prompt],
-                    config={"system_instruction": system_context, "response_mime_type": "application/json"},
+                    contents=[f"Farmer question: {query_text}"],
+                    config={
+                        "system_instruction": system_context,
+                        "response_mime_type": "application/json",
+                        "temperature": 0.2,
+                        "max_output_tokens": 600,
+                    },
                 )
 
                 if response and response.text:
@@ -317,17 +332,18 @@ async def voice_assistant(req: VoiceQueryRequest):
                     elif clean_text.startswith("```"):
                         clean_text = clean_text.split("```")[1].split("```")[0].strip()
                     data = json.loads(clean_text)
-                    return VoiceAssistantResponse(
-                        spoken_text=data.get("spoken_text", ""),
-                        english_translation=data.get("english_translation", ""),
-                        language=req.language,
-                        action=data.get("action"),
-                        action_label=data.get("action_label"),
-                        suggested_followups=data.get("suggested_followups", []),
-                        engine=candidate_model
-                    )
+                    if data.get("spoken_text"):
+                        return VoiceAssistantResponse(
+                            spoken_text=data["spoken_text"],
+                            english_translation=data.get("english_translation", data["spoken_text"]),
+                            language=req.language,
+                            action=data.get("action"),
+                            action_label=data.get("action_label"),
+                            suggested_followups=data.get("suggested_followups", []),
+                            engine=candidate_model
+                        )
             except Exception as e:
-                logger.warning(f"Candidate model {candidate_model} failed: {e}")
+                logger.warning(f"Candidate model {candidate_model} error: {e}")
                 continue
 
     # 3. Dynamic Knowledge Engine Fallback

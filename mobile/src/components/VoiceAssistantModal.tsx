@@ -211,12 +211,14 @@ export default function VoiceAssistantModal({
         farmerContext
       );
 
+      // Instant UI response update
       setResponse(result);
       setIsProcessing(false);
 
+      // Audio playback in background without UI blocking
       if (result.spoken_text) {
         setIsSpeaking(true);
-        await voiceAssistantService.speak(
+        voiceAssistantService.speak(
           result.spoken_text,
           selectedLang,
           () => setIsSpeaking(true),
