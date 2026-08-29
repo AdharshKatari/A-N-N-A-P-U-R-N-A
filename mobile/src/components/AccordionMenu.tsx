@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ExpandCollapse, AnimatedPressable } from './Animations';
 import { hapticLight } from '../utils/haptics';
 import { Colors, Spacing, BorderRadius, Typography, FontFamily, Shadows } from '../constants/theme';
+import { useLanguage } from '../context/LanguageContext';
 
 interface AccordionItemProps {
   title: string;
@@ -160,12 +161,17 @@ interface CategorizedFAQProps {
 }
 
 export function CategorizedFAQ({
-  badge = 'NEED HELP?',
-  title = 'Frequently asked questions',
-  subtitle = 'Quick answers to help you get more from Annapurna.',
+  badge,
+  title,
+  subtitle,
   categories,
   style,
 }: CategorizedFAQProps) {
+  const { t } = useLanguage();
+  const activeBadge = badge || t('faq_badge', 'NEED HELP?');
+  const activeTitle = title || t('faq_title', 'Frequently asked questions');
+  const activeSubtitle = subtitle || t('faq_sub', 'Quick answers to help you get more from Annapurna.');
+
   const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? '');
   const selected = categories.find((category) => category.id === activeCategory) ?? categories[0];
   if (!selected) return null;
@@ -174,10 +180,10 @@ export function CategorizedFAQ({
     <View style={[styles.faqShell, style]}>
       <View style={styles.faqBadge}>
         <MaterialIcons name="help-outline" size={13} color={Colors.primaryDeep} />
-        <Text style={styles.faqBadgeText}>{badge}</Text>
+        <Text style={styles.faqBadgeText}>{activeBadge}</Text>
       </View>
-      <Text style={styles.faqHeading}>{title}</Text>
-      <Text style={styles.faqSubtitle}>{subtitle}</Text>
+      <Text style={styles.faqHeading}>{activeTitle}</Text>
+      <Text style={styles.faqSubtitle}>{activeSubtitle}</Text>
       <View style={styles.categoryTabs}>
         {categories.map((category) => {
           const active = category.id === selected.id;

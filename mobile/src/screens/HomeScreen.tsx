@@ -42,6 +42,7 @@ import VoiceAssistantModal from '../components/VoiceAssistantModal';
 import FloatingVoiceButton from '../components/FloatingVoiceButton';
 import { CalendarWidget } from '../components/CalendarWidget';
 import { FloatingDisclosure } from '../components/FloatingDisclosure';
+import { useLanguage } from '../context/LanguageContext';
 
 const AVATAR_URL =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDAoI8pXqz5UIVImYP4_1U_SYCwn0-QyQaKO_oL7FRLJDHZcnXOiEVFZ00nEXT1FEOIIaEHzJGKZZw2EhEllzfNebbmYmgB26uUxHLLZCcyD95hQzxvAfdiKnsNS3zqLyQkyo3tCNxyK5-3NBgLUcQzh7SrabAfONySEkNe0yck4gstrbqO86Jw3xCT9Y_wEYxLaB3EnS6O8-MiYGXcdWDnODUkfOz5yPPxRtdmo8rs120wYsHGfw8fJQ';
@@ -51,48 +52,51 @@ import { getWeatherByCoords, getWeatherAlerts, getFaq } from '../services/api';
 interface WeatherData { temp: number; humidity: number; description: string; location_name: string }
 interface WeatherAlert { severity: string; title: string; recommended_action: string }
 
-const FAQ_CATEGORIES: FAQCategory[] = [
-  {
-    id: 'crops',
-    label: 'Crops',
-    icon: 'eco',
-    items: [
-      {
-        question: 'How do I add and track a new crop?',
-        answer: 'Open Crops, tap Add Crop, then enter the crop, variety, sowing date, farm area, and field location. Annapurna will begin tracking the batch after you save it.',
-      },
-      {
-        question: 'Where do crop recommendations come from?',
-        answer: 'Recommendations combine your crop details with weather, market, satellite, and spoilage-risk signals. Each recommendation includes its reasoning so you can review it before acting.',
-      },
-      {
-        question: 'Can I use the app when connectivity is poor?',
-        answer: 'Yes. Supported actions are queued securely on your device and synchronized when a connection becomes available.',
-      },
-    ],
-  },
-  {
-    id: 'market',
-    label: 'Market',
-    icon: 'storefront',
-    items: [
-      {
-        question: 'How are mandi prices selected?',
-        answer: 'Market prices are matched to your crop and nearby markets. Smart Move also considers distance, transport cost, expected profit, and remaining shelf life.',
-      },
-      {
-        question: 'What does Smart Move compare?',
-        answer: 'It compares choices such as selling locally, storing, processing, or transporting to another market and highlights the option with the strongest risk-adjusted outcome.',
-      },
-      {
-        question: 'Can I view the route to a recommended market?',
-        answer: 'Yes. Choose a scenario with a destination and tap View Route to see the route and market details.',
-      },
-    ],
-  },
-];
+function getLocalizedFaqCategories(t: (k: string, fb?: string) => string): FAQCategory[] {
+  return [
+    {
+      id: 'crops',
+      label: t('nav_crops', 'Crops'),
+      icon: 'eco',
+      items: [
+        {
+          question: t('faq_q1', 'How do I add and track a new crop?'),
+          answer: t('faq_a1', 'Open Crops, tap Add Crop, then enter the crop, variety, sowing date, farm area, and field location. Annapurna will begin tracking the batch after you save it.'),
+        },
+        {
+          question: t('faq_q2', 'Where do crop recommendations come from?'),
+          answer: t('faq_a2', 'Recommendations combine your crop details with weather, market, satellite, and spoilage-risk signals. Each recommendation includes its reasoning so you can review it before acting.'),
+        },
+        {
+          question: t('faq_q3', 'Can I use the app when connectivity is poor?'),
+          answer: t('faq_a3', 'Yes. Supported actions are queued securely on your device and synchronized when a connection becomes available.'),
+        },
+      ],
+    },
+    {
+      id: 'market',
+      label: t('nav_market', 'Market'),
+      icon: 'storefront',
+      items: [
+        {
+          question: t('faq_q4', 'How are mandi prices selected?'),
+          answer: t('faq_a4', 'Market prices are matched to your crop and nearby markets. Smart Move also considers distance, transport cost, expected profit, and remaining shelf life.'),
+        },
+        {
+          question: t('faq_q5', 'What does Smart Move compare?'),
+          answer: t('faq_a5', 'It compares choices such as selling locally, storing, processing, or transporting to another market and highlights the option with the strongest risk-adjusted outcome.'),
+        },
+        {
+          question: t('faq_q6', 'Can I view the route to a recommended market?'),
+          answer: t('faq_a6', 'Yes. Choose a scenario with a destination and tap View Route to see the route and market details.'),
+        },
+      ],
+    },
+  ];
+}
 
 function HomeScreen({ navigation }: any) {
+  const { t, language } = useLanguage();
   const [weather, setWeather] = useState<WeatherData | null>({
     temp: 28,
     humidity: 55,
@@ -106,7 +110,12 @@ function HomeScreen({ navigation }: any) {
   const [weatherAlerts, setWeatherAlerts] = useState<WeatherAlert[]>([]);
   const [username, setUsername] = useState('Farmer');
   const [voiceModalVisible, setVoiceModalVisible] = useState(false);
-  const [faqCategories, setFaqCategories] = useState<FAQCategory[]>(FAQ_CATEGORIES);
+  const [faqCategories, setFaqCategories] = useState<FAQCategory[]>(() => getLocalizedFaqCategories(t));
+
+  useEffect(() => {
+    setFaqCategories(getLocalizedFaqCategories(t));
+  }, [language]);
+
   const [activityItems, setActivityItems] = useState<Array<{
     id?: string;
     icon: string;
@@ -117,21 +126,21 @@ function HomeScreen({ navigation }: any) {
     {
       id: 'init-scan-ready',
       icon: 'camera-iris',
-      text: '5-sample quality scan ready · Assess field health',
+      text: t('act_scan_ready', '5-sample quality scan ready · Assess field health'),
       color: Colors.primary,
       onPress: () => navigation?.navigate('Scan'),
     },
     {
       id: 'init-mandi-update',
       icon: 'trending-up',
-      text: 'Mandi price updates received for Nashik & Maharashtra',
+      text: t('act_mandi_update', 'Mandi price updates received for Nashik & Maharashtra'),
       color: Colors.secondary,
       onPress: () => navigation?.navigate('Market'),
     },
     {
       id: 'init-smart-move',
       icon: 'shield-check',
-      text: 'Smart Move recommendations active for your crops',
+      text: t('act_smart_move', 'Smart Move recommendations active for your crops'),
       color: Colors.warning,
       onPress: () => navigation?.navigate('SmartMove'),
     },
@@ -550,7 +559,7 @@ function HomeScreen({ navigation }: any) {
             <FadeIn delay={400} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
               <View style={styles.recentActivitySection}>
                 <View style={styles.activityHeaderRow}>
-                  <Text style={styles.sectionHeaderTitle}>Recent Activity</Text>
+                  <Text style={styles.sectionHeaderTitle}>{t('recent_activity', 'Recent Activity')}</Text>
                   <MaterialIcons name="history" size={20} color={Colors.primary} />
                 </View>
                 <View style={styles.activityList}>

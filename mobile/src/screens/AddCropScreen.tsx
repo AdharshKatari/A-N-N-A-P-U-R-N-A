@@ -41,6 +41,7 @@ import {
   useReducedMotion,
   MotionTokens,
 } from '../components/GlassPrimitives';
+import { useLanguage } from '../context/LanguageContext';
 
 const UNITS = ['Acres', 'Hectares', 'Bigha', 'Guntha', 'Sq. Meters'];
 
@@ -51,6 +52,7 @@ function formatDateDisplay(date: Date): string {
 }
 
 function AddCropScreen({ navigation }: any) {
+  const { t } = useLanguage();
   const [cropType, setCropType] = useState('Paddy');
   const [variety, setVariety] = useState('BPT 5204');
   const [sowingDate, setSowingDate] = useState(() => new Date());
@@ -221,14 +223,14 @@ function AddCropScreen({ navigation }: any) {
         >
           <MaterialIcons name="arrow-back" size={24} color={Colors.primaryDeep} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Add Crop</Text>
+        <Text style={styles.headerTitle}>{t('action_add_crop', 'Add Crop')}</Text>
       </View>
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.headerSubtitle}>Add your crop details to start tracking</Text>
+        <Text style={styles.headerSubtitle}>{t('add_crop_sub', 'Add your crop details to start tracking')}</Text>
 
         {/* Card 1: Main Details */}
         <FadeIn delay={50} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
@@ -388,7 +390,7 @@ function AddCropScreen({ navigation }: any) {
           {saving ? (
             <ActivityIndicator color="#FFFFFF" size="small" />
           ) : (
-            <Text style={styles.saveButtonText}>Save Crop Details</Text>
+            <Text style={styles.saveButtonText}>{t('save_changes', 'Save Crop Details')}</Text>
           )}
         </GlassButton>
         </FadeIn>

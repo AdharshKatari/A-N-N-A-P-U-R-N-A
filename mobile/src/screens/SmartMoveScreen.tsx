@@ -26,6 +26,7 @@ import CardSwipe from '../components/CardSwipe';
 import TextEffect from '../components/TextEffect';
 import SplitActionButton from '../components/SplitActionButton';
 import { FpoLogisticsAndBuyerHub } from '../components/FpoLogisticsAndBuyerHub';
+import { useLanguage } from '../context/LanguageContext';
 import {
   GlassCard,
   GlassPanel,
@@ -41,6 +42,7 @@ import {
 } from '../components/GlassPrimitives';
 
 function SmartMoveScreen({ navigation, route }: any) {
+  const { t, language } = useLanguage();
   const cropName = route?.params?.crop || 'Paddy';
   const fieldName = route?.params?.field || 'East Field';
   const [selectedOption, setSelectedOption] = useState<string>('sell');
@@ -248,7 +250,7 @@ function SmartMoveScreen({ navigation, route }: any) {
             </Text>
           </View>
           <Text style={styles.contextSubtitle}>
-            Choose the best next step for your crop
+            {t('choose_best_step', 'Choose the best next step for your crop')}
           </Text>
         </View>
         </FadeIn>
@@ -258,24 +260,24 @@ function SmartMoveScreen({ navigation, route }: any) {
         <FadeIn delay={100} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
         <View style={styles.contextSummaryCard}>
           <View style={styles.summaryCol}>
-            <Text style={styles.summaryLabel}>Condition</Text>
+            <Text style={styles.summaryLabel}>{t('condition', 'Condition')}</Text>
             <Text style={[styles.summaryValue, { color: whatIfData?.visual_score && whatIfData.visual_score < 50 ? Colors.error : Colors.success }]}>
-              {whatIfData?.visual_score && whatIfData.visual_score < 50 ? 'Needs Attention' : 'Good'}
+              {whatIfData?.visual_score && whatIfData.visual_score < 50 ? t('needs_attention', 'Needs Attention') : t('healthy', 'Good')}
             </Text>
           </View>
           <View style={styles.summaryCol}>
-            <Text style={styles.summaryLabel}>Spoilage Risk</Text>
+            <Text style={styles.summaryLabel}>{t('spoilage_risk', 'Spoilage Risk')}</Text>
             <Text style={[styles.summaryValue, { color: whatIfData?.decay_velocity && whatIfData.decay_velocity > 2 ? Colors.warning : Colors.success }]}>
-              {whatIfData?.decay_velocity && whatIfData.decay_velocity > 2 ? 'Moderate' : 'Low'}
+              {whatIfData?.decay_velocity && whatIfData.decay_velocity > 2 ? t('risk_medium', 'Moderate') : t('risk_low', 'Low')}
             </Text>
           </View>
           <View style={styles.summaryCol}>
-            <Text style={styles.summaryLabel}>Decay Rate</Text>
+            <Text style={styles.summaryLabel}>{t('decay_rate', 'Decay Rate')}</Text>
             <Text style={[styles.summaryValue, { color: Colors.success }]}>x{whatIfData?.decay_velocity?.toFixed(1) || '1.0'}</Text>
           </View>
           <View style={styles.summaryCol}>
-            <Text style={styles.summaryLabel}>Shelf Life</Text>
-            <Text style={styles.summaryValue}>{shelfLife.toFixed(0)} days</Text>
+            <Text style={styles.summaryLabel}>{t('shelf_life', 'Shelf Life')}</Text>
+            <Text style={styles.summaryValue}>{shelfLife.toFixed(0)} {t('days_unit', 'days')}</Text>
           </View>
         </View>
         </FadeIn>
@@ -284,10 +286,10 @@ function SmartMoveScreen({ navigation, route }: any) {
         <ScaleIn delay={200} duration={MotionTokens.duration.moderate} reducedMotion={reducedMotion}>
         <GlassCard level="level2" style={styles.recommendationCard}>
           <View style={styles.recommendationHeader}>
-            <Text style={styles.recommendationSuperText}>BEST MOVE RIGHT NOW</Text>
+            <Text style={styles.recommendationSuperText}>{t('best_move_super', 'BEST MOVE RIGHT NOW')}</Text>
             <GlassBadge variant="success" size="sm" style={styles.highlyRecommendedBadge}>
               <MaterialIcons name="verified" size={14} color="#00210B" />
-              <Text style={styles.highlyRecommendedText}>Highly Recommended</Text>
+              <Text style={styles.highlyRecommendedText}>{t('highly_recommended', 'Highly Recommended')}</Text>
             </GlassBadge>
           </View>
 
@@ -299,7 +301,7 @@ function SmartMoveScreen({ navigation, route }: any) {
             {recommendedScenario?.reasoning?.[0] || 'Current crop condition and spoilage risk make early selling safer than waiting.'}
           </Text>
           <SplitActionButton
-            label="View Market Details"
+            label={t('view_market_details', 'View Market Details')}
             onPress={() => navigation?.navigate('Market', { crop: cropName })}
             externalUrl="https://www.enam.gov.in/web/dashboard/agmarknet"
             externalLabel="Open official Agmarknet price dashboard"
@@ -310,7 +312,7 @@ function SmartMoveScreen({ navigation, route }: any) {
         {/* Why This Recommendation? — Explainability */}
         <FadeIn delay={300} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
         <GlassCard level="level1" style={styles.whyCard}>
-          <Text style={styles.whyTitle}>Why this recommendation?</Text>
+          <Text style={styles.whyTitle}>{t('why_this_rec', 'Why this recommendation?')}</Text>
           <View style={styles.whyList}>
             {(recommendedScenario?.reasoning || ['No reasoning available']).map((reason: string, idx: number) => (
               <View key={idx} style={styles.whyRow}>
@@ -337,7 +339,7 @@ function SmartMoveScreen({ navigation, route }: any) {
         {/* Explore Options Section — Staggered entrance */}
         <FadeIn delay={400} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
         <View style={styles.optionsSection}>
-          <Text style={styles.optionsSectionTitle}>Explore Options</Text>
+          <Text style={styles.optionsSectionTitle}>{t('explore_options', 'Explore Options')}</Text>
 
           <CardSwipe gap={16} maxCardWidth={320}>
             {(whatIfData?.scenarios || []).map((scenario: any, index: number) => {
@@ -386,12 +388,12 @@ function SmartMoveScreen({ navigation, route }: any) {
                     </View>
                     {isRecommended && (
                       <GlassBadge variant="success" size="sm" style={styles.recommendedPill}>
-                        Recommended
+                        {t('recommended', 'Recommended')}
                       </GlassBadge>
                     )}
                     {scenario.risk_level === 'HIGH' && !isRecommended && (
                       <GlassBadge variant="error" size="sm" style={styles.highRiskPill}>
-                        High Risk
+                        {t('high_risk', 'High Risk')}
                       </GlassBadge>
                     )}
                   </View>
@@ -399,23 +401,21 @@ function SmartMoveScreen({ navigation, route }: any) {
                   {/* Real metrics from API */}
                   <View style={styles.optionMetricsRow}>
                     <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>Price/kg</Text>
+                      <Text style={styles.optionMetricLabel}>{t('price_per_kg', 'Price/kg')}</Text>
                       <Text style={styles.optionMetricValue}>₹{scenario.estimated_price_per_kg}</Text>
                     </View>
                     <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>Net Profit</Text>
+                      <Text style={styles.optionMetricLabel}>{t('card_potential_rev', 'Net Profit')}</Text>
                       <Text style={styles.optionMetricValue}>₹{Math.round(scenario.expected_net_profit_inr).toLocaleString()}</Text>
                     </View>
                     <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>Shelf Life</Text>
+                      <Text style={styles.optionMetricLabel}>{t('shelf_life', 'Shelf Life')}</Text>
                       <Text style={styles.optionMetricValue}>{scenario.shelf_life_remaining_days?.toFixed(1)}d</Text>
                     </View>
                     <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>Risk</Text>
+                      <Text style={styles.optionMetricLabel}>{t('risk_tier', 'Risk')}</Text>
                       <Text style={[styles.optionMetricValue, {
-                        color: scenario.risk_level === 'LOW' ? Colors.success
-                          : scenario.risk_level === 'MEDIUM' ? Colors.warning
-                          : Colors.error
+                        color: iconColor
                       }]}>{scenario.risk_level}</Text>
                     </View>
                   </View>

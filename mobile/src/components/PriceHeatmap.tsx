@@ -7,6 +7,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Colors, Spacing, BorderRadius, FontFamily, Typography } from '../constants/theme';
+import { useLanguage } from '../context/LanguageContext';
 
 interface PriceHeatmapProps {
   prices: Array<{
@@ -24,16 +25,17 @@ function getPriceColor(price: number, min: number, max: number): string {
   return '#E53935';                       // red — most expensive
 }
 
-function getPriceLabel(price: number, min: number, max: number): string {
-  const ratio = max === min ? 0.5 : (price - min) / (max - min);
-  if (ratio < 0.25) return 'Best Price';
-  if (ratio < 0.45) return 'Good Price';
-  if (ratio < 0.65) return 'Average';
-  return 'High Price';
-}
-
 export default function PriceHeatmap({ prices }: PriceHeatmapProps) {
+  const { t } = useLanguage();
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const getPriceLabel = (price: number, min: number, max: number): string => {
+    const ratio = max === min ? 0.5 : (price - min) / (max - min);
+    if (ratio < 0.25) return t('best_price', 'Best Price');
+    if (ratio < 0.45) return t('good_price', 'Good Price');
+    if (ratio < 0.65) return t('average_price', 'Average');
+    return t('high_price', 'High Price');
+  };
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -55,19 +57,19 @@ export default function PriceHeatmap({ prices }: PriceHeatmapProps) {
       <View style={styles.legendRow}>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: '#1B7A3D' }]} />
-          <Text style={styles.legendText}>Low</Text>
+          <Text style={styles.legendText}>{t('risk_low', 'Low')}</Text>
         </View>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: '#4CAF50' }]} />
-          <Text style={styles.legendText}>Mid-Low</Text>
+          <Text style={styles.legendText}>{t('mid_low', 'Mid-Low')}</Text>
         </View>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: '#FFA726' }]} />
-          <Text style={styles.legendText}>Mid-High</Text>
+          <Text style={styles.legendText}>{t('risk_medium', 'Mid-High')}</Text>
         </View>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: '#E53935' }]} />
-          <Text style={styles.legendText}>High</Text>
+          <Text style={styles.legendText}>{t('risk_high', 'High')}</Text>
         </View>
       </View>
 
@@ -88,7 +90,7 @@ export default function PriceHeatmap({ prices }: PriceHeatmapProps) {
                 <Text style={styles.cellLabel}>{label}</Text>
                 {isBest && (
                   <View style={styles.bestBadge}>
-                    <Text style={styles.bestBadgeText}>★ BEST</Text>
+                    <Text style={styles.bestBadgeText}>★ {t('best_badge', 'BEST')}</Text>
                   </View>
                 )}
               </View>

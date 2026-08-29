@@ -11,6 +11,7 @@ import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors, FontFamily, Shadows } from '../constants/theme';
 import { hapticLight, hapticSelection } from '../utils/haptics';
 import { GlowingAreaChart } from './GlowingAreaChart';
+import { useLanguage } from '../context/LanguageContext';
 
 export type TimelineOption = '7d' | '30d' | '90d' | '1y';
 
@@ -27,7 +28,7 @@ interface TimelineData {
   };
   chartBars: { label: string; price: number; height: number; isPeak?: boolean }[];
   priceRange: { low: string; high: string };
-  factors: { title: string; score: string; status: string; color: string }[];
+  factors: { titleKey: string; defaultTitle: string; score: string; status: string; color: string }[];
 }
 
 const TIMELINE_DATA: Record<TimelineOption, TimelineData> = {
@@ -53,9 +54,9 @@ const TIMELINE_DATA: Record<TimelineOption, TimelineData> = {
       { label: 'Sun', price: 2650, height: 95, isPeak: true },
     ],
     factors: [
-      { title: 'Weather & Highway Transit', score: '94/100', status: 'Optimal', color: '#145C2E' },
-      { title: 'Terminal Mandi Buyer Demand', score: '88/100', status: 'Very High', color: '#2E7D32' },
-      { title: 'Crop Spoilage Decay Risk', score: 'Low (3%)', status: 'Safe', color: '#145C2E' },
+      { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '94/100', status: 'Optimal', color: '#145C2E' },
+      { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '88/100', status: 'Very High', color: '#2E7D32' },
+      { titleKey: 'spoilage_decay_factor', defaultTitle: 'Crop Spoilage Decay Risk', score: 'Low (3%)', status: 'Safe', color: '#145C2E' },
     ],
   },
   '30d': {
@@ -69,64 +70,64 @@ const TIMELINE_DATA: Record<TimelineOption, TimelineData> = {
       arrivalTrend: 'Steady Demand',
       decayIndex: '8.8 Days',
     },
-    priceRange: { low: '₹1,900', high: '₹2,800' },
+    priceRange: { low: '₹1,950', high: '₹2,750' },
     chartBars: [
-      { label: 'W1', price: 1950, height: 30 },
-      { label: 'W2', price: 2200, height: 50 },
+      { label: 'W1', price: 2100, height: 30 },
+      { label: 'W2', price: 2280, height: 50 },
       { label: 'W3', price: 2450, height: 70 },
-      { label: 'W4', price: 2800, height: 95, isPeak: true },
+      { label: 'W4', price: 2750, height: 95, isPeak: true },
     ],
     factors: [
-      { title: 'Seasonal Supply Shift', score: '78/100', status: 'Moderate', color: '#D97706' },
-      { title: 'Buyer Competition Index', score: '92/100', status: 'High', color: '#145C2E' },
-      { title: 'Average Transit Margin', score: '+₹420/q', status: 'Profitable', color: '#145C2E' },
+      { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '89/100', status: 'Good', color: '#2E7D32' },
+      { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '92/100', status: 'Strong', color: '#145C2E' },
+      { titleKey: 'spoilage_decay_factor', defaultTitle: 'Crop Spoilage Decay Risk', score: 'Low (5%)', status: 'Safe', color: '#145C2E' },
     ],
   },
   '90d': {
-    label: 'Season Q3',
+    label: 'Quarterly',
     metrics: {
-      avgPrice: '₹2,280',
+      avgPrice: '₹2,290',
       avgChange: '+22.5% 📈',
       peakPrice: '₹3,500',
-      peakMarket: 'Pune / Mumbai',
+      peakMarket: 'Pune APMC',
       arrivalVol: '18,500 q',
       arrivalTrend: 'Peak Harvest',
-      decayIndex: '8.4 Days',
+      decayIndex: '8.5 Days',
     },
-    priceRange: { low: '₹1,600', high: '₹3,100' },
+    priceRange: { low: '₹1,750', high: '₹2,850' },
     chartBars: [
-      { label: 'Jun', price: 1650, height: 30 },
-      { label: 'Jul', price: 2100, height: 55 },
-      { label: 'Aug', price: 2650, height: 90, isPeak: true },
+      { label: 'M1', price: 1850, height: 25 },
+      { label: 'M2', price: 2200, height: 55 },
+      { label: 'M3', price: 2850, height: 95, isPeak: true },
     ],
     factors: [
-      { title: 'Monsoon Impact Factor', score: '65/100', status: 'Moderate', color: '#D97706' },
-      { title: 'Storage & Cold Chain Access', score: '82/100', status: 'Good', color: '#2E7D32' },
-      { title: 'Overall Yield Realization', score: '91/100', status: 'Excellent', color: '#145C2E' },
+      { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '82/100', status: 'Moderate', color: '#D97706' },
+      { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '85/100', status: 'High', color: '#2E7D32' },
+      { titleKey: 'spoilage_decay_factor', defaultTitle: 'Crop Spoilage Decay Risk', score: 'Mod (8%)', status: 'Manageable', color: '#D97706' },
     ],
   },
   '1y': {
     label: 'Annual Cycle',
     metrics: {
-      avgPrice: '₹2,150',
+      avgPrice: '₹2,180',
       avgChange: '+31.0% 📈',
       peakPrice: '₹3,800',
-      peakMarket: 'Metro Terminals',
+      peakMarket: 'Vashi Mumbai',
       arrivalVol: '74,000 q',
-      arrivalTrend: 'Annual Cycle',
+      arrivalTrend: 'Cyclical Peak',
       decayIndex: '8.0 Days',
     },
-    priceRange: { low: '₹1,200', high: '₹3,800' },
+    priceRange: { low: '₹1,400', high: '₹3,100' },
     chartBars: [
-      { label: 'Q1', price: 1400, height: 25 },
-      { label: 'Q2', price: 1900, height: 50 },
-      { label: 'Q3', price: 2600, height: 80 },
-      { label: 'Q4', price: 3400, height: 100, isPeak: true },
+      { label: 'Q1', price: 1550, height: 20 },
+      { label: 'Q2', price: 1980, height: 45 },
+      { label: 'Q3', price: 2450, height: 70 },
+      { label: 'Q4', price: 3100, height: 95, isPeak: true },
     ],
     factors: [
-      { title: 'Annual Price Appreciation', score: '+31%', status: 'Bullish', color: '#145C2E' },
-      { title: 'Smart Move Cumulative Gain', score: '+₹48.5K', status: 'Realized', color: '#145C2E' },
-      { title: 'Crop Rotation Health', score: '89/100', status: 'High', color: '#2E7D32' },
+      { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '80/100', status: 'Stable', color: '#2E7D32' },
+      { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '90/100', status: 'High Peak', color: '#145C2E' },
+      { titleKey: 'spoilage_decay_factor', defaultTitle: 'Crop Spoilage Decay Risk', score: 'Avg (10%)', status: 'Monitored', color: '#D97706' },
     ],
   },
 };
@@ -142,12 +143,13 @@ export function MarketTrendsAnalytics({
   onClose,
   style,
 }: MarketTrendsAnalyticsProps) {
+  const { t } = useLanguage();
   const [timeline, setTimeline] = useState<TimelineOption>('7d');
   const activeData = TIMELINE_DATA[timeline];
 
-  const handleTimelineChange = (t: TimelineOption) => {
+  const handleTimelineChange = (tOpt: TimelineOption) => {
     hapticSelection();
-    setTimeline(t);
+    setTimeline(tOpt);
   };
 
   return (
@@ -155,23 +157,23 @@ export function MarketTrendsAnalytics({
       {/* Top Header Row with Title & Timeline Dropdown/Switcher */}
       <View style={styles.headerRow}>
         <View style={styles.titleCol}>
-          <Text style={styles.mainTitle}>{cropName} Market Trends</Text>
-          <Text style={styles.subTitle}>Historical movement & price analytics</Text>
+          <Text style={styles.mainTitle}>{cropName} {t('market_trends', 'Market Trends')}</Text>
+          <Text style={styles.subTitle}>{t('historical_trends_sub', 'Historical movement & price analytics')}</Text>
         </View>
 
         {/* Timeline Switcher Chips */}
         <View style={styles.timelineSwitcher}>
-          {(['7d', '30d', '90d', '1y'] as TimelineOption[]).map((t) => {
-            const isActive = timeline === t;
+          {(['7d', '30d', '90d', '1y'] as TimelineOption[]).map((tOpt) => {
+            const isActive = timeline === tOpt;
             return (
               <TouchableOpacity
-                key={t}
+                key={tOpt}
                 style={[styles.timelineChip, isActive && styles.timelineChipActive]}
-                onPress={() => handleTimelineChange(t)}
+                onPress={() => handleTimelineChange(tOpt)}
                 activeOpacity={0.8}
               >
                 <Text style={[styles.timelineChipText, isActive && styles.timelineChipTextActive]}>
-                  {t.toUpperCase()}
+                  {tOpt.toUpperCase()}
                 </Text>
               </TouchableOpacity>
             );
@@ -186,7 +188,7 @@ export function MarketTrendsAnalytics({
           <View style={styles.metricIconWrap}>
             <MaterialIcons name="payments" size={18} color="#145C2E" />
           </View>
-          <Text style={styles.metricLabel}>Average Price</Text>
+          <Text style={styles.metricLabel}>{t('average_price', 'Average Price')}</Text>
           <Text style={styles.metricValue}>{activeData.metrics.avgPrice}</Text>
           <Text style={styles.metricSub}>{activeData.metrics.avgChange}</Text>
         </View>
@@ -196,7 +198,7 @@ export function MarketTrendsAnalytics({
           <View style={[styles.metricIconWrap, { backgroundColor: '#FEF3C7' }]}>
             <MaterialIcons name="trending-up" size={18} color="#D97706" />
           </View>
-          <Text style={styles.metricLabel}>Top APMC Peak</Text>
+          <Text style={styles.metricLabel}>{t('top_apmc_peak', 'Top APMC Peak')}</Text>
           <Text style={[styles.metricValue, { color: '#D97706' }]}>{activeData.metrics.peakPrice}</Text>
           <Text style={styles.metricSub}>{activeData.metrics.peakMarket}</Text>
         </View>
@@ -206,7 +208,7 @@ export function MarketTrendsAnalytics({
           <View style={[styles.metricIconWrap, { backgroundColor: '#E0F2FE' }]}>
             <MaterialIcons name="inventory" size={18} color="#0284C7" />
           </View>
-          <Text style={styles.metricLabel}>Arrival Volume</Text>
+          <Text style={styles.metricLabel}>{t('arrival_volume', 'Arrival Volume')}</Text>
           <Text style={styles.metricValue}>{activeData.metrics.arrivalVol}</Text>
           <Text style={styles.metricSub}>{activeData.metrics.arrivalTrend}</Text>
         </View>
@@ -216,16 +218,16 @@ export function MarketTrendsAnalytics({
           <View style={[styles.metricIconWrap, { backgroundColor: '#F3E8FF' }]}>
             <MaterialIcons name="timer" size={18} color="#7E22CE" />
           </View>
-          <Text style={styles.metricLabel}>Shelf Life</Text>
+          <Text style={styles.metricLabel}>{t('shelf_life', 'Shelf Life')}</Text>
           <Text style={styles.metricValue}>{activeData.metrics.decayIndex}</Text>
-          <Text style={styles.metricSub}>Avg Safe Transit</Text>
+          <Text style={styles.metricSub}>{t('avg_safe_transit', 'Avg Safe Transit')}</Text>
         </View>
       </View>
 
       {/* Main Interactive Price Trajectory Glowing Area Chart */}
       <GlowingAreaChart
         title={`${activeData.label} Price Evolution`}
-        subtitle="Daily modal rate trajectory (₹ / Quintal)"
+        subtitle={t('daily_modal_rate_sub', 'Daily modal rate trajectory (₹ / Quintal)')}
         badgeLabel={activeData.metrics.avgChange}
         badgePositive={true}
         data={activeData.chartBars.map((b) => ({ label: b.label, value: b.price }))}
@@ -236,12 +238,12 @@ export function MarketTrendsAnalytics({
 
       {/* Market Factors & Profitability Index */}
       <View style={styles.factorsCard}>
-        <Text style={styles.factorsHeading}>Market Recovery & Profitability Factors</Text>
+        <Text style={styles.factorsHeading}>{t('market_factors_title', 'Market Recovery & Profitability Factors')}</Text>
         <View style={styles.factorsList}>
           {activeData.factors.map((factor, idx) => (
             <View key={idx} style={styles.factorRow}>
               <View style={[styles.factorDot, { backgroundColor: factor.color }]} />
-              <Text style={styles.factorTitle}>{factor.title}</Text>
+              <Text style={styles.factorTitle}>{t(factor.titleKey, factor.defaultTitle)}</Text>
               <View style={styles.factorValueBadge}>
                 <Text style={[styles.factorScoreText, { color: factor.color }]}>{factor.score}</Text>
                 <Text style={styles.factorStatusText}>({factor.status})</Text>

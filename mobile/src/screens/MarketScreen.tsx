@@ -649,7 +649,7 @@ function MarketScreen({ navigation }: any) {
         <View style={styles.heatmapSection}>
           <View style={styles.heatmapHeader}>
             <MaterialIcons name="grid-on" size={20} color={Colors.primaryDark} />
-            <Text style={styles.heatmapTitle}>Price Heatmap</Text>
+            <Text style={styles.heatmapTitle}>{t('price_heatmap', 'Price Heatmap')}</Text>
           </View>
           <PriceHeatmap prices={prices} />
         </View>
@@ -669,7 +669,7 @@ function MarketScreen({ navigation }: any) {
             <View style={styles.actionIconCircle}>
               <MaterialIcons name="location-on" size={24} color={Colors.primaryDark} />
             </View>
-            <Text style={styles.actionCardTitleSecondary}>Nearby Markets</Text>
+            <Text style={styles.actionCardTitleSecondary}>{t('nearby_markets', 'Nearby Markets')}</Text>
           </AnimatedPressable>
 
           {/* Action 2: Prices & Statistics (secondary) */}
@@ -682,7 +682,7 @@ function MarketScreen({ navigation }: any) {
             <View style={styles.actionIconCircle}>
               <MaterialIcons name="analytics" size={24} color={Colors.primaryDark} />
             </View>
-            <Text style={styles.actionCardTitleSecondary}>Prices & Statistics</Text>
+            <Text style={styles.actionCardTitleSecondary}>{t('prices_and_stats', 'Prices & Statistics')}</Text>
           </AnimatedPressable>
         </View>
         </FadeIn>
@@ -696,7 +696,7 @@ function MarketScreen({ navigation }: any) {
           haptic="medium"
         >
           <MaterialIcons name="storefront" size={22} color={Colors.textOnPrimary} />
-          <Text style={styles.sellBuyPrimaryText}>Sell / Buy</Text>
+          <Text style={styles.sellBuyPrimaryText}>{t('sell_buy_cta', 'Sell / Buy')}</Text>
         </AnimatedPressable>
         </FadeIn>
 
@@ -704,8 +704,8 @@ function MarketScreen({ navigation }: any) {
         <FadeIn delay={400} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
         <View style={styles.bestOptionSection}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionHeading}>Nearby Markets</Text>
-            <Text style={styles.sectionSubtext}>Ranked by price</Text>
+            <Text style={styles.sectionHeading}>{t('nearby_markets', 'Nearby Markets')}</Text>
+            <Text style={styles.sectionSubtext}>{t('ranked_by_price', 'Ranked by price')}</Text>
           </View>
 
           <FavoriteMarketsList

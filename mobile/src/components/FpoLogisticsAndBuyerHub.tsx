@@ -12,6 +12,7 @@ import {
 import { MaterialIcons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { Colors, FontFamily, BorderRadius, Shadows } from '../constants/theme';
 import { hapticHeavy, hapticLight, hapticMedium } from '../utils/haptics';
+import { useLanguage } from '../context/LanguageContext';
 
 export interface FpoHubProps {
   cropType?: string;
@@ -34,6 +35,7 @@ export function FpoLogisticsAndBuyerHub({
   onSelectBuyer,
   onBookColdStorage,
 }: FpoHubProps) {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>('pooling');
   const [poolJoined, setPoolJoined] = useState<boolean>(false);
   const [lockedBuyer, setLockedBuyer] = useState<string | null>(null);
@@ -159,14 +161,14 @@ export function FpoLogisticsAndBuyerHub({
                 </Text>
               </View>
               <View style={styles.departureBadge}>
-                <Text style={styles.departureText}>Departs 09:30 AM</Text>
+                <Text style={styles.departureText}>{t('departs_time', 'Departs 09:30 AM')}</Text>
               </View>
             </View>
 
             {/* Capacity Progress Bar */}
             <View style={styles.capacitySection}>
               <View style={styles.capacityHeader}>
-                <Text style={styles.capacityLabel}>Current Truck Payload Capacity</Text>
+                <Text style={styles.capacityLabel}>{t('truck_capacity_label', 'Current Truck Payload Capacity')}</Text>
                 <Text style={styles.capacityNumbers}>
                   {poolJoined ? '1,800 kg / 2,000 kg (90%)' : '1,300 kg / 2,000 kg (65%)'}
                 </Text>
@@ -183,7 +185,7 @@ export function FpoLogisticsAndBuyerHub({
 
             {/* Co-Shippers List */}
             <View style={styles.coShippersList}>
-              <Text style={styles.coShippersTitle}>Participating Co-Shippers (Your FPO Group):</Text>
+              <Text style={styles.coShippersTitle}>{t('co_shippers_title', 'Participating Co-Shippers (Your FPO Group):')}</Text>
               
               <View style={styles.shipperRow}>
                 <View style={styles.avatarMini}>
@@ -210,7 +212,7 @@ export function FpoLogisticsAndBuyerHub({
               {/* Your Slot */}
               <View style={[styles.shipperRow, styles.yourSlotRow]}>
                 <View style={[styles.avatarMini, { backgroundColor: '#145C2E' }]}>
-                  <Text style={[styles.avatarText, { color: '#FFFFFF' }]}>YOU</Text>
+                  <Text style={[styles.avatarText, { color: '#FFFFFF' }]}>{t('you_badge', 'YOU')}</Text>
                 </View>
                 <View style={styles.shipperInfo}>
                   <Text style={styles.yourName}>You (Ramesh Patel)</Text>
@@ -223,16 +225,16 @@ export function FpoLogisticsAndBuyerHub({
             {/* Freight Cost Comparison Widget */}
             <View style={styles.savingsBox}>
               <View style={styles.savingsCol}>
-                <Text style={styles.savingsLabel}>Solo Private Truck</Text>
+                <Text style={styles.savingsLabel}>{t('solo_truck_label', 'Solo Private Truck')}</Text>
                 <Text style={styles.soloPrice}>₹3,800</Text>
               </View>
               <MaterialIcons name="arrow-forward" size={20} color="#145C2E" />
               <View style={styles.savingsCol}>
-                <Text style={styles.savingsLabel}>FPO Shared Pool</Text>
+                <Text style={styles.savingsLabel}>{t('fpo_shared_pool', 'FPO Shared Pool')}</Text>
                 <Text style={styles.poolPrice}>₹850</Text>
               </View>
               <View style={styles.savingsBadge}>
-                <Text style={styles.savingsBadgeText}>SAVE ₹2,950 (78%)</Text>
+                <Text style={styles.savingsBadgeText}>{t('save_amount_badge', 'SAVE ₹2,950 (78%)')}</Text>
               </View>
             </View>
 
@@ -249,7 +251,7 @@ export function FpoLogisticsAndBuyerHub({
                 color="#FFFFFF"
               />
               <Text style={styles.joinBtnText}>
-                {poolJoined ? 'Shared Truck Reserved & Scheduled' : 'Join Shared Truck (₹850)'}
+                {poolJoined ? t('shared_truck_reserved', 'Shared Truck Reserved & Scheduled') : `${t('join_shared_truck', 'Join Shared Truck')} (₹850)`}
               </Text>
             </TouchableOpacity>
           </View>
