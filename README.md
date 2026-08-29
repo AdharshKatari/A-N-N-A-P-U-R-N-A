@@ -56,52 +56,95 @@ Over **15% to 30% of Indian horticultural crops** (such as tomatoes, mangoes, an
 
 ---
 
-## 🔬 Core Scientific Intelligence Engines
+## 🌟 Complete Feature Ecosystem
 
-### 1. Biological Respiration Kinetics ($Q_{10}$ Engine)
-Instead of arbitrary linear deductions, FreshGuard computes cellular decay velocity exponentially as a function of thermal transit history:
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                       KEY PLATFORM CAPABILITIES                                          │
+├─────────────────────────────────────┬────────────────────────────────────┬───────────────────────────────┤
+│ 📸 5-Sample Smart Produce Scanner   │ ⚖️ Side-by-Side Mandi Arbitrage   │ 🛡️ PostGIS Plan-B Safety Net  │
+│ 🧪 Chemical Ethylene Gas Warning    │ 🧬 Q10 Biological Decay Physics    │ 🔐 Cryptographic QR Passport  │
+│ 🔮 "What-If" Scenario Simulator     │ 🚚 SmartMove FPO Freight Pooling   │ 📡 ISRO Satellite NDVI Stress │
+│ 🗣️ Regional Voice AI Assistant      │ 🌦️ Thermal Weather Alert Engine   │ 📴 Zero-Crash Offline Sync    │
+└─────────────────────────────────────┴────────────────────────────────────┴───────────────────────────────┘
+```
 
-$$\text{Thermal Velocity} = (Q_{10})^{\frac{T_{\text{ambient}} - 12.0}{10.0}}$$
+### 1. 📸 5-Sample Smart Produce Quality Scanner
+*   **Computer Vision Guardrails:** Real-time on-device check for **Laplacian 2D gradient blur variance** ($\text{Var} \ge 30.0$), brightness normalization, and resolution verification.
+*   **3-Tier Multi-Engine AI Grading:** Analyzes surface skin texture, color uniformity, and fungal spores using **Google Gemini 2.5 Flash** (Tier 1/2) with local **NumPy/Pillow colorimetric & necrotic lesion fallback** (Tier 3).
+*   **AGMARK Parameter Extraction:** Predicts visual quality score ($0–100$), categorical ripeness (`Unripe`, `Optimal`, `Overripe`), and boolean fungal pathogen presence with calibrated confidence.
 
-$$\text{Days Lost in Transit} = \frac{\text{Transit Duration (Hours)} \times \text{Thermal Velocity} \times \text{Ethylene Multiplier}}{24.0}$$
+### 2. ⚖️ Side-by-Side Mandi Arbitrage Radar
+*   **Real Profit vs. Nominal Price:** Compares local vs. distant metro mandis (e.g., *Nashik APMC vs. Vashi Mumbai*).
+*   **Transit Cost & Spoilage Factoring:** Automatically deducts diesel freight (**₹5.00/km**) and estimated transit thermal decay loss from gross payout to highlight genuine net profit margins.
+*   **Mandi Quick-Switcher & Swap:** Interactive UI pills allowing farmers to instantly benchmark alternative regional APMCs with haptic feedback.
 
-*   **Temperature Coefficient ($Q_{10}$)**: Calibrated at `2.2` for Tomatoes, `2.5` for Mangoes, and `2.0` for Onions. Biological respiration speeds double for every 10°C spike above optimal preservation baselines ($12^\circ\text{C}$).
+### 3. 🛡️ PostGIS Plan-B Mandi Rejection Rerouting Core
+*   **4-Hour Rejection Delay Modeling:** Simulates market glut delays or mandi entry rejections to calculate remaining shelf life.
+*   **Spatial Fallback Radius:** PostGIS spatial queries (`ST_DWithin`, GiST Indexing) map secondary cold storage and food processing facilities with guaranteed floor purchase prices.
+*   **Resilience Tiers:** Evaluates route safety into **AIRTIGHT** (has viable salvage hub), **VULNERABLE** (safe arrival life $\ge 1.5\text{d}$, but no fallback), and **CRITICAL_SPECULATIVE**.
 
-### 2. Autocatalytic Ethylene Chemical Interaction Layer
-Models autocatalytic ethylene gas accumulation in parts per million (PPM) inside shipping vehicles:
+### 4. 🧪 Chemical Ethylene Gas Cross-Contamination Warning
+*   **Climacteric Interaction Matrix:** Models autocatalytic ethylene gas accumulation (PPM) when co-shipping produce.
+*   **Ventilation Modifiers:** Multiplies biological respiration rates up to **4.00x** when high-emitting climacteric crops (e.g., overripe tomatoes) are loaded with sensitive produce in unventilated trucks.
 
-$$\text{Effective PPM} = \text{Gas Load} \times (1.0 \text{ if ventilated else } 2.5)$$
+### 5. 🧬 $Q_{10}$ Respiration Kinetics & Thermal Decay Engine
+*   **Exponential Decay Physics:** Calculates exponential decay speed based on ambient transit temperatures:
+    $$\text{Thermal Velocity} = (Q_{10})^{\frac{T_{\text{ambient}} - 12.0}{10.0}}$$
+*   **Crop-Calibrated Constants:** $Q_{10} = 2.2$ for Tomatoes, $2.5$ for Mangoes, and $2.0$ for Onions above optimal baselines ($12^\circ\text{C}$).
 
-$$\text{Multiplier} = \min\left(4.00, \; 1.0 + (\text{Effective PPM} \times 0.15)\right)$$
+### 6. 🔐 Cryptographic QR Crop Passport
+*   **Tamper-Proof B2B Verification:** Encapsulates batch provenance, AGMARK visual score, harvest timestamp, and weight into an immutable **HMAC-SHA256** signed token (`{Base64 Payload}.{Base64 Signature}`).
+*   **Quick-Commerce Integration:** Downstream buyers (e.g., *Zepto, Blinkit, Mandi Traders*) scan the QR code to verify quality authenticity in constant time (`hmac.compare_digest`), preventing middleman tampering.
 
-*   Applies severe cross-contamination penalties if high-ethylene climacteric crops (e.g., overripe tomatoes) are co-shipped alongside sensitive produce in unventilated containers.
+### 7. 🔮 "What-If" Multi-Scenario Strategy Simulator
+*   **4 Real-World Economic Pathways:** Simulates trade-offs between:
+    1. *Immediate Local Mandi Sale* (Zero transit decay, baseline price).
+    2. *Distant Metro APMC Transit* (Higher price spread minus freight & thermal loss).
+    3. *Cold Storage Holding* (Speculative price surge minus electricity storage fees).
+    4. *Secondary Food Processing Salvage* (Instant bulk floor price for borderline batches).
 
-### 3. PostGIS Plan-B Mandi Rejection Rerouting Core
-Utilizes **PostGIS spatial indexing (`ST_DWithin`, GiST Indexing)** to automatically map a secondary fallback safety net around every destination:
+### 8. 🚚 SmartMove & FPO Shared Freight Pooling Optimizer
+*   **Consolidated Consignments:** Pools smallholder farm yields into shared commercial carriers (e.g., Bolero / Tata 407), reducing per-kg transit freight by up to **60%**.
+*   **Route Optimization:** Groups nearby geofenced farm pickups for collective delivery to high-yield mandis.
 
-$$\text{Secondary Transit Loss} = \frac{(4.0\text{h Rejection Delay} + \text{Transit to Salvage Hub}) \times \text{Decay Velocity}}{24.0}$$
+### 9. 📡 ISRO Satellite NDVI Pre-Harvest Stress Layer
+*   **Crop Durability Pre-Check:** Connects to ISRO Bhoonidhi STAC and VEDAS WMS APIs to compute **Normalized Difference Vegetation Index (NDVI)** and SMAP soil moisture.
+*   **Pre-Harvest Decay Adjustment:** Scales baseline post-harvest durability ($0.85\times - 1.00\times$) based on field vegetative stress prior to harvest.
 
-*   If a mandi rejects a shipment or experiences market gluts, the engine calculates remaining shelf life at regional processing units or cold storage facilities, assigning routes a resilience tier: `AIRTIGHT`, `VULNERABLE`, or `CRITICAL_SPECULATIVE`.
+### 10. 🗣️ Multilingual Regional Voice AI Assistant
+*   **6 Indian Languages:** Native support across **Telugu (`te`)**, **Hindi (`hi`)**, **Marathi (`mr`)**, **English (`en`)**, **Tamil (`ta`)**, and **Kannada (`kn`)**.
+*   **Hands-Free Speech Synthesis:** Regional voice recognition and synthesized audio feedback for farmers working in the field.
 
-### 4. 3-Tier Multi-Engine Computer Vision Pipeline
-1. **Tier 1 (FreeLLMAPI Gateway):** OpenAI-compatible unified gateway with strict AGMARK JSON formatting.
-2. **Tier 2 (Google Gemini 2.5 Flash SDK):** Multimodal zero-shot vision transformer with constrained schema parsing (`VisionAgronomySchema`).
-3. **Tier 3 (Dedicated CV Classifier & Preprocessing):** Local NumPy/Pillow colorimetric and necrotic lesion classifier with 2D Laplacian variance blur detection.
+### 11. 🌦️ Agro-Weather Hazard Alert Engine
+*   **Thermal Shock & Moisture Alerts:** Warns farmers when local ambient temperatures exceed $35^\circ\text{C}$ or relative humidity exceeds $85\%$.
+*   **10-Year Historical Climate Fallback:** Automatically substitutes live weather API timeouts with pre-compiled district-by-week historical weather profiles.
 
-### 5. Cryptographic QR Crop Passport Engine
-*   Compresses batch parameters into a tamper-proof **HMAC-SHA256** signed token (`{Base64 Payload}.{Base64 Signature}`).
-*   Allows quick-commerce buyers (e.g., Zepto, Blinkit) to verify harvest authenticity in constant time (`hmac.compare_digest`), preventing middleman tampering.
+### 12. 📴 Zero-Crash Offline Synchronization Gateway
+*   **Field Blackout Protection:** Client mutations (batch status changes, IoT sensor logs) queue locally in `AsyncStorage`.
+*   **Idempotent Server Gateway:** Synchronizes queues automatically upon cell signal restoration (`/api/v5/sync/process-queue`) using UUID idempotency keys.
 
 ---
 
-## 📱 Mobile App Key Features
+## 📱 Mobile App UI Flow Previews
 
-*   🌍 **Multilingual Localization:** Complete native support for **6 Indian Languages** (Telugu `te`, Hindi `hi`, Marathi `mr`, English `en`, Tamil `ta`, Kannada `kn`).
-*   🎙️ **Voice AI Assistant:** Regional speech-to-intent voice assistant for hands-free crop guidance.
-*   📸 **5-Sample Smart Produce Scanner:** Interactive camera guide with real-time blur, brightness, and resolution guardrails.
-*   ⚖️ **Side-by-Side Mandi Arbitrage Modal:** Real-time net margin comparison factoring in diesel freight (₹5/km) and $Q_{10}$ transit spoilage.
-*   🗺️ **Interactive Farm & Route Mapping:** Leaflet-based geospatial field boundaries and routing paths.
-*   📊 **TimescaleDB Environmental Telemetry:** Visual degree-hour accumulation charts and transit temperature monitoring.
+```
+┌───────────────────────────┐   ┌───────────────────────────┐   ┌───────────────────────────┐
+│     HOME DASHBOARD        │   │    5-SAMPLE AI SCANNER    │   │  SIDE-BY-SIDE ARBITRAGE   │
+├───────────────────────────┤   ├───────────────────────────┤   ├───────────────────────────┤
+│ ☀️ 32°C Sunny • Nashik    │   │  [📸 Sample 1 / 5]        │   │ ⚡ INXS ARBITRAGE RADAR   │
+│ ⚠️ Heat Stress Warning    │   │  ┌─────────────────────┐  │   │ Nashik APMC vs Vashi APMC │
+│                           │   │  │   [ Tomato Image ]  │  │   │                           │
+│ Active Batches: 4 (2.4T)  │   │  └─────────────────────┘  │   │ • Price: ₹24/kg ➔ ₹34/kg  │
+│                           │   │  ✓ Sharpness: OK (Var 48) │   │ • Transit: 12km ➔ 168km   │
+│ [📸 Scan Harvest Produce] │   │  ✓ Lighting: Sunlight     │   │ • Spoilage: 0.8% ➔ 3.2%   │
+│ [⚖️ Mandi Arbitrage]     │   │                           │   │ • Diesel: ₹120 ➔ ₹840     │
+│ [🚚 FPO SmartMove Pool]   │   │ AGMARK Score: 86/100      │   │                           │
+│ [🔐 QR Digital Passports] │   │ Ripeness: Optimal (Firm)  │   │ 💰 Net Profit Delta:      │
+│                           │   │ Fungal Pathogens: None    │   │    +₹4,160 Net Gain!      │
+│ [🗣️ Voice Assistant]      │   │ Estimated Life: 8.5 Days  │   │ [🛡️ Plan-B: Cold Storage] │
+└───────────────────────────┘   └───────────────────────────┘   └───────────────────────────┘
+```
 
 ---
 
@@ -124,6 +167,7 @@ $$\text{Secondary Transit Loss} = \frac{(4.0\text{h Rejection Delay} + \text{Tra
 | `/api/v5/logs/{id}/analytics` | `GET` | Fetch cumulative degree-hours and spoilage velocity | Bearer JWT |
 | `/api/v5/weather` | `GET` | Local weather proxy with 10-year climate matrix fallback | None |
 | `/api/v5/salvage/nearby` | `GET` | Spatial query for nearest PostGIS cold storage facilities | None |
+| `/api/v5/sync/process-queue` | `POST` | Synchronize offline mutation queue | Bearer JWT |
 
 ---
 
