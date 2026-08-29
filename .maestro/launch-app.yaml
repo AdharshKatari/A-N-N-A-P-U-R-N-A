@@ -1,0 +1,7 @@
+appId: host.exp.exponent
+---
+- launchApp
+- openLink: "exp://127.0.0.1:8084"
+- extendedWaitUntil:
+    visible: "Annapurna"
+    timeout: 180000

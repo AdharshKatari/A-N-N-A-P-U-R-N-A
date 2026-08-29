@@ -1,0 +1,2851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<title>The Farmer Market</title>
+
+<style>
+/* =========================================================
+   THE FARMER MARKET
+   Mobile-first app prototype
+   ========================================================= */
+
+:root{--accent:#1a7a52;--accent-soft:#e6f5ed;--paper:#fff;--bg:#f0f2f5;--ink:#14171e;--ink-2:#3c4049;--muted:#6b7280;--muted-2:#9ca3af;--hairline:rgba(20,23,30,.10);--hairline-2:rgba(20,23,30,.06);--amber:#d97706;--amber-bg:#fef3c7;--danger:#dc2626;--danger-bg:#fee2e2;--success:#16a34a;--success-bg:#dcfce7;--guide-bg:#1a2a22;--farm-dark:#0f1a14;--r-card:18px;--r-pill:999px;--shadow:0 4px 18px -8px rgba(20,23,30,.28);--shadow-deep:0 12px 32px -12px rgba(20,23,30,.35);--ease:cubic-bezier(.16,1,.3,1);--font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0f0d;font-family:var(--font);-webkit-font-smoothing:antialiased}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+}
+
+.app{width:100%;max-width:430px;min-height:100vh;background:var(--bg);position:relative;overflow-x:hidden;display:flex;flex-direction:column;color:var(--ink)}
+
+@media(min-width:600px){.app{min-height:932px;max-height:932px;border-radius:0;overflow:hidden}}
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:8px 20px 12px;background:var(--paper);border-bottom:1px solid var(--hairline-2)}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#22a05d,var(--accent));display:flex;align-items:center;justify-content:center}.brand-icon svg{display:block}
+
+.brand h1 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -.4px;
+    line-height: 1.1;
+}
+.brand p {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: -.2px;
+    margin-top: 1px;
+}
+.profile-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    transition: transform .3s var(--ease);
+}
+.profile-btn:active { transform: scale(.92); }
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 0 120px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 750;
+    letter-spacing: -.9px;
+    padding: 22px 20px 0;
+}
+.page-subtitle {
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--muted);
+    letter-spacing: -.2px;
+    padding: 8px 20px 0;
+}
+
+/* =========================================================
+   WELCOME CARD
+   ========================================================= */
+
+.greet{padding:20px 20px 0}
+.greet h2{font-size:30px;font-weight:800;letter-spacing:-1.1px;line-height:1.05}
+.greet p{margin-top:8px;font-size:16px;line-height:1.4;color:var(--muted);letter-spacing:-.2px}
+.greet p b{color:var(--ink);font-weight:600}
+.chips-row{display:flex;gap:8px;padding:16px 20px 0;overflow-x:auto}
+.chips-row::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;height:36px;padding:0 14px;border-radius:var(--r-pill);background:var(--paper);border:1px solid var(--hairline);display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;letter-spacing:-.2px;color:var(--ink-2);white-space:nowrap;transition:background .2s var(--ease)}
+.chip svg{display:block;flex:0 0 auto}
+
+/* =========================================================
+   ALERT
+   ========================================================= */
+
+.alert-card{margin:16px 20px 0;padding:14px 16px;background:var(--amber-bg);border-radius:14px;display:flex;gap:12px;align-items:flex-start}
+.alert-card svg{flex:0 0 auto;margin-top:1px}
+.alert-card strong{font-size:14px;font-weight:700;letter-spacing:-.2px;color:var(--amber)}
+.alert-card p{margin-top:4px;font-size:13px;line-height:1.45;color:#92400e}
+.metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 20px 0}
+.metric-pill{background:var(--paper);border:1px solid var(--hairline);border-radius:14px;padding:12px}
+.metric-pill small{display:block;font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:-.1px}
+.metric-pill strong{display:block;margin-top:4px;font-size:18px;font-weight:700;letter-spacing:-.4px}
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.section-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 20px 0;
+}
+.section-head h3 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -.5px;
+}
+.section-head span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -.1px;
+}
+
+/* =========================================================
+   FEATURE CARDS
+   ========================================================= */
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px 20px 0;
+}
+
+.feature-card {
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-card);
+    padding: 18px 16px;
+    box-shadow: var(--shadow);
+    position: relative;
+    min-height: 140px;
+    transition: transform .3s var(--ease);
+}
+
+.feature-card:active {
+    transform: scale(.97);
+}
+
+.feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+.feature-icon.green { background: var(--accent-soft); }
+.feature-icon.orange { background: #fff4e6; }
+.feature-icon.blue { background: #e8f0fe; }
+.feature-icon.purple { background: #f0ecff; }
+
+.feature-card h4 {
+    font-size: 15.5px;
+    font-weight: 700;
+    letter-spacing: -.35px;
+}
+.feature-card p {
+    margin-top: 5px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--muted);
+    letter-spacing: -.1px;
+}
+.feature-arrow {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    color: var(--muted-2);
+}
+
+/* =========================================================
+   DIGITAL FARM CARD
+   ========================================================= */
+
+.farm-card{margin:16px 20px 0;background:var(--farm-dark);color:#fff;border-radius:var(--r-card);padding:18px;box-shadow:var(--shadow-deep)}
+.farm-card-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.farm-card-head span{font-size:12px;font-weight:600;letter-spacing:.5px;color:rgba(255,255,255,.5)}
+.farm-card-head .active{color:#4ade80}
+.farm-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.farm-grid small{display:block;font-size:11.5px;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:-.1px}
+.farm-grid strong{display:block;margin-top:4px;font-size:15px;font-weight:700;letter-spacing:-.3px}
+
+/* =========================================================
+   GENERIC CARD
+   ========================================================= */
+
+.card {
+    margin: 14px 20px 0;
+    padding: 18px;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-card);
+    box-shadow: var(--shadow);
+}
+.card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -.4px;
+}
+.card p {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    letter-spacing: -.15px;
+}
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 16px 20px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -.2px;
+}
+.back-btn:active { opacity: .6; }
+
+/* =========================================================
+   CAMERA SCAN
+   ========================================================= */
+
+.camera-box{height:240px;background:linear-gradient(180deg,#1a2a22,#0f1a14);border-radius:var(--r-card);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-top:14px}
+.camera-frame{width:72%;height:60%;border:2px solid rgba(74,222,128,.5);border-radius:16px;position:relative}
+
+.corner {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-color: white;
+}
+
+.c1 {
+    left: -2px;
+    top: -2px;
+    border-left: 3px solid;
+    border-top: 3px solid;
+}
+
+.c2 {
+    right: -2px;
+    top: -2px;
+    border-right: 3px solid;
+    border-top: 3px solid;
+}
+
+.c3 {
+    left: -2px;
+    bottom: -2px;
+    border-left: 3px solid;
+    border-bottom: 3px solid;
+}
+
+.c4 {
+    right: -2px;
+    bottom: -2px;
+    border-right: 3px solid;
+    border-bottom: 3px solid;
+}
+
+.camera-label{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);color:#fff;font-size:12px;font-weight:600;letter-spacing:-.1px;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:7px 14px;border-radius:var(--r-pill)}
+
+.btn-primary{width:100%;padding:14px;border-radius:14px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;letter-spacing:-.2px;transition:transform .3s var(--ease),opacity .3s var(--ease)}
+.btn-primary:active{transform:scale(.98);opacity:.9}
+.btn-secondary{width:100%;padding:14px;border-radius:14px;background:var(--bg);border:1.4px solid var(--hairline);color:var(--ink);font-size:15px;font-weight:700;letter-spacing:-.2px;transition:transform .3s var(--ease)}
+.btn-secondary:active{transform:scale(.98)}
+.btn-sm{flex:1;padding:11px;border-radius:12px;font-size:13px;font-weight:700;letter-spacing:-.1px;text-align:center}
+.btn-sm.primary{background:var(--accent);color:#fff}
+.btn-sm.secondary{background:var(--bg);color:var(--ink);border:1.4px solid var(--hairline)}
+
+/* =========================================================
+   RESULT
+   ========================================================= */
+
+.result {
+    display: none;
+    margin-top: 14px;
+}
+
+.result.show {
+    display: block;
+}
+
+.result-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.result-icon {
+    width: 48px;
+    height: 48px;
+    background: #e6f7ed;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+}
+
+.status {
+    padding: 7px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.status.warning {
+    background: #fff4d6;
+    color: #9b6d00;
+}
+
+.status.good {
+    background: #e2f7eb;
+    color: #08783d;
+}
+
+.status.danger {
+    background: #ffe6e6;
+    color: #bd2929;
+}
+
+/* =========================================================
+   NEARBY SERVICES
+   ========================================================= */
+
+.service-list{padding:12px 20px 0}
+.service-item{display:flex;align-items:center;gap:12px;padding:14px;background:var(--paper);border:1px solid var(--hairline);border-radius:14px;margin-bottom:8px}
+.service-icon{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.service-info{flex:1 1 auto;min-width:0}
+.service-info h4{font-size:14px;font-weight:700;letter-spacing:-.2px}
+.service-info p{margin-top:3px;font-size:12.5px;color:var(--muted);letter-spacing:-.1px}
+.service-info .distance{color:var(--accent);font-weight:600}
+.call-btn{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;flex:0 0 auto;transition:transform .3s var(--ease)}
+.call-btn:active{transform:scale(.9)}
+
+/* =========================================================
+   WHAT IF
+   ========================================================= */
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.input{width:100%;padding:12px 14px;border:1.4px solid var(--hairline);border-radius:12px;background:var(--bg);font-family:var(--font);font-size:14px;font-weight:500;color:var(--ink);outline:none;transition:border-color .2s var(--ease)}
+.input:focus{border-color:var(--accent)}
+.full{grid-column:span 2}
+
+
+
+.scenario{margin:0 20px;padding:16px;background:var(--paper);border:1.4px solid var(--hairline);border-radius:16px;margin-bottom:10px}
+.scenario.best{border-color:var(--accent);background:var(--accent-soft)}
+
+.scenario-head {
+    display: flex;
+    justify-content: space-between;
+}
+
+.scenario h4 {
+    font-size: 14px;
+}
+
+.risk-badge{font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;letter-spacing:.3px}
+.risk-badge.low{background:var(--success-bg);color:#166534}
+.risk-badge.medium{background:var(--amber-bg);color:#92400e}
+.risk-badge.high{background:var(--danger-bg);color:#991b1b}
+.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.metric-sm{background:var(--bg);padding:10px;border-radius:10px}
+.metric-sm small{display:block;font-size:11px;color:var(--muted);letter-spacing:-.1px}
+.metric-sm strong{display:block;margin-top:3px;font-size:14px;font-weight:700;letter-spacing:-.2px}
+
+
+
+.risk-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.timeline-step{background:var(--bg);border-radius:10px;padding:10px 6px;text-align:center}
+.timeline-step small{display:block;font-size:10px;color:var(--muted)}
+.timeline-step strong{display:block;font-size:11px;font-weight:700;margin-top:4px}
+
+.trace-card{background:var(--farm-dark);border-radius:14px;color:#fff;padding:14px;margin-top:12px}
+.trace-code{font-family:"SF Mono","Fira Code","Cascadia Code",monospace;letter-spacing:1px;color:#4ade80;font-size:12px}
+
+/* =========================================================
+   MARKET
+   ========================================================= */
+
+.market-item{margin:0 20px;padding:16px;background:var(--paper);border:1px solid var(--hairline);border-radius:16px;margin-bottom:8px;box-shadow:var(--shadow)}
+.market-top{display:flex;justify-content:space-between;align-items:center}
+.market-item h4{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.price{color:var(--accent);font-weight:700;font-size:16px;letter-spacing:-.3px}
+.market-item p{margin-top:5px;font-size:13px;color:var(--muted)}
+.market-actions{display:flex;gap:8px;margin-top:12px}
+
+/* =========================================================
+   AI GUIDE
+   ========================================================= */
+
+.ai-guide{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:406px;z-index:80}
+.ai-inner{background:var(--guide-bg);color:#fff;border-radius:20px;padding:12px 12px 12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 14px 40px -14px rgba(0,0,0,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.ai-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#4ade80,#16a34a);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ai-text{flex:1 1 auto;min-width:0}
+.ai-text strong{display:block;font-size:10.5px;font-weight:700;letter-spacing:.6px;color:#4ade80}
+.ai-text p{margin-top:2px;font-size:13px;line-height:1.35;color:rgba(255,255,255,.8);letter-spacing:-.1px}
+.mic-btn{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s var(--ease)}
+.mic-btn:active{transform:scale(.9)}
+.mic-btn.listening{background:var(--danger);animation:pulse 1.2s infinite}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(239,68,68,.6); }
+    70% { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
+    100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+}
+
+/* =========================================================
+   BOTTOM NAV
+   ========================================================= */
+
+.bottom-nav{flex:0 0 auto;position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--hairline);z-index:70}
+.nav-grid{display:grid;grid-template-columns:repeat(5,1fr);padding:10px 8px 6px}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0;color:var(--muted);transition:color .25s var(--ease)}
+.nav-item svg{display:block}
+.nav-item span{font-size:10.5px;font-weight:600;letter-spacing:-.15px}
+.nav-item.active{color:var(--accent)}
+.nav-item.active span{font-weight:700}
+.home-indicator{flex:0 0 28px;display:flex;align-items:center;justify-content:center;background:var(--paper)}
+.home-indicator i{display:block;width:138px;height:5px;border-radius:var(--r-pill);background:rgba(20,23,30,.85)}
+
+/* =========================================================
+   ONBOARDING
+   ========================================================= */
+
+.overlay{position:fixed;inset:0;background:rgba(10,15,13,.94);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+
+.overlay.hidden {
+    display: none;
+}
+
+.onboarding{width:100%;max-width:380px;background:var(--paper);border-radius:28px;padding:28px 24px;text-align:center;box-shadow:var(--shadow-deep)}
+
+.onboarding-logo{width:64px;height:64px;margin:0 auto;border-radius:18px;background:linear-gradient(135deg,#22a05d,var(--accent));color:#fff;display:flex;align-items:center;justify-content:center}
+
+.onboarding h2{margin-top:16px;font-size:24px;font-weight:800;letter-spacing:-.7px}
+.onboarding>p{margin-top:6px;font-size:15px;color:var(--muted);letter-spacing:-.2px}
+
+.voice-box{margin-top:22px;background:var(--accent-soft);border-radius:18px;padding:18px;min-height:100px;text-align:left}
+.voice-box strong{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.4px}
+.voice-box p{margin-top:10px;font-size:16px;line-height:1.45;letter-spacing:-.2px}
+
+.voice-button{width:70px;height:70px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;margin:22px auto 10px;transition:transform .3s var(--ease)}
+.voice-button:active{transform:scale(.92)}
+
+.skip-btn{margin-top:14px;font-size:13px;font-weight:600;color:var(--muted)}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-16px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:var(--r-pill);font-size:13px;font-weight:600;letter-spacing:-.15px;z-index:300;opacity:0;transition:.3s var(--ease);pointer-events:none;width:max-content;max-width:88%;box-shadow:var(--shadow-deep)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.loading{display:none;text-align:center;padding:16px;color:var(--accent);font-size:13px;font-weight:600;letter-spacing:-.1px}
+.loading.show{display:block}
+.spinner{display:inline-block;width:16px;height:16px;border:2.5px solid var(--accent-soft);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="statusbar"><div class="time">9:41</div><div class="glyphs"><svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 11.4 6.6 9.2a2.9 2.9 0 0 1 3.8 0l-1.9 2.2Z" fill="currentColor"/><path d="M12.6 6.6a6 6 0 0 0-8.2 0L3.1 5.2a7.9 7.9 0 0 1 10.8 0l-1.3 1.4Z" fill="currentColor"/><path d="M15.5 3.3a10.2 10.2 0 0 0-14 0L.2 1.9a12.1 12.1 0 0 1 16.6 0l-1.3 1.4Z" fill="currentColor"/></svg><svg width="26" height="13" viewBox="0 0 26 13" fill="none"><rect x=".6" y=".6" width="22" height="11.8" rx="3.4" fill="none" stroke="currentColor" stroke-opacity=".38" stroke-width="1.1"/><rect x="2.2" y="2.2" width="18.8" height="8.6" rx="2.2" fill="currentColor"/><path d="M24.2 4.5v4a2.1 2.1 0 0 0 0-4Z" fill="currentColor" fill-opacity=".42"/></svg></div></div>
+
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 18V10M10 10C10 6.5 13 3.5 16.5 3.5c0 3.5-3 6.5-6.5 6.5ZM10 13c0-2.2-1.8-4-4-4 0 2.2 1.8 4 4 4Z" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+            <h1>The Farmer Market</h1>
+            <p id="profileTag">Farmer &bull; Location</p>
+        </div>
+    </div>
+    <button class="profile-btn" onclick="showProfile()" aria-label="Profile"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 19.5a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+</header>
+
+
+<main class="content">
+
+<!-- =====================================================
+     HOME
+     ===================================================== -->
+
+<section id="home" class="page active">
+
+    <div class="greet">
+        <h2>Good morning,<br><span id="welcomeName">Ramayya</span> 👋</h2>
+        <p>Your AI farming companion is <b>ready to guide you</b> today.</p>
+    </div>
+
+    <div class="chips-row">
+        <div class="chip"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#dc2626" stroke-width="1.4"/><path d="M8 5v3.5" stroke="#dc2626" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r=".8" fill="#dc2626"/></svg><span id="weatherTemperature">31</span>&thinsp;°C</div>
+        <div class="chip"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C5 7 3 9 3 11.5a5 5 0 0 0 10 0C13 9 11 7 8 2Z" stroke="#3b82f6" stroke-width="1.4" stroke-linejoin="round"/></svg><span id="weatherHumidity">62</span>% Humidity</div>
+        <div class="chip"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14.5c3.5-3.5 5.5-5.8 5.5-8a5.5 5.5 0 0 0-11 0c0 2.2 2 4.5 5.5 8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="6.5" r="1.8" stroke="currentColor" stroke-width="1.4"/></svg><span id="weatherLocation">Kurabalakota</span></div>
+    </div>
+
+
+    <div class="alert-card"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2.5 18.5 17H1.5L10 2.5Z" fill="#fbbf24"/><path d="M10 8v4" stroke="#92400e" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14.5" r=".8" fill="#92400e"/></svg><div><strong>AI Farm Alert</strong><p id="farmAlertMessage">High heat may increase tomato spoilage. Your AI guide recommends checking your harvested batch today.</p></div></div>
+
+    <div class="metrics-row">
+        <div class="metric-pill"><small>Tracked batches</small><strong id="dashboardBatches">0</strong></div>
+        <div class="metric-pill"><small>Good quality</small><strong id="dashboardGood">--</strong></div>
+        <div class="metric-pill"><small>Quick sale</small><strong id="dashboardQuickSale">0</strong></div>
+    </div>
+
+
+    <div class="card">
+
+        <h3>📷 Scan harvested fruit</h3>
+
+        <p>
+            Upload a clear fruit photo to estimate visible quality,
+            remaining shelf life and spoilage risk.
+        </p>
+
+        <div class="form-grid" style="margin-top:12px;">
+            <select id="scanFruitInput" class="input">
+                <option>Tomato</option>
+                <option>Mango</option>
+                <option>Banana</option>
+                <option>Chilli</option>
+            </select>
+
+            <input id="fruitPhotoInput" class="input" type="file" accept="image/*">
+
+            <input id="scanQuantityInput" class="input full" type="number" min="1" value="500" placeholder="Batch quantity (kg)">
+        </div>
+
+        <button class="btn-primary" style="margin-top:12px;" onclick="runFruitAssessment()">Analyze Fruit Quality</button>
+
+        <div id="fruitAssessmentLoading" class="loading">
+            <span class="spinner"></span>
+            Combining image, farm and storage signals...
+        </div>
+
+        <div id="fruitAssessmentResult" class="hidden" style="margin-top:14px;">
+            <div class="metrics-grid" style="margin:0;">
+                <div class="metric-sm"><small>Quality</small><strong id="scanQuality">--</strong></div>
+                <div class="metric-sm"><small>Shelf life</small><strong id="scanShelfLife">--</strong></div>
+                <div class="metric-sm"><small>Risk</small><strong id="scanRisk">--</strong></div>
+            </div>
+            <p id="scanRecommendation" style="margin-top:12px;color:#166534;font-size:14px;line-height:1.5;"></p>
+            <div id="riskTimeline" class="risk-timeline"></div>
+            <button id="saveAssessmentButton" class="btn-primary" style="margin-top:14px;" onclick="saveAssessmentBatch()">Save as tracked batch</button>
+            <div id="savedBatchTrace" class="hidden trace-card"></div>
+        </div>
+
+    </div>
+
+
+    <div class="section-head">
+        <h3>What do you need today?</h3>
+        <span>AI Guided</span>
+    </div>
+
+
+    <div class="feature-grid">
+
+        <div class="feature-card"
+             onclick="openPage('farm')">
+
+            <div class="feature-icon green">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3v16M11 3C8.8 5.8 6 7.5 3 8c.5 3.5 3 5.5 8 5.5M11 3c2.2 2.8 5 4.5 8 5-.5 3.5-3 5.5-8 5.5" stroke="#1a7a52" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+
+            <h4>Farm Conditions</h4>
+
+            <p>
+                Check vegetation, water and temperature stress.
+            </p>
+
+            <span class="feature-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+
+        </div>
+
+
+        <div class="feature-card"
+             onclick="openPage('batches')">
+
+            <div class="feature-icon orange">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 17V7l7-4 7 4v10l-7 4-7-4Z" stroke="#d97706" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7l7 4 7-4M11 11v10" stroke="#d97706" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </div>
+
+            <h4>My Predictions</h4>
+
+            <p>
+                Review batches that need sale, storage or processing.
+            </p>
+
+            <span class="feature-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+
+        </div>
+
+
+        <div class="feature-card"
+             onclick="openPage('smartmove')">
+
+            <div class="feature-icon blue">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="7" width="13" height="9" rx="2" stroke="#2563eb" stroke-width="1.6"/><path d="M15 10h3l2 3v3h-5v-6Z" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><circle cx="7" cy="17.5" r="1.8" stroke="#2563eb" stroke-width="1.6"/><circle cx="17.5" cy="17.5" r="1.8" stroke="#2563eb" stroke-width="1.6"/></svg>
+            </div>
+
+            <h4>Smart-Move</h4>
+
+            <p>
+                Ask: What happens if I sell, store or transport?
+            </p>
+
+            <span class="feature-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+
+        </div>
+
+
+        <div class="feature-card"
+             onclick="openPage('market')">
+
+            <div class="feature-icon purple">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 8.5h16l-1.5 9.5H4.5L3 8.5Z" stroke="#7c3aed" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 8.5V5.5a4 4 0 0 1 8 0v3" stroke="#7c3aed" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </div>
+
+            <h4>Direct Market</h4>
+
+            <p>
+                Find buyers, markets, transport and agri services.
+            </p>
+
+            <span class="feature-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+
+        </div>
+
+    </div>
+
+
+    <!-- DIGITAL FARM CARD -->
+
+    <div class="farm-card">
+        <div class="farm-card-head">
+            <span>🌾 DIGITAL FARM CARD</span>
+            <span class="active">● ACTIVE</span>
+        </div>
+        <div class="farm-grid">
+            <div><small>Farmer</small><strong id="cardName">Ramayya</strong></div>
+            <div><small>Location</small><strong id="cardLocation">Kurabalakota</strong></div>
+            <div><small>Soil Status</small><strong id="cardSoil">Needs testing</strong></div>
+            <div><small>Last Activity</small><strong id="cardActivity">App opened</strong></div>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PEST DOCTOR
+     ===================================================== -->
+
+<section id="pest" class="page">
+
+    <button class="back-btn" onclick="openPage('home')">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4 6 9l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </button>
+
+    <h2 class="page-title">Pest Doctor</h2>
+
+    <p class="page-subtitle">
+        Point your camera at a damaged leaf, fruit or insect.
+        The AI will identify the possible problem and guide you.
+    </p>
+
+
+    <div class="card">
+
+        <h3>Scan your crop</h3>
+
+        <p>
+            No typing required. Take a clear picture of the affected area.
+        </p>
+
+        <div class="camera-box">
+
+            <div class="camera-frame">
+
+                <div class="corner c1"></div>
+                <div class="corner c2"></div>
+                <div class="corner c3"></div>
+                <div class="corner c4"></div>
+
+            </div>
+
+            <div class="camera-label">
+                📷 Camera ready
+            </div>
+
+        </div>
+
+        <button class="btn-primary" style="margin-top:12px;" onclick="runPestScan()">📷 Scan Pest / Crop Damage</button>
+
+        <div id="pestLoading" class="loading">
+            <span class="spinner"></span>
+            AI is analyzing the crop...
+        </div>
+
+    </div>
+
+
+    <div id="pestResult" class="result">
+
+        <div class="card">
+
+            <div class="result-head">
+
+                <div class="result-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1a7a52" stroke-width="1.8"/><path d="M9 9c0-1.1.9-2 2-2s2 .9 2 2c0 1.5-2 2-2 3M12 16v.5" stroke="#1a7a52" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </div>
+
+                <div>
+                    <small style="color:var(--muted);font-size:12px;">
+                        Possible AI diagnosis
+                    </small>
+
+                    <h3 style="margin:2px 0;font-size:18px;">
+                        Fruit Borer
+                    </h3>
+                </div>
+
+            </div>
+
+            <div class="status-badge warning">
+                ⚠️ Medium Risk — Immediate attention recommended
+            </div>
+
+            <p style="margin-top:12px;">
+                The AI detected symptoms that may be consistent
+                with fruit borer damage.
+            </p>
+
+            <div style="background:var(--accent-soft);border-radius:14px;padding:14px;margin-top:12px;">
+                <strong style="font-size:13px;">Recommended next step</strong>
+                <p style="margin-top:5px;font-size:13px;">
+                    Confirm the diagnosis with a qualified local
+                    agricultural expert before applying any treatment.
+                </p>
+            </div>
+
+        </div>            <div class="section-head">
+            <h3>Nearby agricultural services</h3>
+            <span>Based on location</span>
+        </div>
+
+
+        <div class="service-list">
+
+            <div class="service">
+
+                <div class="service-icon">🏪</div>
+
+                <div class="service-info">
+
+                    <h4>Venkateswara Agri Center</h4>
+
+                    <p>
+                        Agri-input dealer • ⭐ 4.7
+                    </p>
+
+                    <p class="distance">
+                        📍 0.8 km away
+                    </p>
+
+                </div>
+
+                <button class="call-btn" onclick="callService('Venkateswara Agri Center')">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16.5 12.6v2.4a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.1-1.8A11.7 11.7 0 0 1 5 10.2a11.9 11.9 0 0 1-1.8-5.1A1.2 1.2 0 0 1 4.4 3.8h2.4a1.2 1.2 0 0 1 1.2 1c.2 1 .5 2 .9 2.9a1.2 1.2 0 0 1-.3 1.3L7 10.2a9.6 9.6 0 0 0 3.8 3.8l1.2-1.2a1.2 1.2 0 0 1 1.3-.3c.9.4 1.9.7 2.9.9a1.2 1.2 0 0 1 1 1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+            </div>
+
+
+            <div class="service">
+
+                <div class="service-icon">🌱</div>
+
+                <div class="service-info">
+
+                    <h4>Sri Balaji Hybrid Nursery</h4>
+
+                    <p>
+                        Verified nursery • ⭐ 4.8
+                    </p>
+
+                    <p class="distance">
+                        📍 2.1 km away
+                    </p>
+
+                </div>
+
+                <button class="call-btn" onclick="callService('Sri Balaji Hybrid Nursery')">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16.5 12.6v2.4a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.1-1.8A11.7 11.7 0 0 1 5 10.2a11.9 11.9 0 0 1-1.8-5.1A1.2 1.2 0 0 1 4.4 3.8h2.4a1.2 1.2 0 0 1 1.2 1c.2 1 .5 2 .9 2.9a1.2 1.2 0 0 1-.3 1.3L7 10.2a9.6 9.6 0 0 0 3.8 3.8l1.2-1.2a1.2 1.2 0 0 1 1.3-.3c.9.4 1.9.7 2.9.9a1.2 1.2 0 0 1 1 1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+            </div>
+
+
+            <div class="service">
+
+                <div class="service-icon">👨‍🌾</div>
+
+                <div class="service-info">
+
+                    <h4>Local Agriculture Expert</h4>
+
+                    <p>
+                        Crop consultation
+                    </p>
+
+                    <p class="distance">
+                        📍 3.4 km away
+                    </p>
+
+                </div>
+
+                <button class="call-btn" onclick="callService('Local Agriculture Expert')">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16.5 12.6v2.4a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.1-1.8A11.7 11.7 0 0 1 5 10.2a11.9 11.9 0 0 1-1.8-5.1A1.2 1.2 0 0 1 4.4 3.8h2.4a1.2 1.2 0 0 1 1.2 1c.2 1 .5 2 .9 2.9a1.2 1.2 0 0 1-.3 1.3L7 10.2a9.6 9.6 0 0 0 3.8 3.8l1.2-1.2a1.2 1.2 0 0 1 1.3-.3c.9.4 1.9.7 2.9.9a1.2 1.2 0 0 1 1 1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SOIL TEST
+     ===================================================== -->
+
+<section id="soil" class="page">
+
+    <button class="back-btn" onclick="openPage('home')">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4 6 9l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </button>
+
+    <h2 class="page-title">Soil Test</h2>
+
+    <p class="page-subtitle">
+        Take a picture of your soil test report.
+        The AI will read the values and explain what they mean.
+    </p>
+
+
+    <div class="card">
+
+        <h3>Scan Soil Report</h3>
+
+        <p>
+            Place the complete report inside the camera frame.
+        </p>
+
+        <div class="camera-box">
+
+            <div class="camera-frame"
+                 style="height:72%;">
+
+                <div class="corner c1"></div>
+                <div class="corner c2"></div>
+                <div class="corner c3"></div>
+                <div class="corner c4"></div>
+
+                <div style="
+                    position:absolute;
+                    inset:15%;
+                    background:white;
+                    border-radius:5px;
+                    opacity:.9;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    color:#333;
+                    font-size:10px;">
+                    SOIL HEALTH REPORT
+                </div>
+
+            </div>
+
+            <div class="camera-label">
+                📄 Align report inside frame
+            </div>
+
+        </div>
+
+
+        <button class="btn-primary" style="margin-top:12px;" onclick="runSoilScan()">📷 Scan Soil Report</button>
+
+        <div id="soilLoading" class="loading">
+            <span class="spinner"></span>
+            Reading soil report...
+        </div>
+
+    </div>
+
+
+    <div id="soilResult" class="result">
+
+        <div class="card">
+
+            <div class="result-head">
+
+                <div class="result-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 3h6v4l3 8H6l3-8V3Z" stroke="#1a7a52" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 15h12" stroke="#1a7a52" stroke-width="1.8"/></svg>
+                </div>
+
+                <div>
+                    <small style="color:var(--muted);font-size:12px;">
+                        AI Soil Summary
+                    </small>
+
+                    <h3 style="margin:2px 0;font-size:18px;">
+                        Needs Attention
+                    </h3>
+                </div>
+
+            </div>
+
+            <div class="metrics-grid" style="margin-top:14px;">
+                <div class="metric-sm"><small>pH</small><strong>6.2</strong></div>
+                <div class="metric-sm"><small>Nitrogen</small><strong style="color:var(--amber);">Low</strong></div>
+                <div class="metric-sm"><small>Phosphorus</small><strong>Medium</strong></div>
+            </div>
+
+            <div class="status-badge warning" style="margin-top:12px;">
+                ⚠️ Nitrogen may need attention
+            </div>
+
+            <p style="margin-top:12px;">
+                Your AI guide can explain this report in simple
+                language and help you find a nearby soil testing
+                service.
+            </p>
+
+        </div>
+
+
+        <div class="section-head">
+            <h3>Nearby soil services</h3>
+            <span>Nearest first</span>
+        </div>
+
+
+        <div class="service-list">
+
+            <div class="service">
+
+                <div class="service-icon">🧪</div>
+
+                <div class="service-info">
+
+                    <h4>Government Soil Testing Lab</h4>
+
+                    <p>Soil testing • Verified</p>
+
+                    <p class="distance">
+                        📍 1.4 km away
+                    </p>
+
+                </div>
+
+                <button class="call-btn" onclick="callService('Government Soil Testing Lab')">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16.5 12.6v2.4a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.1-1.8A11.7 11.7 0 0 1 5 10.2a11.9 11.9 0 0 1-1.8-5.1A1.2 1.2 0 0 1 4.4 3.8h2.4a1.2 1.2 0 0 1 1.2 1c.2 1 .5 2 .9 2.9a1.2 1.2 0 0 1-.3 1.3L7 10.2a9.6 9.6 0 0 0 3.8 3.8l1.2-1.2a1.2 1.2 0 0 1 1.3-.3c.9.4 1.9.7 2.9.9a1.2 1.2 0 0 1 1 1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+            </div>
+
+
+            <div class="service">
+
+                <div class="service-icon">🔬</div>
+
+                <div class="service-info">
+
+                    <h4>Krishi Soil Diagnostics</h4>
+
+                    <p>Private soil testing</p>
+
+                    <p class="distance">
+                        📍 3.2 km away
+                    </p>
+
+                </div>
+
+                <button class="call-btn" onclick="callService('Krishi Soil Diagnostics')">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16.5 12.6v2.4a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.1-1.8A11.7 11.7 0 0 1 5 10.2a11.9 11.9 0 0 1-1.8-5.1A1.2 1.2 0 0 1 4.4 3.8h2.4a1.2 1.2 0 0 1 1.2 1c.2 1 .5 2 .9 2.9a1.2 1.2 0 0 1-.3 1.3L7 10.2a9.6 9.6 0 0 0 3.8 3.8l1.2-1.2a1.2 1.2 0 0 1 1.3-.3c.9.4 1.9.7 2.9.9a1.2 1.2 0 0 1 1 1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+            </div>
+
+
+            <div class="service">
+
+                <div class="service-icon">🌱</div>
+
+                <div class="service-info">
+
+                    <h4>Agri Advisory Center</h4>
+
+                    <p>Soil + crop consultation</p>
+
+                    <p class="distance">
+                        📍 4.7 km away
+                    </p>
+
+                </div>
+
+                <button class="call-btn" onclick="callService('Agri Advisory Center')">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16.5 12.6v2.4a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.1-1.8A11.7 11.7 0 0 1 5 10.2a11.9 11.9 0 0 1-1.8-5.1A1.2 1.2 0 0 1 4.4 3.8h2.4a1.2 1.2 0 0 1 1.2 1c.2 1 .5 2 .9 2.9a1.2 1.2 0 0 1-.3 1.3L7 10.2a9.6 9.6 0 0 0 3.8 3.8l1.2-1.2a1.2 1.2 0 0 1 1.3-.3c.9.4 1.9.7 2.9.9a1.2 1.2 0 0 1 1 1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FARM CONDITIONS
+     ===================================================== -->
+
+<section id="farm" class="page">
+    <button class="back-btn" onclick="openPage('home')">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4 6 9l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </button>
+    <h2 class="page-title">Farm Conditions</h2>
+    <p class="page-subtitle">Environmental context helps plan harvest and post-harvest decisions. It does not diagnose individual fruit.</p>
+
+    <div class="card">
+        <h3>Farm context</h3>
+        <p>Update these values from field observation or a remote-sensing provider.</p>
+        <div class="batch-form" style="margin-top:12px;">
+            <input id="farmNdviInput" class="input" type="number" min="0" max="1" step="0.01" value="0.71" placeholder="NDVI (0–1)">
+            <input id="farmWaterStressInput" class="input" type="number" min="0" max="100" value="25" placeholder="Water stress %">
+            <input id="farmTemperatureStressInput" class="input full" type="number" min="0" max="100" value="30" placeholder="Temperature stress %">
+        </div>
+        <button class="btn-primary" style="margin-top:12px;" onclick="loadFarmConditions()">Check farm health</button>
+    </div>
+
+    <div id="farmConditionsResult" class="hidden">
+        <div class="card" style="background:var(--accent-soft);border-color:#b9e2c7;">
+            <h3 id="farmVegetation">Vegetation: --</h3>
+            <div class="metrics-grid" style="margin-top:12px;">
+                <div class="metric-sm"><small>NDVI</small><strong id="farmNdvi">--</strong></div>
+                <div class="metric-sm"><small>Water stress</small><strong id="farmWaterStress">--</strong></div>
+                <div class="metric-sm"><small>Heat stress</small><strong id="farmHeatStress">--</strong></div>
+            </div>
+            <p id="farmRecommendation" style="margin-top:12px;color:#166534;font-size:14px;line-height:1.5;"></p>
+        </div>
+    </div>
+</section>
+
+<!-- =====================================================
+     SMART MOVE
+     ===================================================== -->
+
+<section id="smartmove" class="page">
+
+    <button class="back-btn" onclick="openPage('home')">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4 6 9l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </button>
+
+    <h2 class="page-title">Smart-Move</h2>
+
+    <p class="page-subtitle">
+        Don't just ask "Will my crop spoil?"
+        Ask the AI: <strong>"Which future is best?"</strong>
+    </p>
+
+
+    <div class="card">
+
+        <h3>Create Crop Batch</h3>
+
+        <p>
+            Enter your harvested crop details.
+        </p>
+
+        <div class="batch-form"
+             style="margin-top:13px;">
+
+            <div>
+                <small>Crop</small>
+
+                <select id="cropInput"
+                        class="input">
+                    <option>Tomato</option>
+                    <option>Chilli</option>
+                    <option>Mango</option>
+                    <option>Banana</option>
+                </select>
+            </div>
+
+
+            <div>
+                <small>Quantity (kg)</small>
+
+                <input id="quantityInput"
+                       class="input"
+                       type="number"
+                       value="500">
+            </div>
+
+
+            <div>
+                <small>Current quality</small>
+
+                <select id="qualityInput"
+                        class="input">
+                    <option value="90">Excellent</option>
+                    <option value="75" selected>Good</option>
+                    <option value="60">Average</option>
+                    <option value="45">Poor</option>
+                </select>
+            </div>
+
+
+            <div>
+                <small>Harvest age</small>
+
+                <select id="ageInput"
+                        class="input">
+                    <option value="6">6 hours</option>
+                    <option value="12">12 hours</option>
+                    <option value="24" selected>24 hours</option>
+                    <option value="36">36 hours</option>
+                </select>
+            </div>
+
+        </div>
+
+
+        <button class="btn-primary" style="margin-top:14px;" onclick="runSimulation()">✨ Simulate My Best Future</button>
+
+        <div id="simulationLoading"
+             class="loading">
+            <span class="spinner"></span>
+            AI is comparing possible futures...
+        </div>
+
+    </div>
+
+
+        <div class="card">
+
+            <h3>📦 Check storage conditions</h3>
+
+            <p>Check whether the current temperature and humidity are safe for this batch.</p>
+
+            <div class="batch-form" style="margin-top:12px;">
+                <input id="storageTemperature" class="input" type="number" value="28" placeholder="Temperature °C">
+                <input id="storageHumidity" class="input" type="number" value="70" placeholder="Humidity %">
+            </div>
+
+            <button class="btn-secondary" style="width:100%;margin-top:12px;" onclick="checkStorageConditions()">Check Storage</button>
+
+            <p id="storageResult" style="margin-top:10px;color:#166534;font-size:14px;line-height:1.5;"></p>
+
+        </div>
+
+
+    <div id="simulationResults"
+         class="hidden">
+
+        <div class="section-head">
+
+            <h3>Possible Futures</h3>
+
+            <span id="bestOptionLabel">
+                AI recommendation
+            </span>
+
+        </div>
+
+
+        <div id="scenarioA"
+             class="scenario">
+
+            <div class="scenario-head">
+
+                <h4>🏪 Local Market</h4>
+
+                <span class="risk-badge low" id="riskA">LOW RISK</span>
+
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-sm"><small>Time</small><strong id="timeA">2h</strong></div>
+                <div class="metric-sm"><small>Spoilage</small><strong id="spoilA">5%</strong></div>
+                <div class="metric-sm"><small>Net Value</small><strong id="valueA">₹0</strong></div>
+            </div>
+
+        </div>
+
+
+        <div id="scenarioB"
+             class="scenario">
+
+            <div class="scenario-head">
+
+                <h4>🏙️ City Market</h4>
+
+                <span class="risk-badge medium" id="riskB">MEDIUM</span>
+
+            </div>
+
+            <div class="metrics">
+
+                <div class="metric">
+                    <small>Time</small>
+                    <strong id="timeB">7h</strong>
+                </div>
+
+                <div class="metric">
+                    <small>Spoilage</small>
+                    <strong id="spoilB">15%</strong>
+                </div>
+
+                <div class="metric">
+                    <small>Net Value</small>
+                    <strong id="valueB">₹0</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="scenarioC"
+             class="scenario">
+
+            <div class="scenario-head">
+
+                <h4>❄️ Overnight Storage</h4>
+
+                <span class="risk-badge high" id="riskC">HIGH</span>
+
+            </div>
+
+            <div class="metrics">
+
+                <div class="metric">
+                    <small>Time</small>
+                    <strong id="timeC">18h</strong>
+                </div>
+
+                <div class="metric">
+                    <small>Spoilage</small>
+                    <strong id="spoilC">25%</strong>
+                </div>
+
+                <div class="metric">
+                    <small>Net Value</small>
+                    <strong id="valueC">₹0</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card" style="background:var(--accent-soft);border-color:#b9e2c7;">
+            <strong style="font-size:14px;">🤖 AI Recommendation</strong>
+            <p id="recommendation" style="margin-top:8px;color:#166534;font-size:14px;line-height:1.5;">Calculating...</p>
+            <p id="batchReference" style="margin-top:7px;color:var(--muted);font-size:12px;"></p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     MY PREDICTIONS
+     ===================================================== -->
+
+<section id="batches" class="page">
+    <button class="back-btn" onclick="openPage('home')">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4 6 9l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </button>
+    <h2 class="page-title">My Predictions</h2>
+    <p class="page-subtitle">Prioritize the batches that have the shortest remaining shelf life or highest deterioration risk.</p>
+    <div id="trackedBatches" class="service-list">
+        <div class="card"><p>Loading tracked batches...</p></div>
+    </div>
+</section>
+
+<!-- =====================================================
+     MARKET
+     ===================================================== -->
+
+<section id="market" class="page">
+
+    <button class="back-btn" onclick="openPage('home')">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4 6 9l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </button>
+
+    <h2 class="page-title">Direct Market</h2>
+
+    <p class="page-subtitle">
+        Find possible buyers, markets, transport partners
+        and other services around you.
+    </p>
+
+    <div id="marketInsights" class="card">
+        <h3>Live market intelligence</h3>
+        <p>Loading market options...</p>
+    </div>
+
+
+    <div class="section-head">
+        <h3>Nearby selling options</h3>
+        <span>Location matched</span>
+    </div>
+
+
+    <div class="market-item">
+
+        <div class="market-top">
+
+            <h4>🏪 Local Mandi</h4>
+
+            <span class="price">
+                ₹28/kg
+            </span>
+
+        </div>
+
+        <p>
+            📍 2.3 km • Estimated travel: 25 min
+        </p>
+
+        <div class="market-actions">
+            <button class="btn-sm primary" onclick="contactMarket('Local Mandi')">Contact</button>
+            <button class="btn-sm secondary" onclick="showToast('Opening route...')">Directions</button>
+        </div>
+
+    </div>
+
+
+    <div class="market-item">
+
+        <div class="market-top">
+
+            <h4>🏭 Tomato Processing Unit</h4>
+
+            <span class="price">
+                ₹25/kg
+            </span>
+
+        </div>
+
+        <p>
+            📍 12 km • Bulk buyer • Minimum 300 kg
+        </p>
+
+        <div class="market-actions">
+            <button class="btn-sm primary" onclick="contactMarket('Tomato Processing Unit')">Contact Buyer</button>
+            <button class="btn-sm secondary" onclick="showToast('Buyer profile opened')">View</button>
+        </div>
+
+    </div>
+
+
+    <div class="market-item">
+
+        <div class="market-top">
+
+            <h4>🚛 Shared Farmer Transport</h4>
+
+            <span class="price">
+                Save 30%
+            </span>
+
+        </div>
+
+        <p>
+            3 nearby farmers are transporting crops today.
+        </p>
+
+        <div class="market-actions">
+            <button class="btn-sm primary" onclick="showToast('Searching shared transport...')">Join Vehicle</button>
+            <button class="btn-sm secondary" onclick="showToast('Transport details opened')">Details</button>
+        </div>
+
+    </div>
+
+
+    <div class="section-head">
+        <h3>Other farmer services</h3>
+    </div>
+
+
+    <div class="service">
+        <div class="service-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v14M10 3c-2 2-4.5 3.5-7 4 .5 3 2.5 5 7 5.5M10 3c2 2 4.5 3.5 7 4-.5 3-2.5 5-7 5.5" stroke="#1a7a52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="service-info">
+            <h4>Verified Nursery</h4>
+            <p>Seedlings and crop planting material</p>
+            <p class="distance">📍 2.1 km</p>
+        </div>
+        <button class="call-btn" onclick="callService('Verified Nursery')">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16.5 12.6v2.4a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.1-1.8A11.7 11.7 0 0 1 5 10.2a11.9 11.9 0 0 1-1.8-5.1A1.2 1.2 0 0 1 4.4 3.8h2.4a1.2 1.2 0 0 1 1.2 1c.2 1 .5 2 .9 2.9a1.2 1.2 0 0 1-.3 1.3L7 10.2a9.6 9.6 0 0 0 3.8 3.8l1.2-1.2a1.2 1.2 0 0 1 1.3-.3c.9.4 1.9.7 2.9.9a1.2 1.2 0 0 1 1 1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+    </div>
+
+    <div class="service">
+        <div class="service-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="8" width="16" height="8" rx="2" stroke="#1a7a52" stroke-width="1.5"/><circle cx="6" cy="16" r="2" stroke="#1a7a52" stroke-width="1.5"/><circle cx="14" cy="16" r="2" stroke="#1a7a52" stroke-width="1.5"/><path d="M14 8V5h3l2 3" stroke="#1a7a52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="service-info">
+            <h4>Farm Equipment Rental</h4>
+            <p>Tractor and equipment services</p>
+            <p class="distance">📍 4.2 km</p>
+        </div>
+        <button class="call-btn" onclick="callService('Farm Equipment Rental')">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16.5 12.6v2.4a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.1-1.8A11.7 11.7 0 0 1 5 10.2a11.9 11.9 0 0 1-1.8-5.1A1.2 1.2 0 0 1 4.4 3.8h2.4a1.2 1.2 0 0 1 1.2 1c.2 1 .5 2 .9 2.9a1.2 1.2 0 0 1-.3 1.3L7 10.2a9.6 9.6 0 0 0 3.8 3.8l1.2-1.2a1.2 1.2 0 0 1 1.3-.3c.9.4 1.9.7 2.9.9a1.2 1.2 0 0 1 1 1.2Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     AI GUIDE
+     ===================================================== -->
+
+<div class="ai-guide">
+    <div class="ai-inner">
+        <div class="ai-avatar">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="8" r="3" stroke="#fff" stroke-width="1.5"/><path d="M4 17a6 6 0 0 1 12 0" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="7.5" r=".8" fill="#fff"/><circle cx="13" cy="7.5" r=".8" fill="#fff"/></svg>
+        </div>
+        <div class="ai-text">
+            <strong>AI FARM GUIDE</strong>
+            <p id="aiMessage">Hi Ramayya! I am your farming guide. Ask me anything.</p>
+        </div>
+        <button id="micButton" class="mic-btn" onclick="startVoiceGuide()" aria-label="Voice">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="6" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 8.5a5.5 5.5 0 0 0 11 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 14v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+    </div>
+</div>
+
+
+<!-- =====================================================
+     BOTTOM NAVIGATION
+     ===================================================== -->
+
+<nav class="bottom-nav">
+    <div class="nav-grid">
+        <button class="nav-item active" id="nav-home" onclick="openPage('home')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V10.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21V14h6v7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            <span>Home</span>
+        </button>
+        <button class="nav-item" id="nav-farm" onclick="openPage('farm')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M12 3C9.5 6 6.5 8 3 8.5.5 12 3 14.5 12 15M12 3c2.5 3 5.5 5 9 .5-2.5 3.5-5 6-9 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Farm</span>
+        </button>
+        <button class="nav-item" id="nav-smartmove" onclick="openPage('smartmove')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="8" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M16 11h4l2 3v4h-6v-7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7" cy="19.5" r="2" stroke="currentColor" stroke-width="1.8"/><circle cx="19" cy="19.5" r="2" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span>Smart-Move</span>
+        </button>
+        <button class="nav-item" id="nav-batches" onclick="openPage('batches')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 18V8l8-5 8 5v10l-8 5-8-5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 8l8 5 8-5M12 13v10" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            <span>Batches</span>
+        </button>
+        <button class="nav-item" id="nav-market" onclick="openPage('market')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 9h18l-1.5 11H4.5L3 9Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9V6a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>Market</span>
+        </button>
+    </div>
+    <div class="home-indicator"><i></i></div>
+</nav>
+
+
+<!-- =====================================================
+     ONBOARDING
+     ===================================================== -->
+
+<div id="onboarding"
+     class="overlay">
+
+    <div class="onboarding">
+
+        <div class="onboarding-logo">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M15 28V14M15 14C11.5 9 7 6 2 6.5 1 11 4 15 15 16M15 14c3.5 5 8 7 13 2.5-4 5-8 8.5-13 9.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <h2>The Farmer Market</h2>
+
+        <p>
+            Your personal AI farming companion
+        </p>
+
+        <div class="voice-box">
+            <strong>🤖 AI FARM GUIDE</strong>
+            <p id="onboardingText">
+                Hello! Welcome to The Farmer Market.
+                What is your name?
+            </p>
+        </div>
+
+        <button class="voice-button" onclick="nextOnboarding()" aria-label="Speak">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="9" y="3" width="8" height="12" rx="4" stroke="#fff" stroke-width="2"/><path d="M5 12a8 8 0 0 0 16 0" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M13 20v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+
+        <small>
+            Tap the microphone and answer naturally.
+        </small>
+
+        <br>
+
+        <button class="skip-btn" onclick="finishOnboarding()">
+            Skip demo
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div id="toast"
+     class="toast">
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   FARMER STATE
+   ========================================================= */
+
+const farmerProfile = {
+
+    name: "Ramayya",
+
+    location: "Kurabalakota",
+
+    crop: "Tomato",
+
+    soilStatus: "Needs testing",
+
+    lastActivity: "App opened",
+
+    quantity: 500
+
+};
+
+
+/* =========================================================
+   PAGE NAVIGATION
+   ========================================================= */
+
+function openPage(page) {
+
+    document.querySelectorAll(".page")
+        .forEach(p => p.classList.remove("active"));
+
+    const target = document.getElementById(page);
+
+    if (target) {
+        target.classList.add("active");
+    }
+
+
+    document.querySelectorAll(".nav-item")
+        .forEach(n => n.classList.remove("active"));
+
+    const nav = document.getElementById("nav-" + page);
+
+    if (nav) {
+        nav.classList.add("active");
+    }
+
+
+    farmerProfile.lastActivity =
+        page + " section opened";
+
+    updateProfile();
+
+
+    updateAIMessage(page);
+
+    if (page === "market") {
+        loadMarketInsights();
+    }
+
+    if (page === "farm") {
+        loadFarmConditions();
+    }
+
+    if (page === "batches") {
+        loadTrackedBatches();
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   PROFILE UPDATE
+   ========================================================= */
+
+function updateProfile() {
+
+    document.getElementById("profileTag").innerText =
+        farmerProfile.name + " • " +
+        farmerProfile.location;
+
+    document.getElementById("welcomeName").innerText =
+        farmerProfile.name;
+
+    document.getElementById("cardName").innerText =
+        farmerProfile.name;
+
+    document.getElementById("cardLocation").innerText =
+        farmerProfile.location;
+
+    document.getElementById("cardSoil").innerText =
+        farmerProfile.soilStatus;
+
+    document.getElementById("cardActivity").innerText =
+        farmerProfile.lastActivity;
+
+}
+
+
+/* =========================================================
+   AI GUIDE MESSAGE
+   ========================================================= */
+
+function updateAIMessage(page) {
+
+    const messages = {
+
+        home:
+        "I am here with you. You can scan a pest, check your soil, decide where to sell, or ask me anything.",
+
+        pest:
+        "Show me the affected leaf or fruit. I will help identify the possible problem and find relevant nearby services.",
+
+        farm:
+        "I use farm health and weather as context for harvest planning. These signals do not diagnose individual fruit.",
+
+        batches:
+        "These batches are ranked by deterioration risk so you can decide which crop needs action first.",
+
+        soil:
+        "Take a clear picture of your soil report. I will explain the numbers in simple language and help you find a nearby testing service.",
+
+        smartmove:
+        "Tell me your crop and quantity. I will compare different futures and show which option may give you the best outcome.",
+
+        market:
+        "I can help you explore nearby markets, buyers, transport partners, nurseries and other farmer services."
+
+    };
+
+    document.getElementById("aiMessage").innerText =
+        messages[page] || messages.home;
+
+}
+
+
+async function loadDashboard() {
+
+    try {
+        const response = await fetch("http://localhost:3000/api/dashboard?farmer=" + encodeURIComponent(farmerProfile.name) + "&location=" + encodeURIComponent(farmerProfile.location));
+
+        if (!response.ok) {
+            throw new Error("Dashboard service returned an error.");
+        }
+
+        const payload = await response.json();
+        const dashboard = payload.dashboard;
+
+        document.getElementById("weatherTemperature").innerText = dashboard.weather.temperatureC;
+        document.getElementById("weatherHumidity").innerText = dashboard.weather.humidityPercent;
+        document.getElementById("weatherLocation").innerText = dashboard.location;
+        document.getElementById("farmAlertMessage").innerText = dashboard.weather.recommendation;
+        document.getElementById("dashboardBatches").innerText = dashboard.batches.total;
+        document.getElementById("dashboardGood").innerText = dashboard.batches.total
+            ? Math.round((dashboard.batches.riskCounts.LOW / dashboard.batches.total) * 100) + "%"
+            : "--";
+        document.getElementById("dashboardQuickSale").innerText = dashboard.batches.riskCounts.MEDIUM + dashboard.batches.riskCounts.HIGH;
+        farmerProfile.lastActivity = dashboard.batches.total + " tracked batches loaded";
+        updateProfile();
+    }
+    catch (error) {
+        // The offline prototype keeps its default farmer values when the API is unavailable.
+    }
+
+}
+
+
+async function loadMarketInsights() {
+
+    const container = document.getElementById("marketInsights");
+
+    try {
+        const response = await fetch("http://localhost:3000/api/recommendations", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                fruit: farmerProfile.crop,
+                quantityKg: farmerProfile.quantity,
+                image: { qualityScore: 75 },
+                storage: { temperature: 31, humidity: 70, daysStored: 0 },
+                farm: { location: farmerProfile.location, ndvi: 0.7 }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Market service returned an error.");
+        }
+
+        const payload = await response.json();
+        const recommendation = payload.recommendation;
+        container.innerHTML = "<h3>Live market intelligence</h3>" +
+            "<p><strong>Recommended: " + recommendation.bestMarket.name + "</strong></p>" +
+            "<p>Expected value: ₹" + recommendation.bestMarket.expectedValue.toLocaleString() +
+            ". " + recommendation.explanation + "</p>";
+    }
+    catch (error) {
+        container.innerHTML = "<h3>Live market intelligence</h3><p>Market service unavailable. Static nearby options are still shown below.</p>";
+    }
+
+}
+
+
+async function runFruitAssessment() {
+
+    const loading = document.getElementById("fruitAssessmentLoading");
+    const result = document.getElementById("fruitAssessmentResult");
+    const photo = document.getElementById("fruitPhotoInput").files[0];
+    const fruit = document.getElementById("scanFruitInput").value;
+    const quantityKg = Number(document.getElementById("scanQuantityInput").value) || 1;
+    const assessmentInput = {
+        fruit,
+        quantityKg,
+        image: {
+            qualityScore: photo ? 82 : 75,
+            ripeness: 78,
+            visibleDamage: photo ? 8 : 12,
+            diseaseProbability: 7
+        },
+        storage: {
+            type: "Open market crate",
+            temperature: 31,
+            humidity: 70,
+            daysStored: 0
+        },
+        farm: {
+            location: farmerProfile.location,
+            ndvi: 0.7,
+            waterStress: 25,
+            temperatureStress: 30
+        },
+        harvestAgeHours: 24
+    };
+
+    loading.classList.add("show");
+    result.classList.add("hidden");
+    document.getElementById("savedBatchTrace").classList.add("hidden");
+
+    try {
+        const response = await fetch("http://localhost:3000/api/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(assessmentInput)
+        });
+
+        if (!response.ok) {
+            throw new Error("Fruit prediction failed.");
+        }
+
+        const payload = await response.json();
+        const prediction = payload.prediction;
+
+        document.getElementById("scanQuality").innerText = prediction.quality.score + "%";
+        document.getElementById("scanShelfLife").innerText = prediction.shelfLife.estimate;
+        document.getElementById("scanRisk").innerText = prediction.spoilage.level;
+        document.getElementById("scanRecommendation").innerText = prediction.recommendation;
+        renderRiskTimeline(prediction.riskTimeline);
+        window.lastAssessmentInput = assessmentInput;
+        result.classList.remove("hidden");
+        farmerProfile.lastActivity = fruit + " quality assessed";
+        updateProfile();
+        document.getElementById("aiMessage").innerText = "Your fruit report is ready. Use the shelf-life estimate to decide whether to sell, store or process the batch.";
+        showToast("Fruit quality report ready");
+    }
+    catch (error) {
+        showToast("Start the backend at localhost:3000 first");
+    }
+    finally {
+        loading.classList.remove("show");
+    }
+
+}
+
+async function loadFarmConditions() {
+    const result = document.getElementById("farmConditionsResult");
+    const ndvi = Number(document.getElementById("farmNdviInput").value);
+    const waterStress = Number(document.getElementById("farmWaterStressInput").value);
+    const temperatureStress = Number(document.getElementById("farmTemperatureStressInput").value);
+
+    try {
+        const response = await fetch("http://localhost:3000/api/farm-conditions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                location: farmerProfile.location,
+                ndvi: Number.isFinite(ndvi) ? ndvi : 0.71,
+                waterStress: Number.isFinite(waterStress) ? waterStress : 25,
+                temperatureStress: Number.isFinite(temperatureStress) ? temperatureStress : 30
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Farm conditions service returned an error.");
+        }
+
+        const { farm } = await response.json();
+        document.getElementById("farmVegetation").innerText = "Vegetation: " + farm.vegetation;
+        document.getElementById("farmNdvi").innerText = farm.ndvi.toFixed(2);
+        document.getElementById("farmWaterStress").innerText = farm.waterStress.level;
+        document.getElementById("farmHeatStress").innerText = farm.temperatureStress.level;
+        document.getElementById("farmRecommendation").innerText = farm.recommendation;
+        result.classList.remove("hidden");
+    }
+    catch (error) {
+        result.classList.add("hidden");
+        showToast("Farm conditions are unavailable. Check the backend.");
+    }
+}
+
+async function loadTrackedBatches() {
+    const container = document.getElementById("trackedBatches");
+    container.innerHTML = "";
+
+    try {
+        const response = await fetch("http://localhost:3000/api/batches");
+        if (!response.ok) {
+            throw new Error("Batch service returned an error.");
+        }
+
+        const { batches } = await response.json();
+        const sortedBatches = [...batches].sort((left, right) =>
+            right.prediction.spoilage.riskScore - left.prediction.spoilage.riskScore
+        );
+
+        if (!sortedBatches.length) {
+            const empty = document.createElement("div");
+            empty.className = "card";
+            empty.innerHTML = "<h3>No tracked batches yet</h3><p>Assess a fruit batch from Home, then save it to review its shelf life and traceability details here.</p>";
+            container.appendChild(empty);
+            return;
+        }
+
+        sortedBatches.forEach((batch) => {
+            const card = document.createElement("div");
+            card.className = "market-item";
+            const top = document.createElement("div");
+            top.className = "market-top";
+            const name = document.createElement("h4");
+            name.innerText = batch.prediction.context.fruit + " • " + batch.quantityKg + " kg";
+            const risk = document.createElement("span");
+            risk.className = "risk-badge " + (batch.prediction.spoilage.level === "LOW" ? "low" : batch.prediction.spoilage.level === "MEDIUM" ? "medium" : "high");
+            risk.innerText = batch.prediction.spoilage.level + " RISK";
+            top.append(name, risk);
+
+            const detail = document.createElement("p");
+            detail.innerText = "Shelf life: " + batch.prediction.shelfLife.estimate + " • Priority sale: " + batch.distribution.prioritySaleKg + " kg";
+            const trace = document.createElement("p");
+            trace.className = "trace-code";
+            trace.style.marginTop = "8px";
+            trace.innerText = batch.id + " / " + batch.traceCode;
+            card.append(top, detail, trace);
+            container.appendChild(card);
+        });
+    }
+    catch (error) {
+        container.innerHTML = "<div class=\"card\"><h3>Batch service unavailable</h3><p>Start the backend, then return here to view tracked predictions.</p></div>";
+    }
+}
+
+function renderRiskTimeline(timeline) {
+    const container = document.getElementById("riskTimeline");
+    container.innerHTML = "";
+
+    (timeline || []).forEach((point) => {
+        const item = document.createElement("div");
+        item.className = "timeline-step";
+
+        const label = document.createElement("small");
+        label.innerText = point.label;
+        const risk = document.createElement("strong");
+        risk.innerText = point.level;
+        risk.style.color = point.level === "LOW" ? "#166534" : point.level === "MEDIUM" ? "#92400e" : "#991b1b";
+
+        item.append(label, risk);
+        container.appendChild(item);
+    });
+}
+
+async function saveAssessmentBatch() {
+    if (!window.lastAssessmentInput) {
+        showToast("Run a quality assessment first");
+        return;
+    }
+
+    const button = document.getElementById("saveAssessmentButton");
+    const trace = document.getElementById("savedBatchTrace");
+    button.disabled = true;
+    button.innerText = "Saving batch...";
+
+    try {
+        const response = await fetch("http://localhost:3000/api/batches", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(window.lastAssessmentInput)
+        });
+
+        if (!response.ok) {
+            throw new Error("Batch could not be saved.");
+        }
+
+        const { batch } = await response.json();
+        trace.innerHTML = "";
+        const heading = document.createElement("strong");
+        heading.innerText = "Traceable batch created";
+        const id = document.createElement("p");
+        id.className = "trace-code";
+        id.innerText = batch.id;
+        const details = document.createElement("p");
+        details.style.marginTop = "7px";
+        details.style.fontSize = "11px";
+        details.innerText = "Trace code: " + batch.traceCode + " • Premium " + batch.distribution.premiumKg + " kg • Priority sale " + batch.distribution.prioritySaleKg + " kg";
+        trace.append(heading, id, details);
+        trace.classList.remove("hidden");
+        farmerProfile.lastActivity = batch.id + " saved";
+        updateProfile();
+        showToast("Batch saved with traceability code");
+    }
+    catch (error) {
+        showToast("Unable to save batch. Check the backend.");
+    }
+    finally {
+        button.disabled = false;
+        button.innerText = "Save as tracked batch";
+    }
+}
+
+
+/* =========================================================
+   ONBOARDING
+   ========================================================= */
+
+let onboardingStep = 0;
+
+function nextOnboarding() {
+
+    const text =
+        document.getElementById("onboardingText");
+
+
+    onboardingStep++;
+
+
+    if (onboardingStep === 1) {
+
+        text.innerText =
+            "Farmer detected as Ramayya. What village are you from?";
+
+    }
+
+    else if (onboardingStep === 2) {
+
+        text.innerText =
+            "Thank you, Ramayya. I found your location as Kurabalakota. Your farmer profile is ready.";
+
+    }
+
+    else {
+
+        finishOnboarding();
+
+    }
+
+}
+
+
+function finishOnboarding() {
+
+    document
+        .getElementById("onboarding")
+        .classList.add("hidden");
+
+    updateProfile();
+
+    updateAIMessage("home");
+
+}
+
+
+/* =========================================================
+   PEST SCAN
+   ========================================================= */
+
+function runPestScan() {
+
+    const loading =
+        document.getElementById("pestLoading");
+
+    const result =
+        document.getElementById("pestResult");
+
+
+    result.classList.remove("show");
+
+    loading.classList.add("show");
+
+
+    farmerProfile.lastActivity =
+        "Pest scan completed";
+
+    updateProfile();
+
+
+    updateAIMessage("pest");
+
+
+    setTimeout(() => {
+
+        loading.classList.remove("show");
+
+        result.classList.add("show");
+
+        document.getElementById("aiMessage").innerText =
+            "I found a possible fruit-borer pattern. Please confirm with a qualified agricultural expert before treatment. I also found nearby agricultural services for you.";
+
+        showToast("AI crop analysis completed");
+
+    }, 1800);
+
+}
+
+
+/* =========================================================
+   SOIL SCAN
+   ========================================================= */
+
+function runSoilScan() {
+
+    const loading =
+        document.getElementById("soilLoading");
+
+    const result =
+        document.getElementById("soilResult");
+
+
+    result.classList.remove("show");
+
+    loading.classList.add("show");
+
+
+    setTimeout(() => {
+
+        loading.classList.remove("show");
+
+        result.classList.add("show");
+
+
+        farmerProfile.soilStatus =
+            "Low Nitrogen";
+
+        farmerProfile.lastActivity =
+            "Soil report scanned";
+
+        updateProfile();
+
+
+        document.getElementById("aiMessage").innerText =
+            "Your report indicates low nitrogen. I have also shown nearby soil testing and advisory services.";
+
+        showToast("Soil report analyzed");
+
+    }, 1600);
+
+}
+
+
+/* =========================================================
+   WHAT-IF ENGINE
+   ========================================================= */
+
+function runSimulation() {
+
+    runBackendSimulation();
+
+    return;
+
+    /* Legacy local calculation retained below as a fallback reference. */
+
+    const quantity =
+        Number(
+            document.getElementById("quantityInput").value
+        ) || 500;
+
+
+    const quality =
+        Number(
+            document.getElementById("qualityInput").value
+        ) || 75;
+
+
+    const age =
+        Number(
+            document.getElementById("ageInput").value
+        ) || 24;
+
+
+    const loading =
+        document.getElementById("simulationLoading");
+
+
+    const results =
+        document.getElementById("simulationResults");
+
+
+    results.classList.add("hidden");
+
+    loading.classList.add("show");
+
+
+    /*
+       DEMO DECAY MODEL
+
+       This is intentionally transparent and simple for the prototype.
+
+       Spoilage increases with:
+       - lower initial quality
+       - older harvest age
+       - longer transport/storage time
+    */
+
+
+    const baseRisk =
+        (100 - quality) * 0.25 +
+        (age / 24) * 5;
+
+
+    const localRisk =
+        Math.min(
+            35,
+            baseRisk + 4
+        );
+
+
+    const cityRisk =
+        Math.min(
+            60,
+            baseRisk + 14
+        );
+
+
+    const storageRisk =
+        Math.min(
+            75,
+            baseRisk + 24
+        );
+
+
+    /*
+       Demo market prices.
+       Backend can later replace these with live market data.
+    */
+
+    const localPrice = 28;
+
+    const cityPrice = 34;
+
+    const storagePrice = 36;
+
+
+    /*
+       Calculate usable quantity.
+    */
+
+    const usableLocal =
+        quantity * (1 - localRisk / 100);
+
+    const usableCity =
+        quantity * (1 - cityRisk / 100);
+
+    const usableStorage =
+        quantity * (1 - storageRisk / 100);
+
+
+    /*
+       Transport/storage cost estimates.
+    */
+
+    const localCost = 600;
+
+    const cityCost = 1800;
+
+    const storageCost = 1200;
+
+
+    /*
+       Expected net value.
+    */
+
+    const localValue =
+        usableLocal * localPrice - localCost;
+
+    const cityValue =
+        usableCity * cityPrice - cityCost;
+
+    const storageValue =
+        usableStorage * storagePrice - storageCost;
+
+
+    const values = [
+        localValue,
+        cityValue,
+        storageValue
+    ];
+
+
+    const maxValue =
+        Math.max(...values);
+
+
+    let best = 0;
+
+    if (maxValue === cityValue) {
+        best = 1;
+    }
+
+    if (maxValue === storageValue) {
+        best = 2;
+    }
+
+
+    setTimeout(() => {
+
+        loading.classList.remove("show");
+
+        results.classList.remove("hidden");
+
+
+        setScenario(
+            "A",
+            localRisk,
+            2,
+            localValue
+        );
+
+
+        setScenario(
+            "B",
+            cityRisk,
+            7,
+            cityValue
+        );
+
+
+        setScenario(
+            "C",
+            storageRisk,
+            18,
+            storageValue
+        );
+
+
+        document
+            .getElementById("scenarioA")
+            .classList.remove("best");
+
+        document
+            .getElementById("scenarioB")
+            .classList.remove("best");
+
+        document
+            .getElementById("scenarioC")
+            .classList.remove("best");
+
+
+        const scenarioIds = [
+            "scenarioA",
+            "scenarioB",
+            "scenarioC"
+        ];
+
+
+        document
+            .getElementById(scenarioIds[best])
+            .classList.add("best");
+
+
+        const names = [
+            "Local Market",
+            "City Market",
+            "Overnight Storage"
+        ];
+
+
+        document
+            .getElementById("bestOptionLabel")
+            .innerText =
+            "Best: " + names[best];
+
+
+        document
+            .getElementById("recommendation")
+            .innerText =
+            "Based on the demo calculation, " +
+            names[best] +
+            " currently gives the strongest expected net outcome. " +
+            "The AI should re-check this recommendation whenever price, weather, crop age or travel conditions change.";
+
+
+        farmerProfile.quantity =
+            quantity;
+
+        farmerProfile.lastActivity =
+            quantity +
+            " kg " +
+            document.getElementById("cropInput").value +
+            " simulation";
+
+
+        updateProfile();
+
+
+        document.getElementById("aiMessage").innerText =
+            "I compared three possible futures for your crop. The green option is currently the strongest based on the prototype calculation.";
+
+        showToast("What-If simulation completed");
+
+    }, 1800);
+
+}
+
+
+async function runBackendSimulation() {
+
+    const quantity =
+        Number(
+            document.getElementById("quantityInput").value
+        ) || 500;
+
+    const quality =
+        Number(
+            document.getElementById("qualityInput").value
+        ) || 75;
+
+    const age =
+        Number(
+            document.getElementById("ageInput").value
+        ) || 24;
+
+    const crop =
+        document.getElementById("cropInput").value;
+
+    const loading =
+        document.getElementById("simulationLoading");
+
+    const results =
+        document.getElementById("simulationResults");
+
+    loading.classList.add("show");
+    results.classList.add("hidden");
+
+    const scenarios = [
+        { type: "Open market crate", temperature: 31, humidity: 70, daysStored: 0, time: 2, price: 28, cost: 600 },
+        { type: "Transport crate", temperature: 32, humidity: 75, daysStored: 0, time: 7, price: 34, cost: 1800 },
+        { type: "Cold storage", temperature: 6, humidity: 85, daysStored: 1, time: 18, price: 36, cost: 1200 }
+    ];
+
+    try {
+        const response = await fetch("http://localhost:3000/api/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                fruit: crop,
+                harvestAgeHours: age,
+                image: { qualityScore: quality },
+                storage: scenarios[0],
+                farm: {
+                    location: farmerProfile.location,
+                    ndvi: 0.7,
+                    waterStress: 25,
+                    temperatureStress: 30
+                }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Prediction service returned an error.");
+        }
+
+        const payload = await response.json();
+        const baselineRisk = payload.prediction.spoilage.riskScore;
+        const predictions = scenarios.map((scenario, index) => ({
+            prediction: {
+                spoilage: { riskScore: Math.min(95, baselineRisk + [0, 10, 20][index]) },
+                shelfLife: { estimate: index === 0 ? payload.prediction.shelfLife.estimate : `${Math.max(1, 3 - index)}-${Math.max(2, 5 - index)} days` },
+                recommendation: payload.prediction.recommendation
+            }
+        }));
+
+        const outcomes = predictions.map((payload, index) => {
+            const risk = payload.prediction.spoilage.riskScore;
+            const scenario = scenarios[index];
+            const value = quantity * (1 - risk / 100) * scenario.price - scenario.cost;
+
+            return { risk, value };
+        });
+
+        const best = outcomes.reduce(
+            (bestIndex, outcome, index) => outcome.value > outcomes[bestIndex].value ? index : bestIndex,
+            0
+        );
+
+        const batchResponse = await fetch("http://localhost:3000/api/batches", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                fruit: crop,
+                quantityKg: quantity,
+                harvestDate: new Date().toISOString().slice(0, 10),
+                harvestAgeHours: age,
+                image: { qualityScore: quality },
+                storage: scenarios[0],
+                farm: {
+                    location: farmerProfile.location,
+                    ndvi: 0.7,
+                    waterStress: 25,
+                    temperatureStress: 30
+                }
+            })
+        });
+
+        if (!batchResponse.ok) {
+            throw new Error("Batch service returned an error.");
+        }
+
+        const batchPayload = await batchResponse.json();
+
+        loading.classList.remove("show");
+        results.classList.remove("hidden");
+
+        outcomes.forEach((outcome, index) => {
+            setScenario(
+                String.fromCharCode(65 + index),
+                outcome.risk,
+                scenarios[index].time,
+                outcome.value
+            );
+        });
+
+        ["scenarioA", "scenarioB", "scenarioC"].forEach((id) => {
+            document.getElementById(id).classList.remove("best");
+        });
+
+        document
+            .getElementById(["scenarioA", "scenarioB", "scenarioC"][best])
+            .classList.add("best");
+
+        const names = ["Local Market", "City Market", "Overnight Storage"];
+
+        document.getElementById("bestOptionLabel").innerText =
+            "Best: " + names[best];
+
+        document.getElementById("recommendation").innerText =
+            predictions[best].prediction.recommendation +
+            " Estimated shelf life: " +
+            predictions[best].prediction.shelfLife.estimate + ".";
+
+        document.getElementById("batchReference").innerText =
+            "Batch tracked: " + batchPayload.batch.id;
+
+        farmerProfile.quantity = quantity;
+        farmerProfile.lastActivity = quantity + " kg " + crop + " backend simulation";
+        updateProfile();
+        document.getElementById("aiMessage").innerText =
+            "I compared three futures using the multimodal prediction service. The green option has the strongest expected outcome.";
+        showToast("Backend prediction completed");
+    }
+    catch (error) {
+        loading.classList.remove("show");
+        showToast("Start the backend at localhost:3000 first");
+        document.getElementById("aiMessage").innerText =
+            "The prediction service is unavailable. Please start the AgriSight backend and try again.";
+    }
+
+}
+
+
+async function checkStorageConditions() {
+
+    const result = document.getElementById("storageResult");
+    const temperature = Number(document.getElementById("storageTemperature").value) || 28;
+    const humidity = Number(document.getElementById("storageHumidity").value) || 70;
+
+    try {
+        const response = await fetch("http://localhost:3000/api/storage/check", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                fruit: document.getElementById("cropInput").value,
+                storage: {
+                    type: "Open market crate",
+                    temperature,
+                    humidity,
+                    daysStored: 1
+                },
+                image: { qualityScore: Number(document.getElementById("qualityInput").value) || 75 },
+                farm: { location: farmerProfile.location, ndvi: 0.7 }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Storage check failed.");
+        }
+
+        const payload = await response.json();
+        const alerts = payload.storage.alerts.length ? " Alerts: " + payload.storage.alerts.join(" ") : "";
+        result.innerText = payload.storage.status + ". Risk: " + payload.prediction.spoilage.level + ". " + payload.storage.recommendation + alerts;
+        farmerProfile.lastActivity = "Storage conditions checked";
+        updateProfile();
+        showToast("Storage analysis completed");
+    }
+    catch (error) {
+        result.innerText = "Storage service unavailable. Start the backend and try again.";
+    }
+
+}
+
+
+/* =========================================================
+   SCENARIO UI
+   ========================================================= */
+
+function setScenario(
+    letter,
+    risk,
+    time,
+    value
+) {
+
+    document.getElementById(
+        "time" + letter
+    ).innerText =
+        time + "h";
+
+
+    document.getElementById(
+        "spoil" + letter
+    ).innerText =
+        risk.toFixed(1) + "%";
+
+
+    document.getElementById(
+        "value" + letter
+    ).innerText =
+        "₹" +
+        Math.round(value).toLocaleString();
+
+
+    const riskElement =
+        document.getElementById(
+            "risk" + letter
+        );
+
+
+    riskElement.className =
+        "risk-badge";
+
+
+    if (risk < 15) {
+
+        riskElement.classList.add("low");
+
+        riskElement.innerText =
+            "LOW RISK";
+
+    }
+
+    else if (risk < 30) {
+
+        riskElement.classList.add("medium");
+
+        riskElement.innerText =
+            "MEDIUM";
+
+    }
+
+    else {
+
+        riskElement.classList.add("high");
+
+        riskElement.innerText =
+            "HIGH RISK";
+
+    }
+
+}
+
+
+/* =========================================================
+   AI VOICE GUIDE
+   ========================================================= */
+
+let speaking = false;
+
+
+function startVoiceGuide() {
+
+    const mic =
+        document.getElementById("micButton");
+
+    const message =
+        document.getElementById("aiMessage");
+
+
+    if (!("speechSynthesis" in window)) {
+
+        showToast(
+            "Voice is not supported in this browser."
+        );
+
+        return;
+
+    }
+
+
+    if (speaking) {
+
+        speechSynthesis.cancel();
+
+        speaking = false;        mic.classList.remove("listening");
+        return;
+    }
+
+    const text = message.innerText;
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "en-IN";
+    speech.rate = .9;
+    speech.pitch = 1;
+    speech.onstart = () => {
+        speaking = true;
+        mic.classList.add("listening");
+    };
+    speech.onend = () => {
+        speaking = false;
+        mic.classList.remove("listening");
+    };
+
+
+    speechSynthesis.speak(speech);
+
+}
+
+
+/* =========================================================
+   SERVICES
+   ========================================================= */
+
+function callService(name) {
+
+    farmerProfile.lastActivity =
+        "Contacted " + name;
+
+    updateProfile();
+
+
+    showToast(
+        "Calling " + name + "..."
+    );
+
+}
+
+
+function contactMarket(name) {
+
+    farmerProfile.lastActivity =
+        "Contacted " + name;
+
+    updateProfile();
+
+
+    showToast(
+        "Connecting to " + name + "..."
+    );
+
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+function showProfile() {
+
+    showToast(
+        farmerProfile.name +
+        " • " +
+        farmerProfile.location
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer;
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+
+    toast.innerText =
+        message;
+
+
+    toast.classList.add("show");
+
+
+    clearTimeout(toastTimer);
+
+
+    toastTimer =
+        setTimeout(() => {
+
+            toast.classList.remove("show");
+
+        }, 2500);
+
+}
+
+
+/* =========================================================
+   STARTUP
+   ========================================================= */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        updateProfile();
+
+        updateAIMessage("home");
+
+        loadDashboard();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

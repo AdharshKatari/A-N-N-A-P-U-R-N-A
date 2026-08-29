@@ -1,0 +1,18 @@
+appId: host.exp.exponent
+---
+- launchApp
+- openLink: "exp://127.0.0.1:8084"
+- extendedWaitUntil:
+    visible: "Crops"
+    timeout: 180000
+- tapOn: "Scan"
+- assertVisible: "Scan Crop"
+- assertVisible: "5-Fruit Sampling Protocol"
+- assertVisible: "0 / 5"
+- assertNotVisible: "Proceed to Analysis (5 samples)"
+- scrollUntilVisible:
+    element:
+      text: "Sampling Guidelines"
+    direction: DOWN
+- assertVisible: "Sampling Guidelines"
+

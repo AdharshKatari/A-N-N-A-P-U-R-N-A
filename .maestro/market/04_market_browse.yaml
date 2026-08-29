@@ -1,0 +1,13 @@
+appId: host.exp.exponent
+---
+- launchApp
+- openLink: "exp://127.0.0.1:8084"
+- extendedWaitUntil:
+    visible: "Crops"
+    timeout: 180000
+- tapOn: "Market"
+- assertVisible: "Market"
+- swipe:
+    direction: UP
+- assertNotVisible: "Something went wrong"
+

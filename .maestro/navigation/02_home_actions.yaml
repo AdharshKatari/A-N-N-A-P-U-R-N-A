@@ -1,0 +1,19 @@
+appId: host.exp.exponent
+---
+- launchApp
+- openLink: "exp://127.0.0.1:8084"
+- extendedWaitUntil:
+    visible: "Annapurna"
+    timeout: 180000
+- tapOn: "Forecast"
+- assertVisible: "Weather"
+- back
+- assertVisible: "Annapurna"
+- tapOn:
+    id: "home-notifications"
+- runFlow:
+    when:
+      visible: "Notifications"
+    commands:
+      - assertVisible: "Notifications"
+      - back

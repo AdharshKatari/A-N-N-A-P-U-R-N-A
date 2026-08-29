@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canvas Previews — The Farmer Market</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; background: #f0f2f5; padding: 40px 20px; }
+.container { max-width: 600px; margin: 0 auto; }
+h1 { font-size: 28px; font-weight: 700; color: #14171e; letter-spacing: -0.8px; margin-bottom: 8px; }
+p { font-size: 15px; color: #6b7280; margin-bottom: 28px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px -4px rgba(20,23,30,.1); text-decoration: none; transition: transform .2s, box-shadow .2s; display: block; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -8px rgba(20,23,30,.15); }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 22px; }
+.card-title { font-size: 16px; font-weight: 700; color: #14171e; letter-spacing: -0.3px; margin-bottom: 4px; }
+.card-desc { font-size: 12px; color: #9ca3af; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎨 Canvas Previews</h1>
+  <p>Click any page to preview the design in your browser.</p>
+  <div class="grid">
+    <a class="card" href="FarmHome.html">
+      <div class="card-icon" style="background:#e6f5ed">🏠</div>
+      <div class="card-title">Home</div>
+      <div class="card-desc">Greeting, alerts, metrics, features</div>
+    </a>
+    <a class="card" href="PestDoctor.html">
+      <div class="card-icon" style="background:#dcfce7">🐛</div>
+      <div class="card-title">Pest Doctor</div>
+      <div class="card-desc">Pest detection & AI scan</div>
+    </a>
+    <a class="card" href="SoilTest.html">
+      <div class="card-icon" style="background:#fef3c7">🌱</div>
+      <div class="card-title">Soil Test</div>
+      <div class="card-desc">pH, nutrients, moisture</div>
+    </a>
+    <a class="card" href="FarmConditions.html">
+      <div class="card-icon" style="background:#dbeafe">🌤️</div>
+      <div class="card-title">Farm Conditions</div>
+      <div class="card-desc">Weather, metrics, alerts</div>
+    </a>
+    <a class="card" href="SmartMove.html">
+      <div class="card-icon" style="background:#f3e5f5">📊</div>
+      <div class="card-title">Smart-Move</div>
+      <div class="card-desc">Price trends & AI advice</div>
+    </a>
+    <a class="card" href="MyPredictions.html">
+      <div class="card-icon" style="background:#e8f5e9">🔮</div>
+      <div class="card-title">My Predictions</div>
+      <div class="card-desc">Accuracy & prediction cards</div>
+    </a>
+    <a class="card" href="Market.html">
+      <div class="card-icon" style="background:#fff3e0">🛒</div>
+      <div class="card-title">Market</div>
+      <div class="card-desc">Products, categories, search</div>
+    </a>
+    <a class="card" href="Onboarding.html">
+      <div class="card-icon" style="background:#fce4ec">👋</div>
+      <div class="card-title">Onboarding</div>
+      <div class="card-desc">Welcome & voice setup</div>
+    </a>
+  </div>
+</div>
+</body>
+</html>

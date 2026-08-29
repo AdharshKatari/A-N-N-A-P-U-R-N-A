@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "projectName": "The Farmer Market",
+  "version": "1.0.0",
+  "description": "React Native market management application",
+  "settings": {
+    "autoSave": true,
+    "fontSize": 14,
+    "theme": "system"
+  },
+  "templates": {
+    "component": "src/components/{{name}}.tsx",
+    "screen": "src/screens/{{name}}Screen.tsx",
+    "service": "src/services/{{name}}.ts"
+  }
+}

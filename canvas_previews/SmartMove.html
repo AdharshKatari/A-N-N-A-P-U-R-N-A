@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart-Move — The Farmer Market</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; display: flex; justify-content: center; padding: 20px; }
+.phone { width: 390px; background: #f0f2f5; border-radius: 44px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.15); position: relative; }
+
+.status-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 28px 8px; background: #fff; font-size: 15px; font-weight: 600; color: #14171e; }
+.status-icons { display: flex; gap: 6px; align-items: center; }
+.status-icons svg { width: 16px; height: 12px; fill: #14171e; }
+
+.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 20px 12px; background: #fff; border-bottom: 1px solid rgba(20,23,30,.06); }
+.back-btn { width: 36px; height: 36px; border-radius: 12px; border: 1.5px solid rgba(20,23,30,.1); background: #fff; display: flex; align-items: center; justify-content: center; }
+.back-btn svg { width: 18px; height: 18px; stroke: #14171e; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.page-title { font-size: 17px; font-weight: 600; color: #14171e; letter-spacing: -0.3px; }
+.top-right-btn { width: 36px; height: 36px; border-radius: 12px; background: #f0f2f5; display: flex; align-items: center; justify-content: center; }
+
+.content { padding: 16px 20px; padding-bottom: 100px; }
+
+/* Crop Selector */
+.crop-selector { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
+.crop-chip { padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; border: 1.5px solid rgba(20,23,30,.1); background: #fff; color: #6b7280; cursor: pointer; }
+.crop-chip.active { background: #1a7a52; color: #fff; border-color: #1a7a52; }
+
+/* Price Card */
+.price-card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 2px 8px -4px rgba(20,23,30,.1); margin-bottom: 16px; }
+.price-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.price-label { font-size: 13px; color: #9ca3af; font-weight: 500; }
+.price-value { font-size: 32px; font-weight: 700; color: #14171e; letter-spacing: -1.5px; margin-top: 2px; }
+.price-change { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.price-up { background: #dcfce7; color: #16a34a; }
+.price-down { background: #fee2e2; color: #dc2626; }
+
+/* Chart placeholder */
+.chart-area { height: 140px; background: linear-gradient(180deg, rgba(26,122,82,.08) 0%, rgba(26,122,82,.01) 100%); border-radius: 12px; position: relative; overflow: hidden; margin-bottom: 12px; }
+.chart-line { position: absolute; bottom: 20px; left: 0; right: 0; height: 2px; }
+.chart-line svg { width: 100%; height: 100%; }
+.chart-labels { display: flex; justify-content: space-between; }
+.chart-label { font-size: 11px; color: #9ca3af; }
+
+/* Recommendation */
+.rec-card { background: #fff; border-radius: 16px; padding: 16px; box-shadow: 0 2px 8px -4px rgba(20,23,30,.1); margin-bottom: 10px; display: flex; align-items: flex-start; gap: 12px; }
+.rec-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rec-icon svg { width: 20px; height: 20px; }
+.rec-info { flex: 1; }
+.rec-title { font-size: 14px; font-weight: 600; color: #14171e; margin-bottom: 2px; }
+.rec-desc { font-size: 12px; color: #6b7280; line-height: 1.4; }
+.rec-badge { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; margin-top: 4px; }
+.section-title { font-size: 18px; font-weight: 700; color: #14171e; letter-spacing: -0.5px; }
+.section-link { font-size: 13px; font-weight: 600; color: #1a7a52; text-decoration: none; }
+
+.bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,.92); backdrop-filter: blur(20px); border-top: 1px solid rgba(20,23,30,.06); padding: 6px 0 0; z-index: 20; }
+.nav-items { display: flex; justify-content: space-around; align-items: center; padding: 0 8px; }
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; background: none; border: none; }
+.nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-icon svg { width: 22px; height: 22px; stroke: #9ca3af; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav-item.active .nav-icon svg { stroke: #1a7a52; }
+.nav-label { font-size: 10px; font-weight: 500; color: #9ca3af; }
+.nav-item.active .nav-label { color: #1a7a52; font-weight: 600; }
+.nav-scan { width: 48px; height: 48px; background: linear-gradient(135deg, #1a7a52, #14633f); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-top: -18px; box-shadow: 0 4px 16px -2px rgba(26,122,82,.35); }
+.nav-scan svg { width: 22px; height: 22px; fill: #fff; stroke: none; }
+.home-indicator { width: 134px; height: 5px; background: #14171e; border-radius: 999px; margin: 8px auto 6px; opacity: .15; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <svg viewBox="0 0 18 12"><rect x="0" y="6" width="3" height="6" rx="1"/><rect x="5" y="4" width="3" height="8" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg viewBox="0 0 16 12"><path d="M8 3.6c1.8 0 3.4.7 4.6 1.9l1.4-1.4C12.4 2.5 10.3 1.6 8 1.6S3.6 2.5 2 4.1l1.4 1.4C4.6 4.3 6.2 3.6 8 3.6zM8 7.2c1 0 2 .4 2.8 1.1l1.4-1.4C10.8 5.8 9.5 5.2 8 5.2s-2.8.6-4.2 1.7L5.2 8.3C6 7.6 7 7.2 8 7.2zM8 10.8c.7 0 1.2-.5 1.2-1.2S8.7 8.4 8 8.4s-1.2.5-1.2 1.2.5 1.2 1.2 1.2z"/></svg>
+      <svg viewBox="0 0 28 14"><rect x="0" y="1" width="23" height="12" rx="3" stroke="#14171e" stroke-width="1.2" fill="none"/><rect x="24" y="4.5" width="2.5" height="5" rx="1" fill="#14171e" opacity=".3"/><rect x="1.5" y="2.5" width="18" height="9" rx="2" fill="#14171e"/></svg>
+    </div>
+  </div>
+
+  <div class="top-bar">
+    <div class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></div>
+    <span class="page-title">Smart-Move</span>
+    <div class="top-right-btn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+  </div>
+
+  <div class="content">
+    <!-- Crop Selector -->
+    <div class="crop-selector">
+      <span class="crop-chip active">🍅 Tomato</span>
+      <span class="crop-chip">🌽 Corn</span>
+      <span class="crop-chip">🫘 Rice</span>
+      <span class="crop-chip">🌶️ Chili</span>
+      <span class="crop-chip">🧅 Onion</span>
+    </div>
+
+    <!-- Price Card -->
+    <div class="price-card">
+      <div class="price-header">
+        <div>
+          <div class="price-label">Current Market Price</div>
+          <div class="price-value">₹2,840</div>
+        </div>
+        <span class="price-change price-up">↑ +8.2%</span>
+      </div>
+      <div class="chart-area">
+        <svg viewBox="0 0 340 120" style="width:100%;height:100%">
+          <defs>
+            <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a7a52" stop-opacity=".15"/>
+              <stop offset="100%" stop-color="#1a7a52" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,90 C30,85 60,70 90,75 C120,80 150,50 180,45 C210,40 240,55 270,30 C300,20 320,25 340,15 L340,120 L0,120Z" fill="url(#cg)"/>
+          <path d="M0,90 C30,85 60,70 90,75 C120,80 150,50 180,45 C210,40 240,55 270,30 C300,20 320,25 340,15" fill="none" stroke="#1a7a52" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="340" cy="15" r="5" fill="#1a7a52"/>
+          <circle cx="340" cy="15" r="8" fill="#1a7a52" opacity=".2"/>
+        </svg>
+      </div>
+      <div class="chart-labels">
+        <span class="chart-label">Jan</span>
+        <span class="chart-label">Mar</span>
+        <span class="chart-label">May</span>
+        <span class="chart-label">Jul</span>
+        <span class="chart-label">Now</span>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="section-header">
+      <span class="section-title">AI Recommendations</span>
+      <a class="section-link" href="#">See all</a>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon" style="background:#dcfce7"><svg viewBox="0 0 24 24" fill="#16a34a"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+      <div class="rec-info">
+        <div class="rec-title">Best Time to Sell</div>
+        <div class="rec-desc">Prices are projected to peak in the next 3-5 days. Consider selling now for maximum profit.</div>
+      </div>
+      <span class="rec-badge" style="background:#dcfce7;color:#16a34a">Action Now</span>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon" style="background:#fef3c7"><svg viewBox="0 0 24 24" fill="#d97706"><path d="M12 2l4 8H8z"/></svg></div>
+      <div class="rec-info">
+        <div class="rec-title">Storage Advisory</div>
+        <div class="rec-desc">If holding inventory, ensure cool storage conditions. Spoilage risk increases with current humidity.</div>
+      </div>
+      <span class="rec-badge" style="background:#fef3c7;color:#d97706">Heads Up</span>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon" style="background:#dbeafe"><svg viewBox="0 0 24 24" fill="#3182ce"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <div class="rec-info">
+        <div class="rec-title">Demand Forecast</div>
+        <div class="rec-desc">Demand for tomatoes expected to rise 15% next week due to festival season.</div>
+      </div>
+      <span class="rec-badge" style="background:#dbeafe;color:#3182ce">Trending</span>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-items">
+      <button class="nav-item"><div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg></div><span class="nav-label">Home</span></button>
+      <button class="nav-item"><div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div><span class="nav-label">History</span></button>
+      <button class="nav-item"><div class="nav-scan"><svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg></div></button>
+      <button class="nav-item"><div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg></div><span class="nav-label">Saved</span></button>
+      <button class="nav-item"><div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="nav-label">Profile</span></button>
+    </div>
+    <div class="home-indicator"></div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+appId: host.exp.exponent
+---
+- launchApp
+- openLink: "exp://127.0.0.1:8084"
+- extendedWaitUntil:
+    visible: "Crops"
+    timeout: 180000
+- tapOn: "Forecast"
+- assertVisible: "Weather"
+- tapOn:
+    id: "weather-profile"
+- assertVisible: "Profile"
+- tapOn: "Language & Region"
+- assertVisible: "Settings"
+- assertVisible: "Language"
+- assertVisible: "Alerts & Notifications"
+- tapOn: "Weather Alerts"
+- tapOn: "Crop Health Alerts"
+- back
+- assertVisible: "Profile"

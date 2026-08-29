@@ -1,0 +1,20 @@
+appId: host.exp.exponent
+---
+- launchApp
+- openLink: "exp://127.0.0.1:8084"
+- extendedWaitUntil:
+    visible: "Good morning, Farmer"
+    timeout: 180000
+- assertVisible: "Good morning, Farmer"
+- assertVisible: "FARM INSIGHTS"
+- assertVisible: "Crops"
+- assertVisible: "Pest"
+- assertVisible: "Move"
+- assertVisible: "Market"
+- takeScreenshot: "annapurna-home"
+- tapOn: "Move"
+- extendedWaitUntil:
+    visible: "Smart Move"
+    timeout: 30000
+- assertVisible: "Smart Move"
+- takeScreenshot: "smart-move"

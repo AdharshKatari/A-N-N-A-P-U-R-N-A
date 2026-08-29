@@ -1,0 +1,212 @@
+
+Here is the **step-by-step sequence to test all Annapurna APIs in Postman**, following the natural farmer and crop lifecycle:
+
+---
+
+### **Pre-requisites: Postman Environment Variables**
+In Postman, set up an Environment with these variables:
+* `base_url`: `http://localhost:8000` (or `http://10.0.2.2:8000` for Android emulator)
+* `token`: *(Will be populated in Step 2)*
+* `batch_id`: *(Will be populated in Step 4)*
+
+---
+
+### **Phase 1: Authentication & Onboarding**
+
+#### **Step 1: Register Farmer Account**
+* **Method & URL**: `POST {{base_url}}/api/v5/auth/register`
+* **Headers**: `Content-Type: application/json`
+* **Body (raw JSON)**:
+  ```json
+  {
+    "username": "ramesh_farmer",
+    "password": "FarmerPassword123!",
+    "full_name": "Ramesh Kumar",
+    "phone": "+919876543210",
+    "district": "Nashik",
+    "state": "Maharashtra"
+  }
+  ```
+
+#### **Step 2: Login & Obtain JWT Token**
+* **Method & URL**: `POST {{base_url}}/api/v5/auth/login`
+* **Headers**: `Content-Type: application/json`
+* **Body (raw JSON)**:
+  ```json
+  {
+    "username": "ramesh_farmer",
+    "password": "FarmerPassword123!"
+  }
+  ```
+* **Postman Test Script** *(under the "Tests" tab to auto-save the token)*:
+  ```javascript
+  const res = pm.response.json();
+  pm.environment.set("token", res.access_token);
+  ```
+
+> 💡 **For all subsequent requests**, add the Header:  
+> `Authorization: Bearer {{token}}`
+
+---
+
+### **Phase 2: Metadata & Environmental Intelligence**
+
+#### **Step 3: Get Supported Crops Taxonomy**
+* **Method & URL**: `GET {{base_url}}/api/v5/metadata/crops`
+* **Purpose**: Fetches the list of valid crop varieties (e.g., Tomato, Onion, Grapes) and base shelf-life parameters.
+
+#### **Step 4: Fetch Live Weather by GPS Coordinates**
+* **Method & URL**: `GET {{base_url}}/api/v5/weather?latitude=19.9975&longitude=73.7898`
+* **Purpose**: Retrieves ambient temperature, humidity, and rainfall probability for Nashik farm coordinates.
+
+#### **Step 5: Get Weather Spoilage & Heat Alerts**
+* **Method & URL**: `GET {{base_url}}/api/v5/weather/alerts?latitude=19.9975&longitude=73.7898&crop_type=Tomato`
+* **Purpose**: Evaluates Q10 thermal degradation and triggers alerts if high heat accelerates rot.
+
+#### **Step 6: Query ISRO VEDAS Satellite Data**
+* **Method & URL**: `GET {{base_url}}/api/v5/satellite/vedas/live?latitude=19.9975&longitude=73.7898`
+* **Purpose**: Retrieves live soil moisture, NDVI vegetation health index, and Land Surface Temperature (LST).
+
+---
+
+### **Phase 3: Harvest & AI Quality Assessment**
+
+#### **Step 7: AI Vision Assessment (Single Fruit / Sample)**
+* **Method & URL**: `POST {{base_url}}/api/v5/vision/analyze`
+* **Headers**: `Content-Type: multipart/form-data`
+* **Body (form-data)**:
+  * `file`: *(Select any crop image file, e.g. tomato.jpg)*
+* **Response**: Returns AGMARK visual score (0-100), ripeness stage (*Unripe/Optimal/Overripe*), and fungal pathogen flag.
+
+#### **Step 8: Create Harvest Batch**
+* **Method & URL**: `POST {{base_url}}/api/v5/batches/harvest`
+* **Headers**: `Content-Type: application/json`
+* **Body (raw JSON)**:
+  ```json
+  {
+    "crop_type": "Tomato",
+    "variety": "Vaibhav Hybrid",
+    "initial_weight_kg": 500,
+    "latitude": 19.9975,
+    "longitude": 73.7898,
+    "field_name": "North Field Block A",
+    "detected_ripeness_stage": "Optimal",
+    "visual_quality_score": 88.5
+  }
+  ```
+* **Postman Test Script**:
+  ```javascript
+  const res = pm.response.json();
+  pm.environment.set("batch_id", res.batch_id || res.id);
+  ```
+
+---
+
+### **Phase 4: Market Intelligence & Smart Move Optimization**
+
+#### **Step 9: Fetch Live APMC Mandi Rates**
+* **Method & URL**: `GET {{base_url}}/api/v5/mandi/prices?crop=Tomato`
+* **Purpose**: Fetches real-time modal, min, and max prices across APMC Mandis (e.g., Lasalgaon, Nashik, Vashi Mumbai, Pune).
+
+#### **Step 10: Simulate "Smart Move" What-If Scenarios**
+* **Method & URL**: `POST {{base_url}}/api/v5/whatif/simulate`
+* **Headers**: `Content-Type: application/json`
+* **Body (raw JSON)**:
+  ```json
+  {
+    "crop_type": "Tomato",
+    "quantity_kg": 500,
+    "visual_score": 88.5,
+    "ambient_temp_c": 31.0,
+    "latitude": 19.9975,
+    "longitude": 73.7898,
+    "ethylene_multiplier": 1.1
+  }
+  ```
+* **Response**: Compares 4 strategies (*Sell Locally, Cold Storage, Processing/Bio-fuel, Transport to Mumbai*) with net profit, transport cost, and spoilage risk.
+
+---
+
+### **Phase 5: Batch Details, Cryptographic Passport & Traceability**
+
+#### **Step 11: Get Individual Batch Details**
+* **Method & URL**: `GET {{base_url}}/api/v5/batches/{{batch_id}}`
+* **Purpose**: Retrieves all metadata, harvest timestamp, weight, and status for the active batch.
+
+#### **Step 12: Generate Cryptographic Batch Passport (QR)**
+* **Method & URL**: `GET {{base_url}}/api/v5/passport/{{batch_id}}`
+* **Purpose**: Returns the cryptographically signed passport with SHA-256 seal, AGMARK certification, and QR verification token.
+
+#### **Step 13: Verify Batch Passport Token (Buyer/Inspector Verification)**
+* **Method & URL**: `POST {{base_url}}/api/v5/passport/verify?token=PASTE_TOKEN_HERE`
+* **Purpose**: Validates QR authenticity and anti-tamper signature for market buyers.
+
+#### **Step 14: Get Thermal Degree-Hour Analytics**
+* **Method & URL**: `GET {{base_url}}/api/v5/logs/{{batch_id}}/analytics`
+* **Purpose**: Computes cumulative heat units accumulated during transit and remaining shelf-life hours.
+
+---
+
+### **Phase 6: Multilingual Speech-to-Speech Assistant ("Annapurna Vaani")**
+
+#### **Step 15: Query Multilingual Voice Assistant**
+* **Method & URL**: `POST {{base_url}}/api/v5/voice/assistant`
+* **Headers**: `Content-Type: application/json`
+* **Body (raw JSON)**:
+  ```json
+  {
+    "query": "టమాటల ధరలు ఎక్కడ బాగున్నాయి?",
+    "language": "te",
+    "crop": "Tomato",
+    "location": "Nashik",
+    "latitude": 19.9975,
+    "longitude": 73.7898
+  }
+  ```
+* **Response**:
+  ```json
+  {
+    "spoken_text": "నాసిక్ మార్కెట్లో టమాట క్వింటాలుకు ₹2,800 పలుకుతోంది. వాషి మార్కెట్లో ₹3,400 ఉంది.",
+    "english_translation": "Tomato is trading at ₹2,800/quintal in Nashik and ₹3,400 in Vashi.",
+    "action": "NAVIGATE_MARKET",
+    "action_label": "మార్కెట్ ధరలు చూడండి"
+  }
+  ```
+
+#### **Step 16: Synthesize Regional Audio Stream**
+* **Method & URL**: `GET {{base_url}}/api/v5/voice/synthesize?text=టమాటల+ధరలు+బాగున్నాయి&lang=te`
+* **Purpose**: Streams high-fidelity regional Indian TTS audio MP3 for voice playback.
+
+---
+
+### **Phase 7: Dashboard & Notifications**
+
+#### **Step 17: Get Farmer Dashboard Overview**
+* **Method & URL**: `GET {{base_url}}/api/v5/dashboard`
+* **Purpose**: Returns summary card numbers (active batches, total tonnage, crop varieties, recent activity feed).
+
+#### **Step 18: Get Notifications & Alerts**
+* **Method & URL**: `GET {{base_url}}/api/v5/notifications`
+* **Purpose**: Lists unread agronomic alerts, weather warnings, and Mandi price surge notifications.
+
+---
+
+### Quick Summary Sequence Diagram
+
+```
+1. Register / Login (Get JWT Token)
+        │
+2. Query Weather & VEDAS Satellite Data
+        │
+3. Analyze Crop Quality (Vision AI)
+        │
+4. Create Harvest Batch (Get Batch ID)
+        │
+5. Run Smart Move & Mandi Price What-If Simulation
+        │
+6. Issue Cryptographic Batch Passport & Verification
+        │
+7. Conversational Voice Assistant (Annapurna Vaani)
+        │
+8. View Aggregated Dashboard & Alerts
+```

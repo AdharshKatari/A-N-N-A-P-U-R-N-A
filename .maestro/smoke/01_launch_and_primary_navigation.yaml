@@ -1,0 +1,27 @@
+appId: host.exp.exponent
+---
+- launchApp
+- openLink: "exp://127.0.0.1:8084"
+- extendedWaitUntil:
+    visible: "Annapurna"
+    timeout: 180000
+- assertVisible: "Crops"
+- assertVisible: "Pest"
+- assertVisible: "Scan"
+- assertVisible: "Move"
+- assertVisible: "Market"
+- tapOn: "Pest"
+- assertVisible:
+    text: ".*Pest & Soil.*"
+- tapOn: "Scan"
+- assertVisible:
+    text: ".*Scan.*"
+- tapOn: "Move"
+- extendedWaitUntil:
+    visible: "Smart Move"
+    timeout: 30000
+- tapOn: "Market"
+- assertVisible: "Market"
+- tapOn: "Crops"
+- assertVisible: "Annapurna"
+

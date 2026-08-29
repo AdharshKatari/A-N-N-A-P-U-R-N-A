@@ -1,0 +1,10 @@
+flows:
+  - "launch-app.yaml"
+  - "app-smoke.yaml"
+  - "smoke/*.yaml"
+  - "navigation/*.yaml"
+  - "scan/*.yaml"
+  - "market/*.yaml"
+  - "settings/*.yaml"
+executionOrder:
+  continueOnFailure: true

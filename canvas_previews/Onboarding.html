@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onboarding — The Farmer Market</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; display: flex; justify-content: center; padding: 20px; }
+.phone { width: 390px; background: #f0f2f5; border-radius: 44px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.15); position: relative; }
+
+/* Onboarding Overlay */
+.onboarding { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(20,23,30,.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+
+.onboarding-card { background: #fff; border-radius: 28px; padding: 40px 32px; margin: 0 24px; text-align: center; box-shadow: 0 20px 60px -12px rgba(20,23,30,.35); }
+
+.onboarding-logo { width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, #1a7a52, #14633f); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 8px 24px -4px rgba(26,122,82,.35); }
+.onboarding-logo svg { width: 36px; height: 36px; fill: #fff; }
+
+.onboarding-title { font-size: 24px; font-weight: 700; color: #14171e; letter-spacing: -0.8px; margin-bottom: 8px; }
+.onboarding-sub { font-size: 15px; color: #6b7280; line-height: 1.5; margin-bottom: 28px; }
+
+/* Voice Button */
+.voice-setup { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 28px; }
+.voice-btn { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #1a7a52, #14633f); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; box-shadow: 0 8px 24px -4px rgba(26,122,82,.35); position: relative; }
+.voice-btn::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid rgba(26,122,82,.2); }
+.voice-btn::after { content: ''; position: absolute; inset: -12px; border-radius: 50%; border: 1px solid rgba(26,122,82,.1); }
+.voice-btn svg { width: 28px; height: 28px; fill: #fff; }
+.voice-label { font-size: 13px; color: #6b7280; }
+
+/* Language Chips */
+.language-chips { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; justify-content: center; }
+.lang-chip { padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 500; border: 1.5px solid rgba(20,23,30,.1); background: #fff; color: #6b7280; cursor: pointer; }
+.lang-chip.active { background: #1a7a52; color: #fff; border-color: #1a7a52; }
+
+/* CTA Button */
+.onboarding-cta { width: 100%; padding: 14px; border-radius: 14px; background: #1a7a52; color: #fff; font-size: 15px; font-weight: 600; border: none; cursor: pointer; letter-spacing: -0.2px; }
+.onboarding-cta:hover { background: #14633f; }
+
+/* Skip Link */
+.skip-link { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,.6); cursor: pointer; border: none; background: none; }
+.skip-link:hover { color: rgba(255,255,255,.8); }
+
+/* Dots */
+.dots { display: flex; gap: 6px; margin-top: 20px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); }
+.dot.active { width: 20px; border-radius: 3px; background: #fff; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="onboarding">
+    <div class="onboarding-card">
+      <!-- Logo -->
+      <div class="onboarding-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 22c4-4 8-7.5 8-12a8 8 0 10-16 0c0 4.5 4 8 8 12z"/></svg>
+      </div>
+
+      <!-- Title -->
+      <div class="onboarding-title">Welcome to<br>The Farmer Market</div>
+      <div class="onboarding-sub">Your smart farming companion. Get AI-powered insights, market prices, and voice-guided assistance in your language.</div>
+
+      <!-- Voice Setup -->
+      <div class="voice-setup">
+        <button class="voice-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <span class="voice-label">Tap to set up voice guide</span>
+      </div>
+
+      <!-- Language -->
+      <div class="language-chips">
+        <span class="lang-chip active">English</span>
+        <span class="lang-chip">हिन्दी</span>
+        <span class="lang-chip">తెలుగు</span>
+        <span class="lang-chip">ಕನ್ನಡ</span>
+      </div>
+
+      <!-- CTA -->
+      <button class="onboarding-cta">Get Started</button>
+    </div>
+
+    <!-- Skip -->
+    <button class="skip-link">Skip for now</button>
+
+    <!-- Dots -->
+    <div class="dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
