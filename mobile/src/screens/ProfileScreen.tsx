@@ -13,6 +13,7 @@ import {
   Alert,
   ActivityIndicator,
   Share,
+  Switch,
 } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
@@ -38,8 +39,7 @@ import { FarmSatelliteFieldMap } from '../components/FarmSatelliteFieldMap';
 import { PrecisionAgriCommandDashboard } from '../components/PrecisionAgriCommandDashboard';
 import { hapticHeavy, hapticLight, hapticMedium } from '../utils/haptics';
 
-const PROFILE_AVATAR =
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&dpr=2&q=80';
+import { FARMER_AVATAR, FARMER_NAME, FARMER_HANDLE, FARMER_LOCATION, FARMER_ROLE, FARMER_KISAN_ID } from '../constants/farmer';
 
 const PROFILE_STORAGE_KEY = '@annapurna_farmer_profile';
 
@@ -53,6 +53,7 @@ export default function ProfileScreen({ navigation }: any) {
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [scans, setScans] = useState<PestScan[]>([]);
+  const [showSatelliteDashboard, setShowSatelliteDashboard] = useState<boolean>(true);
   const [loading, setLoading] = useState(false);
   const reducedMotion = useReducedMotion();
 
@@ -290,25 +291,41 @@ export default function ProfileScreen({ navigation }: any) {
           <ScaleIn delay={150} duration={MotionTokens.duration.standard} reducedMotion={reducedMotion}>
             <View style={styles.mapSection}>
               <View style={styles.mapHeader}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flex: 1 }}>
                   <MaterialIcons name="satellite-alt" size={20} color="#145C2E" />
-                  <Text style={styles.mapTitle}>Precision Farm Command & Sensors</Text>
+                  <View>
+                    <Text style={styles.mapTitle}>Precision Farm Command & Sensors</Text>
+                  </View>
                 </View>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('DrawAOI')}
-                  style={styles.drawBtn}
-                  activeOpacity={0.7}
-                >
-                  <MaterialIcons name="fullscreen" size={16} color="#145C2E" />
-                  <Text style={styles.drawBtnText}>Full Screen</Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('DrawAOI')}
+                    style={styles.drawBtn}
+                    activeOpacity={0.7}
+                  >
+                    <MaterialIcons name="fullscreen" size={16} color="#145C2E" />
+                    <Text style={styles.drawBtnText}>Full Screen</Text>
+                  </TouchableOpacity>
+                  <Switch
+                    value={showSatelliteDashboard}
+                    onValueChange={(val) => {
+                      hapticLight();
+                      setShowSatelliteDashboard(val);
+                    }}
+                    trackColor={{ false: '#E5E7EB', true: '#C8E6C9' }}
+                    thumbColor={showSatelliteDashboard ? '#145C2E' : '#9CA3AF'}
+                  />
+                </View>
               </View>
-              <PrecisionAgriCommandDashboard
-                farmName={farmerData.name + " Farm"}
-                location={farmerData.farmLocation}
-                initialLatitude={farmCoords.latitude}
-                initialLongitude={farmCoords.longitude}
-              />
+
+              {showSatelliteDashboard && (
+                <PrecisionAgriCommandDashboard
+                  farmName={farmerData.name + " Farm"}
+                  location={farmerData.farmLocation}
+                  initialLatitude={farmCoords.latitude}
+                  initialLongitude={farmCoords.longitude}
+                />
+              )}
             </View>
           </ScaleIn>
         )}

@@ -32,11 +32,12 @@ export interface FarmerProfileCardProps {
   style?: ViewStyle;
 }
 
+import { FARMER_AVATAR } from '../constants/farmer';
+
 const DEFAULT_FARMER: FarmerProfileData = {
   name: 'Ramesh Patel',
   handle: '@ramesh.patel',
-  avatarUrl:
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&dpr=2&q=80',
+  avatarUrl: FARMER_AVATAR,
   role: 'Lead Cultivator & Farm Manager at Annapurna Farms.',
   farmLocation: 'East Field, Nashik Zone',
   joinedDate: 'December 2023',
@@ -59,6 +60,10 @@ export function FarmerProfileCard({
     setIsOpen(!isOpen);
   };
 
+  const avatarSource = typeof data.avatarUrl === 'string' && data.avatarUrl.startsWith('http')
+    ? { uri: data.avatarUrl }
+    : (data.avatarUrl || FARMER_AVATAR);
+
   return (
     <View style={[styles.wrapper, style]}>
       {/* Trigger Row (Avatar + Name + Handle) */}
@@ -68,7 +73,7 @@ export function FarmerProfileCard({
         activeOpacity={0.8}
       >
         <View style={styles.avatarWrapSmall}>
-          <Image source={{ uri: data.avatarUrl }} style={styles.avatarSmall} />
+          <Image source={avatarSource} style={styles.avatarSmall} />
           <View style={styles.onlineBadge} />
         </View>
 
@@ -91,7 +96,7 @@ export function FarmerProfileCard({
       {isOpen && (
         <View style={styles.hoverCardContainer}>
           <View style={styles.hoverCardHeader}>
-            <Image source={{ uri: data.avatarUrl }} style={styles.avatarLarge} />
+            <Image source={avatarSource} style={styles.avatarLarge} />
             <View style={styles.hoverHeaderContent}>
               <View style={styles.nameLine}>
                 <Text style={styles.hoverName}>{data.name}</Text>

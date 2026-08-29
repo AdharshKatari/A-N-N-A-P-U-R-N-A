@@ -341,110 +341,97 @@ function SmartMoveScreen({ navigation, route }: any) {
         <View style={styles.optionsSection}>
           <Text style={styles.optionsSectionTitle}>{t('explore_options', 'Explore Options')}</Text>
 
-          <CardSwipe gap={16} maxCardWidth={320}>
-            {(whatIfData?.scenarios || []).map((scenario: any, index: number) => {
-              // Map scenario ID to selection key and icon
-              const selectionKey = scenario.id || `option-${index}`;
-              const iconName = scenario.id === 'sell_local' ? 'storefront'
-                : scenario.id === 'store_overnight' ? 'inventory-2'
-                : scenario.id === 'transport_distant' ? 'local-shipping'
-                : scenario.id === 'processing' ? 'factory'
-                : 'help-outline';
-              const iconBg = scenario.risk_level === 'LOW' ? Colors.successBg
-                : scenario.risk_level === 'MEDIUM' ? Colors.warningBg
-                : Colors.errorBg;
-              const iconColor = scenario.risk_level === 'LOW' ? Colors.primaryDeep
-                : scenario.risk_level === 'MEDIUM' ? Colors.warning
-                : Colors.error;
-              const isRecommended = scenario.is_recommended;
-
-              // Border styling based on risk
-              const cardBorder = isRecommended ? styles.optionCardGreen
-                : scenario.risk_level === 'HIGH' ? styles.optionCardRed
-                : {};
-              const isSelected = selectedOption === selectionKey;
-              const selectedBorder = isSelected ? (isRecommended ? styles.optionCardSelectedGreen
+          {(whatIfData?.scenarios || []).map((scenario: any, index: number) => {
+            const selectionKey = scenario.id || `option-${index}`;
+            const iconName = scenario.id === 'sell_local' ? 'storefront'
+              : scenario.id === 'store_overnight' ? 'inventory-2'
+              : scenario.id === 'transport_distant' ? 'local-shipping'
+              : scenario.id === 'processing' ? 'factory'
+              : 'help-outline';
+            const iconBg = scenario.risk_level === 'LOW' ? Colors.successBg
+              : scenario.risk_level === 'MEDIUM' ? Colors.warningBg
+              : Colors.errorBg;
+            const iconColor = scenario.risk_level === 'LOW' ? Colors.primaryDeep
+              : scenario.risk_level === 'MEDIUM' ? Colors.warning
+              : Colors.error;
+            const isRecommended = scenario.is_recommended;
+            const cardBorder = isRecommended ? styles.optionCardGreen
+              : scenario.risk_level === 'HIGH' ? styles.optionCardRed : {};
+            const isSelected = selectedOption === selectionKey;
+            const selectedBorder = isSelected
+              ? (isRecommended ? styles.optionCardSelectedGreen
                 : scenario.risk_level === 'HIGH' ? styles.optionCardSelectedRed
                 : styles.optionCardSelected)
-                : {};
+              : {};
 
-              return (
-                <FadeIn delay={index * MotionTokens.stagger.delay} duration={MotionTokens.duration.fast} direction="up" reducedMotion={reducedMotion}>
-                <AnimatedPressable
-                  key={selectionKey}
-                  onPress={() => setSelectedOption(selectionKey)}
-                  style={[styles.optionCard, cardBorder, selectedBorder]}
-                  haptic="light"
-                >
-                  <View style={styles.optionHeaderRow}>
-                    <View style={styles.optionTitleLeft}>
-                      <View style={[styles.optionIconCircle, { backgroundColor: iconBg }]}>
-                        <MaterialIcons name={iconName} size={22} color={iconColor} />
-                      </View>
-                      <View style={{ flex: 1 }}>
-                        <Text style={isRecommended ? styles.optionTitleGreen : styles.optionTitle}>{scenario.title}</Text>
-                        <Text style={styles.optionSubtitle}>{scenario.subtitle}</Text>
-                      </View>
-                    </View>
-                    {isRecommended && (
-                      <GlassBadge variant="success" size="sm" style={styles.recommendedPill}>
-                        {t('recommended', 'Recommended')}
-                      </GlassBadge>
-                    )}
-                    {scenario.risk_level === 'HIGH' && !isRecommended && (
-                      <GlassBadge variant="error" size="sm" style={styles.highRiskPill}>
-                        {t('high_risk', 'High Risk')}
-                      </GlassBadge>
-                    )}
+            return (
+              <FadeIn key={selectionKey} delay={index * MotionTokens.stagger.delay} duration={MotionTokens.duration.fast} direction="up" reducedMotion={reducedMotion}>
+              <AnimatedPressable
+                onPress={() => setSelectedOption(selectionKey)}
+                style={[styles.optionCard, cardBorder, selectedBorder]}
+                haptic="light"
+              >
+                {/* Header row */}
+                <View style={styles.optionHeaderRow}>
+                  <View style={[styles.optionIconCircle, { backgroundColor: iconBg }]}>
+                    <MaterialIcons name={iconName} size={22} color={iconColor} />
                   </View>
-
-                  {/* Real metrics from API */}
-                  <View style={styles.optionMetricsRow}>
-                    <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>{t('price_per_kg', 'Price/kg')}</Text>
-                      <Text style={styles.optionMetricValue}>₹{scenario.estimated_price_per_kg}</Text>
-                    </View>
-                    <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>{t('card_potential_rev', 'Net Profit')}</Text>
-                      <Text style={styles.optionMetricValue}>₹{Math.round(scenario.expected_net_profit_inr).toLocaleString()}</Text>
-                    </View>
-                    <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>{t('shelf_life', 'Shelf Life')}</Text>
-                      <Text style={styles.optionMetricValue}>{scenario.shelf_life_remaining_days?.toFixed(1)}d</Text>
-                    </View>
-                    <View style={styles.optionMetric}>
-                      <Text style={styles.optionMetricLabel}>{t('risk_tier', 'Risk')}</Text>
-                      <Text style={[styles.optionMetricValue, {
-                        color: iconColor
-                      }]}>{scenario.risk_level}</Text>
-                    </View>
+                  <View style={styles.optionHeaderText}>
+                    <Text style={isRecommended ? styles.optionTitleGreen : styles.optionTitle} numberOfLines={2}>{scenario.title}</Text>
+                    <Text style={styles.optionSubtitle} numberOfLines={2}>{scenario.subtitle}</Text>
                   </View>
-
-                  {/* First reasoning point */}
-                  {scenario.reasoning?.[0] && (
-                    <View style={styles.optionFeaturesRow}>
-                      <MaterialIcons name="info-outline" size={14} color={Colors.textSecondary} />
-                      <Text style={styles.optionFeatureText} numberOfLines={1}>{scenario.reasoning[0]}</Text>
-                    </View>
+                  {isRecommended && (
+                    <GlassBadge variant="success" size="sm">{t('recommended', 'Rec.')}</GlassBadge>
                   )}
-
-                  {/* Route Button */}
-                  {scenario.destination && (
-                    <TouchableOpacity
-                      style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}
-                      onPress={() => navigation.navigate('Route', { destination: scenario.destination })}
-                    >
-                      <MaterialIcons name="map" size={16} color={Colors.primaryDark} />
-                      <Text style={{ fontFamily: 'PlusJakartaSans_600SemiBold', fontSize: 13, color: Colors.primaryDark, marginLeft: 4 }}>
-                        View Route to {scenario.destination.name}
-                      </Text>
-                    </TouchableOpacity>
+                  {scenario.risk_level === 'HIGH' && !isRecommended && (
+                    <GlassBadge variant="error" size="sm">{t('high_risk', 'High Risk')}</GlassBadge>
                   )}
-                </AnimatedPressable>
-                </FadeIn>
-              );
-            })}
-          </CardSwipe>
+                </View>
+
+                {/* 2×2 metrics grid */}
+                <View style={styles.optionMetricsGrid}>
+                  <View style={styles.optionMetricCell}>
+                    <Text style={styles.optionMetricLabel} numberOfLines={1}>{t('price_per_kg', 'PRICE/KG')}</Text>
+                    <Text style={styles.optionMetricValue} numberOfLines={1}>₹{scenario.estimated_price_per_kg}</Text>
+                  </View>
+                  <View style={styles.optionMetricCell}>
+                    <Text style={styles.optionMetricLabel} numberOfLines={1}>{t('card_potential_rev', 'NET PROFIT')}</Text>
+                    <Text style={styles.optionMetricValue} numberOfLines={1}>₹{Math.round(scenario.expected_net_profit_inr).toLocaleString()}</Text>
+                  </View>
+                  <View style={styles.optionMetricCell}>
+                    <Text style={styles.optionMetricLabel} numberOfLines={1}>{t('shelf_life', 'SHELF LIFE')}</Text>
+                    <Text style={styles.optionMetricValue} numberOfLines={1}>{scenario.shelf_life_remaining_days?.toFixed(1)}d</Text>
+                  </View>
+                  <View style={styles.optionMetricCell}>
+                    <Text style={styles.optionMetricLabel} numberOfLines={1}>{t('risk_tier', 'RISK')}</Text>
+                    <Text style={[styles.optionMetricValue, { color: iconColor }]} numberOfLines={1}>{scenario.risk_level}</Text>
+                  </View>
+                </View>
+
+                {/* Reasoning */}
+                {scenario.reasoning?.[0] && (
+                  <View style={styles.optionFeaturesRow}>
+                    <MaterialIcons name="info-outline" size={14} color={Colors.textSecondary} />
+                    <Text style={styles.optionFeatureText} numberOfLines={2}>{scenario.reasoning[0]}</Text>
+                  </View>
+                )}
+
+                {/* Route link */}
+                {scenario.destination && (
+                  <TouchableOpacity
+                    style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}
+                    onPress={() => navigation.navigate('Route', { destination: scenario.destination })}
+                  >
+                    <MaterialIcons name="map" size={16} color={Colors.primaryDark} />
+                    <Text style={{ fontFamily: 'PlusJakartaSans_600SemiBold', fontSize: 12, color: Colors.primaryDark, marginLeft: 4 }} numberOfLines={1}>
+                      {scenario.destination.name}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </AnimatedPressable>
+              </FadeIn>
+            );
+          })}
         </View>
         </FadeIn>
 
@@ -682,13 +669,13 @@ const styles = StyleSheet.create({
   },
   optionCard: {
     width: '100%',
-    minHeight: 250,
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.lg,
     padding: Spacing.cardPaddingSm,
-    gap: Spacing.sm - 2,
+    gap: Spacing.sm,
     borderWidth: 1.5,
     borderColor: Colors.divider,
+    overflow: 'hidden' as const,
     ...Shadows.glass1,
   },
   // Semantic border variants
@@ -708,66 +695,72 @@ const styles = StyleSheet.create({
     borderColor: Colors.primaryDeep,
   },
   optionHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  optionTitleLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
     gap: Spacing.sm,
+  },
+  optionHeaderText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  badgeRow: {
+    flexDirection: 'row' as const,
+    gap: Spacing.xs,
   },
   optionIconCircle: {
     width: 40,
     height: 40,
     borderRadius: BorderRadius.full,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    flexShrink: 0,
   },
   optionTitle: {
     fontFamily: FontFamily.semibold,
-    fontSize: Typography.bodyLg.fontSize,
-    lineHeight: Typography.bodyLg.lineHeight,
-    fontWeight: '600',
+    fontSize: 15,
+    lineHeight: 20,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
   },
   optionTitleGreen: {
     fontFamily: FontFamily.semibold,
-    fontSize: Typography.bodyLg.fontSize,
-    lineHeight: Typography.bodyLg.lineHeight,
-    fontWeight: '600',
+    fontSize: 15,
+    lineHeight: 20,
+    fontWeight: '600' as const,
     color: Colors.primaryDeep,
   },
   optionSubtitle: {
     fontFamily: FontFamily.regular,
-    fontSize: Typography.small.fontSize,
-    lineHeight: Typography.small.lineHeight,
+    fontSize: 12,
+    lineHeight: 16,
     color: Colors.textSecondary,
     marginTop: 2,
   },
-  optionMetricsRow: {
-    flexDirection: 'row',
-    gap: 12,
-    paddingVertical: 8,
+  optionMetricsGrid: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
     borderTopWidth: 1,
     borderTopColor: Colors.divider,
     borderBottomWidth: 1,
     borderBottomColor: Colors.divider,
+    paddingVertical: 8,
   },
-  optionMetric: {
-    flex: 1,
+  optionMetricCell: {
+    width: '50%' as any,
+    paddingVertical: 4,
+    paddingRight: 8,
     gap: 2,
   },
   optionMetricLabel: {
     fontFamily: FontFamily.bold,
-    fontSize: 10,
+    fontSize: 9,
     letterSpacing: 0.5,
     color: Colors.textSecondary,
-    textTransform: 'uppercase',
+    textTransform: 'uppercase' as const,
   },
   optionMetricValue: {
     fontFamily: FontFamily.semibold,
-    fontSize: 13,
+    fontSize: 14,
     color: Colors.textPrimary,
   },
   recommendedPill: {
@@ -780,7 +773,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bold,
     fontSize: 11,
     lineHeight: 14,
-    fontWeight: '700',
+    fontWeight: '700' as const,
     color: Colors.textOnPrimary,
   },
   highRiskPill: {
@@ -793,19 +786,20 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bold,
     fontSize: 11,
     lineHeight: 14,
-    fontWeight: '700',
+    fontWeight: '700' as const,
     color: Colors.error,
   },
   optionFeaturesRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
     gap: Spacing.xs,
   },
   optionFeatureText: {
     fontFamily: FontFamily.regular,
-    fontSize: Typography.small.fontSize,
-    lineHeight: Typography.small.lineHeight,
+    fontSize: 12,
+    lineHeight: 16,
     color: Colors.textSecondary,
+    flex: 1,
   },
   featureDot: {
     width: Spacing.xxs,

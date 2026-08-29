@@ -42,9 +42,7 @@ import VoiceAssistantModal from '../components/VoiceAssistantModal';
 import FloatingVoiceButton from '../components/FloatingVoiceButton';
 import { CalendarWidget } from '../components/CalendarWidget';
 import { FloatingDisclosure } from '../components/FloatingDisclosure';
-
-const AVATAR_URL =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuDAoI8pXqz5UIVImYP4_1U_SYCwn0-QyQaKO_oL7FRLJDHZcnXOiEVFZ00nEXT1FEOIIaEHzJGKZZw2EhEllzfNebbmYmgB26uUxHLLZCcyD95hQzxvAfdiKnsNS3zqLyQkyo3tCNxyK5-3NBgLUcQzh7SrabAfONySEkNe0yck4gstrbqO86Jw3xCT9Y_wEYxLaB3EnS6O8-MiYGXcdWDnODUkfOz5yPPxRtdmo8rs120wYsHGfw8fJQ';
+import { FARMER_AVATAR } from '../constants/farmer';
 
 import { getWeatherByCoords, getWeatherAlerts, getFaq } from '../services/api';
 
@@ -373,6 +371,19 @@ function HomeScreen({ navigation }: any) {
             activeOpacity={0.8}
           >
             <MaterialIcons name="notifications-none" size={22} color={Colors.primaryDeep} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Open farmer profile"
+            testID="home-profile"
+            style={{ width: 36, height: 36, borderRadius: 18, overflow: 'hidden', borderWidth: 2, borderColor: '#145C2E' }}
+            onPress={() => {
+              hapticLight();
+              navigation?.navigate('Profile');
+            }}
+            activeOpacity={0.8}
+          >
+            <Image source={FARMER_AVATAR} style={{ width: 36, height: 36, borderRadius: 18 }} />
           </TouchableOpacity>
         </View>
       </View>

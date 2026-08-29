@@ -2,28 +2,10 @@
  * API Configuration
  *
  * Switches between local dev server and production backend automatically.
- *
- * Usage:
- *   - Local dev:  EXPO_PUBLIC_API_URL=http://localhost:8001 npx expo start
- *   - Production: EXPO_PUBLIC_API_URL=https://your-api.vercel.app npx expo start
- *   - Fallback:   defaults to http://localhost:8001
+ * Backend port defaults to 8000 (FastAPI Uvicorn).
  */
 
 import { Platform } from 'react-native';
-
-// ─── Environment URLs ──────────────────────────────────
-// Set EXPO_PUBLIC_API_URL in your .env or shell before starting Expo.
-
-const DEV_URL = 'http://192.168.29.123:8001';
-
-// Android emulator needs 10.0.2.2 to reach host localhost
-const ANDROID_EMULATOR_URL = 'http://10.0.2.2:8001';
-
-// Physical device LAN URL
-const LAN_URL = 'http://192.168.29.123:8001';
-
-// ─── URL Resolution ────────────────────────────────────
-
 import Constants from 'expo-constants';
 
 function resolveBaseUrl(): string {
@@ -31,7 +13,15 @@ function resolveBaseUrl(): string {
   const envUrl = (global as any).__EXPO_PUBLIC_API_URL ?? process.env?.EXPO_PUBLIC_API_URL;
   if (envUrl) return envUrl.replace(/\/+$/, ''); // strip trailing slashes
 
-  // 2. Auto-detect Expo host IP for physical devices running Expo Go
+  // 2. Web browser: use current host on port 8000
+  if (Platform.OS === 'web') {
+    if (typeof window !== 'undefined' && window.location && window.location.hostname) {
+      return `http://${window.location.hostname}:8000`;
+    }
+    return 'http://localhost:8000';
+  }
+
+  // 3. Auto-detect Expo host IP for physical devices running Expo Go
   const hostUri =
     Constants.expoConfig?.hostUri ??
     (Constants as any).manifest2?.extra?.expoGo?.debuggerHost ??
@@ -41,12 +31,17 @@ function resolveBaseUrl(): string {
   if (hostUri && typeof hostUri === 'string') {
     const host = hostUri.split('/')[0].split(':')[0];
     if (host && host !== 'localhost' && host !== '127.0.0.1') {
-      return `http://${host}:8001`;
+      return `http://${host}:8000`;
     }
   }
 
-  // 3. Physical phone on LAN or fallback
-  return LAN_URL;
+  // 4. Android emulator needs 10.0.2.2 to reach host localhost
+  if (Platform.OS === 'android') {
+    return 'http://10.0.2.2:8000';
+  }
+
+  // 5. Default fallback
+  return 'http://localhost:8000';
 }
 
 export const API_BASE_URL = resolveBaseUrl();
