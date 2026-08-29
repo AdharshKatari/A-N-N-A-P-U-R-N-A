@@ -33,6 +33,7 @@ import {
   useReducedMotion,
   MotionTokens,
 } from '../components/MotionSystem';
+import AnalyzingCropView from '../components/AnalyzingCropView';
 
 interface AnalysisScreenParams {
   batchId: string;
@@ -73,6 +74,7 @@ function AnalysisScreen({ navigation, route }: any) {
   const [whatIfData, setWhatIfData] = useState<WhatIfResponse | null>(null);
   const [visionResult, setVisionResult] = useState<AggregatedVisionResult | null>(null);
   const [loadingVision, setLoadingVision] = useState(true);
+  const [isAnalyzingComplete, setIsAnalyzingComplete] = useState(false);
   const [loadingSat, setLoadingSat] = useState(false);
   const [loadingWeather, setLoadingWeather] = useState(false);
   const [loadingWhatIf, setLoadingWhatIf] = useState(false);
@@ -321,6 +323,19 @@ function AnalysisScreen({ navigation, route }: any) {
   const spoilageRisk = whatIfData?.decay_velocity && whatIfData.decay_velocity > 2 ? 'Moderate' : 'Low';
   const timing = recommended?.shelf_life_remaining_days ? `${Math.ceil(recommended.shelf_life_remaining_days)} days` : '2-3 Days';
   const condition = visualScore < 50 ? 'Needs Attention' : visualScore < 75 ? 'Fair' : 'Good';
+
+  if (!isAnalyzingComplete && !error) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <AnalyzingCropView
+          cropName={cropType}
+          isReady={!loadingVision && Boolean(visionResult)}
+          onComplete={() => setIsAnalyzingComplete(true)}
+        />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
