@@ -11,6 +11,7 @@ import {
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors, FontFamily, Typography, BorderRadius, Spacing, Shadows } from '../constants/theme';
+import { useLanguage } from '../context/LanguageContext';
 
 interface AnalyzingCropViewProps {
   onComplete?: () => void;
@@ -23,20 +24,21 @@ const STROKE_WIDTH = 14;
 const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-const STEPS = [
-  { id: 'quality', label: 'Detecting quality' },
-  { id: 'ripeness', label: 'Checking ripeness' },
-  { id: 'damages', label: 'Identifying damages' },
-  { id: 'freshness', label: 'Estimating freshness' },
-];
-
 export default function AnalyzingCropView({
   onComplete,
   cropName = 'crop',
   isReady = false,
 }: AnalyzingCropViewProps) {
+  const { t } = useLanguage();
   const [progressPercent, setProgressPercent] = useState(15);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  const STEPS = [
+    { id: 'quality', label: t('detecting_quality', 'Detecting quality') },
+    { id: 'ripeness', label: t('checking_ripeness', 'Checking ripeness') },
+    { id: 'damages', label: t('identifying_damages', 'Identifying damages') },
+    { id: 'freshness', label: t('estimating_freshness', 'Estimating freshness') },
+  ];
 
   const animatedProgress = useRef(new Animated.Value(15)).current;
   const spinAnim = useRef(new Animated.Value(0)).current;
@@ -192,7 +194,7 @@ export default function AnalyzingCropView({
         </View>
 
         {/* Title */}
-        <Text style={styles.title}>Analyzing your crop</Text>
+        <Text style={styles.title}>{t('analyzing_crop', 'Analyzing your crop')}</Text>
         <Text style={styles.subtitle}>
           Evaluating multi-sample firmness, colorimetry, and freshness
         </Text>

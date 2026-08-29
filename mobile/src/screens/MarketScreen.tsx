@@ -41,15 +41,9 @@ import DynamicToolbar from '../components/DynamicToolbar';
 import { MorphingDiscoveryBar } from '../components/MorphingDiscoveryBar';
 import { MarketTrendsAnalytics } from '../components/MarketTrendsAnalytics';
 import FavoriteMarketsList from '../components/FavoriteMarketsList';
+import { useLanguage } from '../context/LanguageContext';
 
 type FilterType = 'all' | 'nearby' | 'cheap' | 'premium';
-
-const FILTER_OPTIONS: { key: FilterType; label: string; icon: string }[] = [
-  { key: 'all', label: 'All Markets', icon: 'store' },
-  { key: 'nearby', label: 'Within 15 km', icon: 'near-me' },
-  { key: 'cheap', label: 'Best Price', icon: 'attach-money' },
-  { key: 'premium', label: 'Premium', icon: 'diamond' },
-];
 
 interface MarketWithCoords {
   id: string;
@@ -78,6 +72,13 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 function MarketScreen({ navigation }: any) {
+  const { t, language } = useLanguage();
+  const FILTER_OPTIONS: { key: FilterType; label: string; icon: string }[] = [
+    { key: 'all', label: t('filter_all', 'All Markets'), icon: 'store' },
+    { key: 'nearby', label: t('nearest_mandi', 'Within 15 km'), icon: 'near-me' },
+    { key: 'cheap', label: t('highest_profit', 'Best Price'), icon: 'attach-money' },
+    { key: 'premium', label: 'Premium', icon: 'diamond' },
+  ];
   const [selectedCrop, setSelectedCrop] = useState('Tomato');
   const [batches, setBatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

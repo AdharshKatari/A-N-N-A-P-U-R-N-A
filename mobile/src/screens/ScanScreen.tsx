@@ -39,6 +39,7 @@ import {
   MotionTokens,
 } from '../components/GlassPrimitives';
 import { useOfflineQueue } from '../utils/offlineQueue';
+import { useLanguage } from '../context/LanguageContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -59,6 +60,7 @@ interface ScanScreenParams {
 }
 
 function ScanScreen({ navigation, route }: any) {
+  const { t } = useLanguage();
   const params = route?.params as ScanScreenParams | undefined;
   const [isCapturing, setIsCapturing] = useState(false);
   const [cropTypes, setCropTypes] = useState<string[]>(['Tomatoes', 'Mangoes', 'Onions', 'Potatoes', 'Paddy', 'Wheat']);
@@ -324,7 +326,7 @@ function ScanScreen({ navigation, route }: any) {
         </TouchableOpacity>
 
         <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>Scan Crop</Text>
+          <Text style={styles.headerTitle}>{t('scan_title', 'Scan Crop')}</Text>
           <Text style={styles.headerSubtitle}>Sample {completedSamples} of {SAMPLE_COUNT}</Text>
         </View>
 
@@ -346,7 +348,7 @@ function ScanScreen({ navigation, route }: any) {
         {/* Progress Bar */}
         <GlassCard level="level1" style={styles.progressContainer}>
           <View style={styles.progressLabelRow}>
-            <Text style={styles.progressLabel}>5-Fruit Sampling Protocol</Text>
+            <Text style={styles.progressLabel}>{t('sampling_protocol', '5-Fruit Sampling Protocol')}</Text>
             <Text style={styles.progressCount}>{completedSamples} / {SAMPLE_COUNT}</Text>
           </View>
           <View style={styles.progressBarBg}>

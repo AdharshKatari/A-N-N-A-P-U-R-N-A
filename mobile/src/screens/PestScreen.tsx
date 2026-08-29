@@ -24,6 +24,7 @@ import {
   AnimatedPressable,
 } from '../components/Animations';
 import { getRecentScans } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 const FARMER_AVATAR =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAynR1UIqlYtF3umYkiv4VHPQHIsoGOaF9cNOzZul5zdwrqC2lCYYBkXGnwN2DWboJ1L976a3ehMgETAkNrzK3AnJ2Htqxu3FvykCx0L85oylzlkrks4WAaxN4sVYaiaeTlbt1TD0LEedpdeHTahbmpH7bCns7lNPposnxXkhRmUyAnF3Skcz7njOcvOWDFaGqBxBHzBIRiR9ftvhhOYTh7CEOgZBEbrDXMdW1OHZmIT8D-z90kmkHJYw';
@@ -32,6 +33,7 @@ const PADDY_LEAF_IMAGE =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDTx2BwGYwcHhhtJnRDQV7-nyKnATPbiG4vrNiXHV1LZ0Kz1LatNQBzuX_VmQncBYRXUNIahhSt0W4Y5xHru-aCOAMWMnjAEy8ihEejBLPkkEV4FKXixOsH5hS6LHz7rncfRC5OKWNW1XsQw-cKVcZbFByrcXQssKHqaQt-vEUWvAk6h3pTFxF8jbFUnZGXHFMTtwfAEMusEDx9itl_RVyg6nh8OyT4cJrerp_GWpqmKAUdvYa8zCMrqQ';
 
 export default function PestScreen({ navigation }: any) {
+  const { t } = useLanguage();
   const [recentScans, setRecentScans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -58,8 +60,8 @@ export default function PestScreen({ navigation }: any) {
             <Image source={{ uri: FARMER_AVATAR }} style={styles.avatar} resizeMode="cover" />
           </View>
           <View>
-            <Text style={styles.headerTitle}>Pest & Soil Hub</Text>
-            <Text style={styles.headerSubtitle}>Check crop problems and soil health</Text>
+            <Text style={styles.headerTitle}>{t('pest_hub_title', 'Pest & Soil Hub')}</Text>
+            <Text style={styles.headerSubtitle}>{t('pest_hub_sub', 'Check crop problems and soil health')}</Text>
           </View>
         </View>
         <TouchableOpacity
@@ -83,9 +85,9 @@ export default function PestScreen({ navigation }: any) {
             <View style={styles.pestIconCircle}>
               <MaterialCommunityIcons name="leaf" size={28} color={Colors.secondary} />
             </View>
-            <Text style={styles.actionCardTitle}>Pest Scanner</Text>
+            <Text style={styles.actionCardTitle}>{t('pest_scanner', 'Pest Scanner')}</Text>
             <Text style={styles.actionCardDesc}>
-              Scan a leaf or crop problem for instant diagnosis
+              {t('pest_scanner_desc', 'Scan a leaf or crop problem for instant diagnosis')}
             </Text>
             <TouchableOpacity
               style={styles.primaryActionButton}
@@ -93,7 +95,7 @@ export default function PestScreen({ navigation }: any) {
               activeOpacity={0.85}
             >
               <MaterialIcons name="photo-camera" size={20} color={Colors.textOnPrimary} />
-              <Text style={styles.primaryActionButtonText}>Start Scan</Text>
+              <Text style={styles.primaryActionButtonText}>{t('start_scan', 'Start Scan')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -102,9 +104,9 @@ export default function PestScreen({ navigation }: any) {
             <View style={styles.soilIconCircle}>
               <MaterialIcons name="landscape" size={28} color={Colors.textOnDark} />
             </View>
-            <Text style={styles.actionCardTitle}>Soil Scanner</Text>
+            <Text style={styles.actionCardTitle}>{t('soil_scanner', 'Soil Scanner')}</Text>
             <Text style={styles.actionCardDesc}>
-              Check soil condition and moisture levels
+              {t('soil_scanner_desc', 'Check soil condition and moisture levels')}
             </Text>
             <TouchableOpacity
               style={styles.secondaryActionButton}
@@ -112,7 +114,7 @@ export default function PestScreen({ navigation }: any) {
               activeOpacity={0.85}
             >
               <MaterialIcons name="qr-code-scanner" size={20} color={Colors.primaryDark} />
-              <Text style={styles.secondaryActionButtonText}>Scan Soil</Text>
+              <Text style={styles.secondaryActionButtonText}>{t('scan_soil_btn', 'Scan Soil')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -121,9 +123,9 @@ export default function PestScreen({ navigation }: any) {
         {/* Recent Scans Section — FadeInUp */}
         <FadeInUp delay={200} duration={500}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Scans</Text>
+          <Text style={styles.sectionTitle}>{t('recent_scans', 'Recent Scans')}</Text>
           <TouchableOpacity activeOpacity={0.7} onPress={() => navigation?.navigate('CropBatches')}>
-            <Text style={styles.viewHistoryLink}>View History</Text>
+            <Text style={styles.viewHistoryLink}>{t('view_history', 'View History')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -153,12 +155,12 @@ export default function PestScreen({ navigation }: any) {
                   {scan.issue_detected !== false ? (
                     <View style={styles.issueBadge}>
                       <MaterialIcons name="warning" size={14} color={Colors.warning} />
-                      <Text style={styles.issueBadgeText}>Issue Detected</Text>
+                      <Text style={styles.issueBadgeText}>{t('issue_detected', 'Issue Detected')}</Text>
                     </View>
                   ) : (
                     <View style={[styles.issueBadge, { backgroundColor: Colors.successBg }]}>
                       <MaterialIcons name="check-circle" size={14} color={Colors.success} />
-                      <Text style={[styles.issueBadgeText, { color: Colors.success }]}>Healthy</Text>
+                      <Text style={[styles.issueBadgeText, { color: Colors.success }]}>{t('healthy', 'Healthy')}</Text>
                     </View>
                   )}
                 </View>
@@ -170,7 +172,7 @@ export default function PestScreen({ navigation }: any) {
                     activeOpacity={0.7}
                     onPress={() => navigation?.navigate('Analysis', { cropType: scan.crop_name, scanId: scan.id })}
                   >
-                    <Text style={styles.viewResultText}>View Result</Text>
+                    <Text style={styles.viewResultText}>{t('view_all', 'View Result')}</Text>
                     <MaterialIcons name="arrow-forward" size={18} color={Colors.primaryDark} />
                   </TouchableOpacity>
                 </View>
@@ -180,7 +182,7 @@ export default function PestScreen({ navigation }: any) {
         ) : (
           <View style={[styles.recentScanCard, { alignItems: 'center', paddingVertical: Spacing.xl }]}>
             <MaterialCommunityIcons name="line-scan" size={40} color={Colors.textMuted} />
-            <Text style={{ fontFamily: FontFamily.semibold, fontSize: Typography.body.fontSize, color: Colors.textSecondary, marginTop: Spacing.sm }}>No recent scans found</Text>
+            <Text style={{ fontFamily: FontFamily.semibold, fontSize: Typography.body.fontSize, color: Colors.textSecondary, marginTop: Spacing.sm }}>{t('no_recent_scans', 'No recent scans found')}</Text>
             <Text style={{ fontFamily: FontFamily.regular, fontSize: Typography.small.fontSize, color: Colors.textMuted, marginTop: Spacing.xxs }}>Your pest and soil scans will appear here.</Text>
           </View>
         )}
@@ -188,7 +190,7 @@ export default function PestScreen({ navigation }: any) {
 
         {/* Nearby Support Section — FadeInUp */}
         <FadeInUp delay={320} duration={500}>
-        <Text style={styles.sectionTitle}>Nearby Support</Text>
+        <Text style={styles.sectionTitle}>{t('nearby_support', 'Nearby Support')}</Text>
 
         <View style={styles.supportCardsContainer}>
           <TouchableOpacity style={styles.supportCard} activeOpacity={0.8} onPress={() => navigation?.navigate('Market')}>
@@ -197,7 +199,7 @@ export default function PestScreen({ navigation }: any) {
                 <MaterialIcons name="storefront" size={24} color={Colors.primaryDark} />
               </View>
               <View>
-                <Text style={styles.supportCardTitle}>Crop-care Stores</Text>
+                <Text style={styles.supportCardTitle}>{t('crop_care_stores', 'Crop-care Stores')}</Text>
                 <Text style={styles.supportCardDesc}>Find pesticides and fertilizers</Text>
               </View>
             </View>
@@ -210,7 +212,7 @@ export default function PestScreen({ navigation }: any) {
                 <MaterialIcons name="local-florist" size={24} color={Colors.primaryDark} />
               </View>
               <View>
-                <Text style={styles.supportCardTitle}>Nearby Nurseries</Text>
+                <Text style={styles.supportCardTitle}>{t('nurseries', 'Nearby Nurseries')}</Text>
                 <Text style={styles.supportCardDesc}>Healthy saplings and seeds</Text>
               </View>
             </View>

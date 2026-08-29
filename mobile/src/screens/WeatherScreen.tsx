@@ -38,6 +38,7 @@ import {
   MotionTokens,
 } from '../components/GlassPrimitives';
 import { withErrorBoundary } from '../components/ErrorBoundary';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ForecastDay {
   day: string;
@@ -50,6 +51,7 @@ interface ForecastDay {
 }
 
 function WeatherScreen({ navigation }: any) {
+  const { t } = useLanguage();
   const [weather, setWeather] = useState<WeatherData | null>({
     source: 'INTERNAL_DEFAULTS',
     temp: 28,
@@ -319,19 +321,19 @@ function WeatherScreen({ navigation }: any) {
           <View style={styles.quickMetricsRow}>
             <View style={styles.metricCol}>
               <MaterialIcons name="water-drop" size={20} color={Colors.textMuted} />
-              <Text style={styles.metricColLabel}>Rain</Text>
+              <Text style={styles.metricColLabel}>{t('rain_probability', 'Rain')}</Text>
               <Text style={styles.metricColValue}>{rainChance}%</Text>
             </View>
 
             <View style={styles.metricCol}>
               <MaterialIcons name="water" size={20} color={Colors.textMuted} />
-              <Text style={styles.metricColLabel}>Humidity</Text>
+              <Text style={styles.metricColLabel}>{t('humidity', 'Humidity')}</Text>
               <Text style={styles.metricColValue}>{humidity}</Text>
             </View>
 
             <View style={styles.metricCol}>
               <Feather name="wind" size={20} color={Colors.textMuted} />
-              <Text style={styles.metricColLabel}>Wind</Text>
+              <Text style={styles.metricColLabel}>{t('wind_speed', 'Wind')}</Text>
               <Text style={styles.metricColValue}>{windSpeed}</Text>
             </View>
           </View>

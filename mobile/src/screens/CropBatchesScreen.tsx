@@ -16,6 +16,7 @@ import { api, Batch, DashboardStats } from '../lib/apiClient';
 import { withErrorBoundary } from '../components/ErrorBoundary';
 import { FadeIn, ScaleIn, MotionTokens } from '../components/Animations';
 import { useReducedMotion } from '../components/GlassPrimitives';
+import { useLanguage } from '../context/LanguageContext';
 
 const DEFAULT_CROP_THUMB =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuCu1LldaJyt1LeNw8sJob3m06qXxXREEE1DfK5y3_ua6l_Us851_OzYo1xv-db5AKhVUgioai6piRotqMeY3HVUxKY40g0SU-mRva0FQjXYS2_-Tr3QHd8rDqrGohfeic2SGQaqZ9wCYcwJi2NcGuStT6jxbnpQm3ftYo79FYhbhRETbpT5OiHZ8b_QPcXUotIMAKJRJssYOZMFmfo9sWd74ma-vZ8L48aMBA_1uBEcdUfpvCetcDoVrA';
@@ -80,6 +81,7 @@ const FALLBACK_BATCHES: Batch[] = [
 ];
 
 function CropBatchesScreen({ navigation }: any) {
+  const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState<'active' | 'completed' | 'all'>('active');
   const [batches, setBatches] = useState<Batch[]>(FALLBACK_BATCHES);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
@@ -174,8 +176,8 @@ function CropBatchesScreen({ navigation }: any) {
             <MaterialIcons name="arrow-back" size={24} color="#00431D" />
           </TouchableOpacity>
           <View>
-            <Text style={styles.headerTitle}>Crop Batches</Text>
-            <Text style={styles.headerSubtitle}>Track your current and previous crops</Text>
+            <Text style={styles.headerTitle}>{t('batches_title', 'Crop Batches')}</Text>
+            <Text style={styles.headerSubtitle}>{t('batches_sub', 'Track your current and previous crops')}</Text>
           </View>
         </View>
 
@@ -202,14 +204,14 @@ function CropBatchesScreen({ navigation }: any) {
             <Text style={styles.summaryNumber}>
               {dashboard?.by_status?.find(s => s.current_status === 'ACTIVE')?.batch_count ?? 0}
             </Text>
-            <Text style={styles.summaryLabel}>Active Batches</Text>
+            <Text style={styles.summaryLabel}>{t('active_batches', 'Active Batches')}</Text>
           </View>
 
           <View style={styles.summaryCard}>
             <Text style={styles.summaryNumber}>
               {dashboard?.by_status?.find(s => s.current_status === 'SOLD')?.batch_count ?? 0}
             </Text>
-            <Text style={styles.summaryLabel}>Completed</Text>
+            <Text style={styles.summaryLabel}>{t('batch_status_sold', 'Completed')}</Text>
           </View>
 
           <View style={styles.summaryCard}>
@@ -217,7 +219,7 @@ function CropBatchesScreen({ navigation }: any) {
               {dashboard?.totals?.total_weight_kg ? Math.round(dashboard.totals.total_weight_kg) : 0}
               <Text style={styles.unitText}>kg</Text>
             </Text>
-            <Text style={styles.summaryLabel}>Total Weight</Text>
+            <Text style={styles.summaryLabel}>{t('card_potential_rev', 'Total Weight')}</Text>
           </View>
         </View>
         </FadeIn>
@@ -239,7 +241,7 @@ function CropBatchesScreen({ navigation }: any) {
                 activeFilter === 'active' && styles.filterPillTextActive,
               ]}
             >
-              Active
+              {t('batch_status_active', 'Active')}
             </Text>
           </TouchableOpacity>
 
@@ -257,7 +259,7 @@ function CropBatchesScreen({ navigation }: any) {
                 activeFilter === 'completed' && styles.filterPillTextActive,
               ]}
             >
-              Completed
+              {t('batch_status_sold', 'Sold / Completed')}
             </Text>
           </TouchableOpacity>
 
@@ -275,7 +277,7 @@ function CropBatchesScreen({ navigation }: any) {
                 activeFilter === 'all' && styles.filterPillTextActive,
               ]}
             >
-              All
+              {t('filter_all', 'All Batches')}
             </Text>
           </TouchableOpacity>
         </View>

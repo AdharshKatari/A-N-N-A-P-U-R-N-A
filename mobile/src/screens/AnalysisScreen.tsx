@@ -34,6 +34,7 @@ import {
   MotionTokens,
 } from '../components/MotionSystem';
 import AnalyzingCropView from '../components/AnalyzingCropView';
+import { useLanguage } from '../context/LanguageContext';
 
 interface AnalysisScreenParams {
   batchId: string;
@@ -66,6 +67,7 @@ interface AggregatedVisionResult {
 }
 
 function AnalysisScreen({ navigation, route }: any) {
+  const { t } = useLanguage();
   const params = route?.params as AnalysisScreenParams | undefined;
   
   const [fieldCoords, setFieldCoords] = useState<{ latitude: number; longitude: number } | null>(null);
