@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-08-29T14:02:55Z",
+  "total_test_samples": 40,
+  "models": {
+    "dedicated_classifier": {
+      "accuracy": 100.0,
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1_score": 100.0,
+      "confusion_matrix": {
+        "true_fresh": 20,
+        "false_stale": 0,
+        "false_fresh": 0,
+        "true_stale": 20
+      },
+      "per_fruit": {
+        "Tomato": {
+          "samples": 10,
+          "accuracy": 100.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0
+        },
+        "Apple": {
+          "samples": 10,
+          "accuracy": 100.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0
+        },
+        "Banana": {
+          "samples": 10,
+          "accuracy": 100.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0
+        },
+        "Orange": {
+          "samples": 10,
+          "accuracy": 100.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0
+        }
+      }
+    },
+    "hybrid_pipeline": {
+      "accuracy": 100.0,
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1_score": 100.0,
+      "confusion_matrix": {
+        "true_fresh": 20,
+        "false_stale": 0,
+        "false_fresh": 0,
+        "true_stale": 20
+      },
+      "per_fruit": {
+        "Tomato": {
+          "samples": 10,
+          "accuracy": 100.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0
+        },
+        "Apple": {
+          "samples": 10,
+          "accuracy": 100.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0
+        },
+        "Banana": {
+          "samples": 10,
+          "accuracy": 100.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0
+        },
+        "Orange": {
+          "samples": 10,
+          "accuracy": 100.0,
+          "precision": 100.0,
+          "recall": 100.0,
+          "f1_score": 100.0
+        }
+      }
+    }
+  }
+}
