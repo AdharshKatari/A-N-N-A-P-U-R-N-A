@@ -14,6 +14,7 @@ import {
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
+import { useLanguage } from '../context/LanguageContext';
 import { api, DashboardStats, Notification, MandiPrice } from '../lib/apiClient';
 import { useDashboard } from '../hooks/useApiQueries';
 import { withErrorBoundary } from '../components/ErrorBoundary';
@@ -283,9 +284,11 @@ function HomeScreen({ navigation }: any) {
   const displayTemp = weather ? `${Math.round(weather.temp)}°C` : '28°C';
   const displayCondition = weather ? weather.description : 'Sunny';
 
+  const { t, language } = useLanguage();
+
   const actionCards = [
     {
-      label: 'Add Crop',
+      label: t('action_add_crop', 'Add Crop'),
       icon: 'add',
       bgTint: '#E8F5E9',
       iconColor: '#1B7A3D',
@@ -293,7 +296,7 @@ function HomeScreen({ navigation }: any) {
       haptic: 'medium' as const,
     },
     {
-      label: 'Scan Crop',
+      label: t('action_scan_crop', 'Scan Crop'),
       icon: 'photo-camera',
       bgTint: '#E0F2FE',
       iconColor: '#0284C7',
@@ -301,7 +304,7 @@ function HomeScreen({ navigation }: any) {
       haptic: 'medium' as const,
     },
     {
-      label: 'Smart Move',
+      label: t('action_smart_move', 'Smart Move'),
       icon: 'trending-up',
       bgTint: '#FEF3C7',
       iconColor: '#D97706',
@@ -384,12 +387,13 @@ function HomeScreen({ navigation }: any) {
         <FadeIn delay={50} duration={MotionTokens.duration.standard} direction="down" reducedMotion={false}>
             <View style={styles.greetingSection}>
               <TextEffect style={styles.greetingText} stagger={18}>
-                {`Good morning, ${username}`}
+                {t('greeting_farmer', `Good morning, ${username}`)}
               </TextEffect>
               <TextLoop style={styles.greetingLoop} interval={3200}>
                 {[
-                  'Track every crop from sowing to sale',
-                  'Diagnose pests and soil concerns',
+                  t('greeting_sub', 'Track every crop from sowing to sale'),
+                  language === 'te' ? 'పంట నాణ్యత మరియు తెగుళ్ల రక్షణ' :
+                  language === 'hi' ? 'फसल की सही कीमत और सुरक्षा' :
                   'Compare markets before you move',
                 ]}
               </TextLoop>

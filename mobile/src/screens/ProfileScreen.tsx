@@ -18,6 +18,7 @@ import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LeafletMap from '../components/LeafletMap';
+import { useLanguage } from '../context/LanguageContext';
 import { api, DashboardStats, Notification, PestScan } from '../lib/apiClient';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -44,6 +45,7 @@ const PROFILE_STORAGE_KEY = '@annapurna_farmer_profile';
 
 export default function ProfileScreen({ navigation }: any) {
   const { user, logout, isAuthenticated } = useAuth();
+  const { t, currentLanguageMeta, language } = useLanguage();
   const [farmCoords, setFarmCoords] = useState<{ latitude: number; longitude: number } | null>({
     latitude: 19.9975,
     longitude: 73.7898,

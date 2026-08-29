@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useLanguage } from '../context/LanguageContext';
 import HomeScreen from '../screens/HomeScreen';
 import PestScreen from '../screens/PestScreen';
 import ScanScreen from '../screens/ScanScreen';
@@ -80,13 +81,15 @@ function DockBar({ state, descriptors, navigation, insets }: BottomTabBarProps) 
 }
 
 export default function BottomTabs() {
+  const { t } = useLanguage();
+
   return (
     <Tab.Navigator initialRouteName="Home" tabBar={(props) => <DockBar {...props} />} screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Crops' }} />
-      <Tab.Screen name="Pest & Soil" component={PestScreen} options={{ tabBarLabel: 'Pest' }} />
-      <Tab.Screen name="Scan" component={ScanScreen} options={{ tabBarLabel: 'Scan' }} />
-      <Tab.Screen name="Smart Move" component={SmartMoveScreen} options={{ tabBarLabel: 'Move' }} />
-      <Tab.Screen name="Market" component={MarketScreen} options={{ tabBarLabel: 'Market' }} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: t('tab_home', 'Home') }} />
+      <Tab.Screen name="Pest & Soil" component={PestScreen} options={{ tabBarLabel: t('tab_crops', 'Pest & Soil') }} />
+      <Tab.Screen name="Scan" component={ScanScreen} options={{ tabBarLabel: t('tab_scan', 'Scan') }} />
+      <Tab.Screen name="Smart Move" component={SmartMoveScreen} options={{ tabBarLabel: t('tab_smart_move', 'Smart Move') }} />
+      <Tab.Screen name="Market" component={MarketScreen} options={{ tabBarLabel: t('tab_market', 'Market') }} />
     </Tab.Navigator>
   );
 }

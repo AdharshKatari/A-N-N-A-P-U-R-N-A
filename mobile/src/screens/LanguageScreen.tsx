@@ -8,36 +8,94 @@ import {
   SafeAreaView,
   StatusBar,
   Switch,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useLanguage } from '../context/LanguageContext';
+import { SupportedLanguage, LANGUAGE_OPTIONS } from '../constants/translations';
+import { voiceAssistantService } from '../services/voiceAssistant';
 import VoiceAssistantModal from '../components/VoiceAssistantModal';
+import { hapticLight, hapticSuccess } from '../utils/haptics';
 
-export default function LanguageScreen({ navigation }: any) {
-  const [selectedLanguage, setSelectedLanguage] = useState<'te' | 'hi' | 'en' | 'mr'>('te');
+const { width } = Dimensions.get('window');
+
+export default function LanguageScreen({ navigation, route }: any) {
+  const { language, setLanguage, completeLanguageSelection, t } = useLanguage();
+  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>(language);
   const [voiceModalVisible, setVoiceModalVisible] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState<SupportedLanguage | null>(null);
 
-  // Toggle states
+  // Toggle states for preferences
   const [weatherAlerts, setWeatherAlerts] = useState(true);
   const [cropHealthAlerts, setCropHealthAlerts] = useState(true);
   const [smartMoveReminders, setSmartMoveReminders] = useState(true);
-  const [marketPriceAlerts, setMarketPriceAlerts] = useState(false);
+  const [marketPriceAlerts, setMarketPriceAlerts] = useState(true);
+
+  const isFromSettings = route?.params?.fromSettings || navigation.canGoBack();
+
+  const handleSelectLanguage = (code: SupportedLanguage) => {
+    hapticLight();
+    setSelectedLanguage(code);
+    setLanguage(code);
+
+    // Audio preview of the selected language
+    const meta = LANGUAGE_OPTIONS.find((l) => l.code === code);
+    if (meta?.greeting) {
+      setIsPlayingAudio(code);
+      voiceAssistantService.speak(
+        meta.greeting,
+        code,
+        () => setIsPlayingAudio(code),
+        () => setIsPlayingAudio(null)
+      );
+    }
+  };
+
+  const handleContinue = async () => {
+    hapticSuccess();
+    await completeLanguageSelection(selectedLanguage);
+
+    if (navigation.canGoBack() && isFromSettings) {
+      navigation.goBack();
+    } else {
+      navigation.replace('Main');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FEF9F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F4F8F3" />
 
-      {/* Top App Bar */}
+      {/* Top Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => (navigation.canGoBack() ? navigation.goBack() : navigation.navigate('Main'))}
-          activeOpacity={0.7}
-        >
-          <MaterialIcons name="arrow-back" size={24} color="#00431D" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settings</Text>
-        <View style={styles.avatarCircle}>
-          <MaterialIcons name="person" size={22} color="#00431D" />
+        {isFromSettings ? (
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons name="arrow-back" size={24} color="#145C2E" />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.brandIconCircle}>
+            <MaterialCommunityIcons name="sprout" size={24} color="#145C2E" />
+          </View>
+        )}
+
+        <View style={styles.headerTextGroup}>
+          <Text style={styles.headerTitle}>
+            {selectedLanguage === 'te' ? 'భాషను ఎంచుకోండి' :
+             selectedLanguage === 'hi' ? 'भाषा का चयन करें' :
+             selectedLanguage === 'mr' ? 'भाषा निवडा' :
+             'Select Language'}
+          </Text>
+          <Text style={styles.headerSubtitle}>
+            {selectedLanguage === 'te' ? 'మీకు సులభమైన భాషలో యాప్ ఉపయోగించండి' :
+             selectedLanguage === 'hi' ? 'अपनी सुविधानुसार पसंदीदा भाषा चुनें' :
+             selectedLanguage === 'mr' ? 'आपल्या पसंतीच्या भाषेत ॲप वापरा' :
+             'Choose your preferred language for the entire app'}
+          </Text>
         </View>
       </View>
 
@@ -45,323 +103,188 @@ export default function LanguageScreen({ navigation }: any) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.headerSubtitle}>
-          Manage language, voice assistant, and app preferences
-        </Text>
-
-        {/* Section 0: Annapurna Vaani Voice Assistant */}
+        {/* Annapurna Vaani Voice Assistant Banner */}
         <TouchableOpacity
           style={styles.vaaniCard}
           onPress={() => setVoiceModalVisible(true)}
-          activeOpacity={0.85}
+          activeOpacity={0.88}
         >
           <View style={styles.vaaniCardHeader}>
             <View style={styles.vaaniAvatar}>
-              <MaterialCommunityIcons name="robot-happy" size={24} color="#FFFFFF" />
+              <MaterialCommunityIcons name="robot-happy" size={26} color="#FFFFFF" />
             </View>
             <View style={styles.vaaniTextCol}>
-              <Text style={styles.vaaniCardTitle}>Annapurna Vaani (స్వర సహాయకి)</Text>
+              <View style={styles.vaaniBadgeRow}>
+                <Text style={styles.vaaniCardTitle}>{t('vaani_title')}</Text>
+                <View style={styles.liveAiBadge}>
+                  <Text style={styles.liveAiBadgeText}>AI Voice</Text>
+                </View>
+              </View>
               <Text style={styles.vaaniCardDesc}>
-                Talk with your AI farming voice assistant in Telugu, Hindi, English, or Marathi
+                {selectedLanguage === 'te' ? 'తెలుగులో ప్రశ్నలు అడగండి — మైక్ నొక్కండి' :
+                 selectedLanguage === 'hi' ? 'हिन्दी में बोलकर सवाल पूछें — माइक दबाएं' :
+                 selectedLanguage === 'mr' ? 'मराठीत बोलून माहिती मिळवा' :
+                 'Speak in your native language with AI farm assistant'}
               </Text>
             </View>
           </View>
+
           <View style={styles.vaaniStartBtn}>
-            <MaterialIcons name="mic" size={20} color="#145C2E" />
-            <Text style={styles.vaaniStartBtnText}>Launch Voice Assistant</Text>
+            <MaterialIcons name="mic" size={18} color="#145C2E" />
+            <Text style={styles.vaaniStartBtnText}>{t('vaani_speak')}</Text>
           </View>
         </TouchableOpacity>
 
-        {/* Section 1: Language */}
+        {/* Language Selection Grid */}
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionHeading}>Language</Text>
+          <View style={styles.sectionHeaderRow}>
+            <MaterialIcons name="translate" size={20} color="#145C2E" />
+            <Text style={styles.sectionHeading}>{t('select_language')}</Text>
+          </View>
+          <Text style={styles.sectionSubHeading}>{t('select_language_sub')}</Text>
 
-          {/* Telugu */}
-          <TouchableOpacity
-            style={[
-              styles.languageRow,
-              selectedLanguage === 'te' && styles.languageRowSelected,
-            ]}
-            onPress={() => setSelectedLanguage('te')}
-            activeOpacity={0.85}
-          >
-            <View style={styles.languageRowLeft}>
-              <MaterialIcons
-                name="language"
-                size={22}
-                color={selectedLanguage === 'te' ? '#145C2E' : '#404940'}
-              />
-              <Text
-                style={[
-                  styles.languageName,
-                  selectedLanguage === 'te' && styles.languageNameSelected,
-                ]}
-              >
-                తెలుగు (Telugu)
-              </Text>
-            </View>
+          <View style={styles.languagesList}>
+            {LANGUAGE_OPTIONS.map((langOpt) => {
+              const isSelected = selectedLanguage === langOpt.code;
+              const isSpeakingThis = isPlayingAudio === langOpt.code;
 
-            <View
-              style={[
-                styles.radioCircle,
-                selectedLanguage === 'te' && styles.radioCircleSelected,
-              ]}
-            >
-              {selectedLanguage === 'te' && <View style={styles.radioDot} />}
-            </View>
-          </TouchableOpacity>
+              return (
+                <TouchableOpacity
+                  key={langOpt.code}
+                  style={[
+                    styles.languageCard,
+                    isSelected && styles.languageCardSelected,
+                  ]}
+                  onPress={() => handleSelectLanguage(langOpt.code)}
+                  activeOpacity={0.85}
+                >
+                  <View style={styles.languageCardLeft}>
+                    <View
+                      style={[
+                        styles.flagCircle,
+                        isSelected && styles.flagCircleSelected,
+                      ]}
+                    >
+                      <Text style={styles.flagEmoji}>{langOpt.flag}</Text>
+                    </View>
 
-          {/* Hindi */}
-          <TouchableOpacity
-            style={[
-              styles.languageRow,
-              selectedLanguage === 'hi' && styles.languageRowSelected,
-            ]}
-            onPress={() => setSelectedLanguage('hi')}
-            activeOpacity={0.85}
-          >
-            <View style={styles.languageRowLeft}>
-              <MaterialIcons
-                name="language"
-                size={22}
-                color={selectedLanguage === 'hi' ? '#145C2E' : '#404940'}
-              />
-              <Text
-                style={[
-                  styles.languageName,
-                  selectedLanguage === 'hi' && styles.languageNameSelected,
-                ]}
-              >
-                हिन्दी (Hindi)
-              </Text>
-            </View>
+                    <View style={styles.langTextGroup}>
+                      <View style={styles.langNameRow}>
+                        <Text
+                          style={[
+                            styles.langNativeName,
+                            isSelected && styles.langNativeNameSelected,
+                          ]}
+                        >
+                          {langOpt.nativeName}
+                        </Text>
+                        <Text style={styles.langEnglishName}>({langOpt.name})</Text>
+                      </View>
+                      <Text style={styles.langSubtext}>{langOpt.greeting}</Text>
+                    </View>
+                  </View>
 
-            <View
-              style={[
-                styles.radioCircle,
-                selectedLanguage === 'hi' && styles.radioCircleSelected,
-              ]}
-            >
-              {selectedLanguage === 'hi' && <View style={styles.radioDot} />}
-            </View>
-          </TouchableOpacity>
-
-          {/* Marathi */}
-          <TouchableOpacity
-            style={[
-              styles.languageRow,
-              selectedLanguage === 'mr' && styles.languageRowSelected,
-            ]}
-            onPress={() => setSelectedLanguage('mr')}
-            activeOpacity={0.85}
-          >
-            <View style={styles.languageRowLeft}>
-              <MaterialIcons
-                name="language"
-                size={22}
-                color={selectedLanguage === 'mr' ? '#145C2E' : '#404940'}
-              />
-              <Text
-                style={[
-                  styles.languageName,
-                  selectedLanguage === 'mr' && styles.languageNameSelected,
-                ]}
-              >
-                मराठी (Marathi)
-              </Text>
-            </View>
-
-            <View
-              style={[
-                styles.radioCircle,
-                selectedLanguage === 'mr' && styles.radioCircleSelected,
-              ]}
-            >
-              {selectedLanguage === 'mr' && <View style={styles.radioDot} />}
-            </View>
-          </TouchableOpacity>
-
-          {/* English */}
-          <TouchableOpacity
-            style={[
-              styles.languageRow,
-              selectedLanguage === 'en' && styles.languageRowSelected,
-            ]}
-            onPress={() => setSelectedLanguage('en')}
-            activeOpacity={0.85}
-          >
-            <View style={styles.languageRowLeft}>
-              <MaterialIcons
-                name="language"
-                size={22}
-                color={selectedLanguage === 'en' ? '#145C2E' : '#404940'}
-              />
-              <Text
-                style={[
-                  styles.languageName,
-                  selectedLanguage === 'en' && styles.languageNameSelected,
-                ]}
-              >
-                English
-              </Text>
-            </View>
-
-            <View
-              style={[
-                styles.radioCircle,
-                selectedLanguage === 'en' && styles.radioCircleSelected,
-              ]}
-            >
-              {selectedLanguage === 'en' && <View style={styles.radioDot} />}
-            </View>
-          </TouchableOpacity>
+                  <View style={styles.languageCardRight}>
+                    {isSpeakingThis ? (
+                      <View style={styles.audioWavePill}>
+                        <MaterialCommunityIcons name="volume-high" size={18} color="#145C2E" />
+                      </View>
+                    ) : isSelected ? (
+                      <View style={styles.radioSelected}>
+                        <MaterialIcons name="check" size={16} color="#FFFFFF" />
+                      </View>
+                    ) : (
+                      <View style={styles.radioUnselected} />
+                    )}
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
 
-        {/* Section 2: Alerts & Notifications */}
+        {/* App Notification Preferences */}
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionHeading}>Alerts & Notifications</Text>
+          <View style={styles.sectionHeaderRow}>
+            <MaterialIcons name="notifications-active" size={20} color="#145C2E" />
+            <Text style={styles.sectionHeading}>
+              {selectedLanguage === 'te' ? 'నోటిఫికేషన్ సెట్టింగ్‌లు' :
+               selectedLanguage === 'hi' ? 'सूचना प्राथमिकताएं' :
+               selectedLanguage === 'mr' ? 'सूचना सेटिंग्ज' :
+               'Notification Alerts'}
+            </Text>
+          </View>
 
-          {/* Toggle 1: Weather Alerts */}
           <View style={styles.toggleRow}>
             <View style={styles.toggleTextCol}>
-              <Text style={styles.toggleTitle}>Weather Alerts</Text>
-              <Text style={styles.toggleSubtitle}>Get alerts for rain or storms</Text>
+              <Text style={styles.toggleLabel}>
+                {selectedLanguage === 'te' ? 'వాతావరణ హెచ్చరికలు' :
+                 selectedLanguage === 'hi' ? 'मौसम व बारिश अलर्ट' :
+                 selectedLanguage === 'mr' ? 'हवामान सूचना' :
+                 'Weather & Rain Alerts'}
+              </Text>
+              <Text style={styles.toggleDesc}>
+                {selectedLanguage === 'te' ? 'వర్షం మరియు పంట కోత అనుకూల సమాచారం' :
+                 'Real-time rainfall & harvest viability warnings'}
+              </Text>
             </View>
             <Switch
               value={weatherAlerts}
               onValueChange={setWeatherAlerts}
-              trackColor={{ false: '#ECE8DF', true: '#145C2E' }}
-              thumbColor="#FFFFFF"
+              trackColor={{ false: '#E2E8F0', true: '#C8E6C9' }}
+              thumbColor={weatherAlerts ? '#145C2E' : '#94A3B8'}
             />
           </View>
 
-          {/* Toggle 2: Crop Health Alerts */}
+          <View style={styles.divider} />
+
           <View style={styles.toggleRow}>
             <View style={styles.toggleTextCol}>
-              <Text style={styles.toggleTitle}>Crop Health Alerts</Text>
-              <Text style={styles.toggleSubtitle}>Notifications from pest scans</Text>
-            </View>
-            <Switch
-              value={cropHealthAlerts}
-              onValueChange={setCropHealthAlerts}
-              trackColor={{ false: '#ECE8DF', true: '#145C2E' }}
-              thumbColor="#FFFFFF"
-            />
-          </View>
-
-          {/* Toggle 3: Smart Move Reminders */}
-          <View style={styles.toggleRow}>
-            <View style={styles.toggleTextCol}>
-              <Text style={styles.toggleTitle}>Smart Move Reminders</Text>
-              <Text style={styles.toggleSubtitle}>Updates on transport tracking</Text>
-            </View>
-            <Switch
-              value={smartMoveReminders}
-              onValueChange={setSmartMoveReminders}
-              trackColor={{ false: '#ECE8DF', true: '#145C2E' }}
-              thumbColor="#FFFFFF"
-            />
-          </View>
-
-          {/* Toggle 4: Market Price Alerts */}
-          <View style={[styles.toggleRow, { borderBottomWidth: 0 }]}>
-            <View style={styles.toggleTextCol}>
-              <Text style={styles.toggleTitle}>Market Price Alerts</Text>
-              <Text style={styles.toggleSubtitle}>Daily market rate summaries</Text>
+              <Text style={styles.toggleLabel}>
+                {selectedLanguage === 'te' ? 'మార్కెట్ ధర హెచ్చరికలు' :
+                 selectedLanguage === 'hi' ? 'मंडी भाव तेजी अलर्ट' :
+                 selectedLanguage === 'mr' ? 'बाजार भाव सूचना' :
+                 'Live Mandi Price Spikes'}
+              </Text>
+              <Text style={styles.toggleDesc}>
+                {selectedLanguage === 'te' ? 'సమీప APMCలలో ధర పెరిగినప్పుడు నోటిఫికేషన్' :
+                 'Instant alerts when terminal markets offer arbitrage gains'}
+              </Text>
             </View>
             <Switch
               value={marketPriceAlerts}
               onValueChange={setMarketPriceAlerts}
-              trackColor={{ false: '#ECE8DF', true: '#145C2E' }}
-              thumbColor="#FFFFFF"
+              trackColor={{ false: '#E2E8F0', true: '#C8E6C9' }}
+              thumbColor={marketPriceAlerts ? '#145C2E' : '#94A3B8'}
             />
           </View>
         </View>
 
-        {/* Section 3: App Preferences */}
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionHeading}>App Preferences</Text>
-
-          <TouchableOpacity style={styles.menuRow} activeOpacity={0.8} onPress={() => navigation.navigate('Route')}>
-            <View style={styles.menuRowLeft}>
-              <MaterialIcons name="location-on" size={20} color="#707A6F" />
-              <Text style={styles.menuRowTitle}>Location Settings</Text>
-            </View>
-            <MaterialIcons name="chevron-right" size={22} color="#C0C9BD" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.menuRow, { borderBottomWidth: 0 }]} activeOpacity={0.8} onPress={() => navigation.navigate('Settings')}>
-            <View style={styles.menuRowLeft}>
-              <MaterialIcons name="straighten" size={20} color="#707A6F" />
-              <View>
-                <Text style={styles.menuRowTitle}>Units</Text>
-                <Text style={styles.menuRowSubtitle}>Acres</Text>
-              </View>
-            </View>
-            <MaterialIcons name="chevron-right" size={22} color="#C0C9BD" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Section 4: Help & Support */}
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionHeading}>Help & Support</Text>
-
-          <TouchableOpacity style={styles.menuRow} activeOpacity={0.8} onPress={() => navigation.navigate('HelpCenter')}>
-            <Text style={styles.menuRowTitle}>Help Center</Text>
-            <MaterialIcons name="chevron-right" size={22} color="#C0C9BD" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuRow} activeOpacity={0.8} onPress={() => navigation.navigate('ContactSupport')}>
-            <Text style={styles.menuRowTitle}>Contact Support</Text>
-            <MaterialIcons name="chevron-right" size={22} color="#C0C9BD" />
-          </TouchableOpacity>
-
-          {/* Support Banner */}
-          <View style={styles.supportBannerBox}>
-            <MaterialIcons name="support-agent" size={28} color="#145C2E" />
-            <Text style={styles.supportBannerTitle}>Need help using Annapurna?</Text>
-            <TouchableOpacity style={styles.getSupportButton} activeOpacity={0.85} onPress={() => navigation.navigate('SupportChat')}>
-              <Text style={styles.getSupportButtonText}>Get Support</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Primary Action Button */}
-        <TouchableOpacity
-          style={styles.saveAndContinueButton}
-          onPress={() => navigation?.navigate('Main')}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.saveAndContinueText}>Save & Go to Dashboard</Text>
-        </TouchableOpacity>
-
-        {/* Section 5: Footer Links */}
-        <View style={styles.footerSection}>
-          <View style={styles.legalLinksRow}>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('PrivacyPolicy')}>
-              <Text style={styles.legalLink}>Privacy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Terms')}>
-              <Text style={styles.legalLink}>Terms</Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity style={styles.logoutButton} activeOpacity={0.85} onPress={() => {
-            navigation?.reset({ index: 0, routes: [{ name: 'Login' }] });
-          }}>
-            <Text style={styles.logoutButtonText}>Log Out</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.appVersionText}>App Version 1.4.2</Text>
-        </View>
+        <View style={{ height: 100 }} />
       </ScrollView>
 
-      {/* Annapurna Vaani Voice Assistant Modal */}
+      {/* Sticky Bottom Action Bar */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          style={styles.continueButton}
+          onPress={handleContinue}
+          activeOpacity={0.88}
+        >
+          <Text style={styles.continueButtonText}>
+            {selectedLanguage === 'te' ? 'ముందుకు సాగండి' :
+             selectedLanguage === 'hi' ? 'आगे बढ़ें (Continue)' :
+             selectedLanguage === 'mr' ? 'पुढे चला (Continue)' :
+             'Continue to Farm Dashboard'}
+          </Text>
+          <MaterialIcons name="arrow-forward" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Floating Voice Assistant Modal */}
       <VoiceAssistantModal
         visible={voiceModalVisible}
         onClose={() => setVoiceModalVisible(false)}
         navigation={navigation}
-        defaultLanguage={selectedLanguage}
       />
     </SafeAreaView>
   );
@@ -370,287 +293,311 @@ export default function LanguageScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FEF9F0',
+    backgroundColor: '#F4F8F3',
   },
   header: {
-    backgroundColor: '#FEF9F0',
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    zIndex: 10,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8EFE9',
   },
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#E8F5E9',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  brandIconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#E8F5E9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  headerTextGroup: {
+    flex: 1,
   },
   headerTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#0F3E1E',
     fontFamily: 'PlusJakartaSans_700Bold',
-    fontSize: 21,
-    lineHeight: 26,
-    fontWeight: '700',
-    color: '#00431D',
-  },
-  avatarCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#ECE8DF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 100,
-    gap: 20,
   },
   headerSubtitle: {
+    fontSize: 12,
+    color: '#55725E',
+    marginTop: 2,
     fontFamily: 'PlusJakartaSans_400Regular',
-    fontSize: 15,
-    lineHeight: 22,
-    color: '#404940',
+  },
+  scrollContent: {
+    padding: 16,
   },
   vaaniCard: {
-    backgroundColor: '#145C2E',
-    borderRadius: 24,
+    backgroundColor: '#0F3E1E',
+    borderRadius: 18,
     padding: 18,
-    gap: 14,
-    shadowColor: '#145C2E',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    elevation: 4,
+    marginBottom: 16,
+    shadowColor: '#0F3E1E',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 5,
   },
   vaaniCardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    marginBottom: 14,
   },
   vaaniAvatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    alignItems: 'center',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#2E7D32',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   vaaniTextCol: {
     flex: 1,
-    gap: 2,
+  },
+  vaaniBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   vaaniCardTitle: {
-    fontFamily: 'PlusJakartaSans_700Bold',
     fontSize: 16,
+    fontWeight: '800',
     color: '#FFFFFF',
+    fontFamily: 'PlusJakartaSans_700Bold',
+  },
+  liveAiBadge: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+    marginLeft: 8,
+  },
+  liveAiBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '700',
   },
   vaaniCardDesc: {
-    fontFamily: 'PlusJakartaSans_400Regular',
     fontSize: 12,
+    color: '#E8F5E9',
+    marginTop: 4,
     lineHeight: 16,
-    color: '#D4EAD6',
   },
   vaaniStartBtn: {
+    backgroundColor: '#E8F5E9',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    backgroundColor: '#FEF9F0',
-    borderRadius: 14,
     paddingVertical: 10,
+    borderRadius: 12,
+    gap: 8,
   },
   vaaniStartBtnText: {
-    fontFamily: 'PlusJakartaSans_700Bold',
-    fontSize: 13,
     color: '#145C2E',
+    fontWeight: '700',
+    fontSize: 13,
+    fontFamily: 'PlusJakartaSans_600SemiBold',
   },
   sectionCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    padding: 20,
-    gap: 16,
-    shadowColor: '#145C2E',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 20,
-    elevation: 3,
+    borderRadius: 18,
+    padding: 18,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E8EFE9',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   sectionHeading: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#0F3E1E',
     fontFamily: 'PlusJakartaSans_700Bold',
-    fontSize: 21,
-    lineHeight: 26,
-    fontWeight: '700',
-    color: '#00431D',
   },
-  languageRow: {
+  sectionSubHeading: {
+    fontSize: 12,
+    color: '#64748B',
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  languagesList: {
+    gap: 10,
+  },
+  languageCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    padding: 14,
     borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#C0C9BD',
+    backgroundColor: '#F8FAF8',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
   },
-  languageRowSelected: {
+  languageCardSelected: {
+    backgroundColor: '#E8F5E9',
     borderColor: '#145C2E',
-    backgroundColor: '#F8F3EA',
+    shadowColor: '#145C2E',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 3,
   },
-  languageRowLeft: {
+  languageCardLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    flex: 1,
   },
-  languageName: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
-    fontSize: 18,
-    color: '#404940',
+  flagCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
-  languageNameSelected: {
-    color: '#145C2E',
+  flagCircleSelected: {
+    borderColor: '#145C2E',
+    backgroundColor: '#FFFFFF',
+  },
+  flagEmoji: {
+    fontSize: 20,
+  },
+  langTextGroup: {
+    flex: 1,
+  },
+  langNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  langNativeName: {
+    fontSize: 16,
     fontWeight: '700',
+    color: '#1E293B',
+    fontFamily: 'PlusJakartaSans_700Bold',
   },
-  radioCircle: {
+  langNativeNameSelected: {
+    color: '#0F3E1E',
+    fontWeight: '800',
+  },
+  langEnglishName: {
+    fontSize: 12,
+    color: '#64748B',
+  },
+  langSubtext: {
+    fontSize: 12,
+    color: '#475569',
+    marginTop: 2,
+  },
+  languageCardRight: {
+    marginLeft: 10,
+  },
+  radioSelected: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#145C2E',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radioUnselected: {
     width: 24,
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#C0C9BD',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: '#CBD5E1',
   },
-  radioCircleSelected: {
-    borderColor: '#145C2E',
-  },
-  radioDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#145C2E',
+  audioWavePill: {
+    backgroundColor: '#C8E6C9',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
   },
   toggleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ECE8DF',
+    paddingVertical: 10,
   },
   toggleTextCol: {
     flex: 1,
-    gap: 2,
+    paddingRight: 12,
   },
-  toggleTitle: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
-    fontSize: 16,
-    lineHeight: 22,
-    color: '#1D1C16',
-  },
-  toggleSubtitle: {
-    fontFamily: 'PlusJakartaSans_400Regular',
-    fontSize: 13,
-    color: '#404940',
-  },
-  menuRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ECE8DF',
-  },
-  menuRowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  menuRowTitle: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
-    fontSize: 16,
-    lineHeight: 22,
-    color: '#1D1C16',
-  },
-  menuRowSubtitle: {
-    fontFamily: 'PlusJakartaSans_400Regular',
-    fontSize: 13,
-    color: '#404940',
-  },
-  supportBannerBox: {
-    backgroundColor: 'rgba(164, 193, 168, 0.3)',
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center',
-    gap: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(164, 193, 168, 0.5)',
-    marginTop: 8,
-  },
-  supportBannerTitle: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
-    fontSize: 16,
-    color: '#145C2E',
-  },
-  getSupportButton: {
-    backgroundColor: '#145C2E',
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    borderRadius: 999,
-  },
-  getSupportButtonText: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
+  toggleLabel: {
     fontSize: 14,
-    color: '#FFFFFF',
+    fontWeight: '700',
+    color: '#1E293B',
   },
-  saveAndContinueButton: {
+  toggleDesc: {
+    fontSize: 11,
+    color: '#64748B',
+    marginTop: 2,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#F1F5F9',
+    marginVertical: 4,
+  },
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 24,
+    borderTopWidth: 1,
+    borderTopColor: '#E8EFE9',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  continueButton: {
     backgroundColor: '#145C2E',
-    height: 56,
-    borderRadius: 28,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 15,
+    borderRadius: 16,
+    gap: 8,
     shadowColor: '#145C2E',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 3,
-    marginTop: 8,
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  saveAndContinueText: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
-    fontSize: 16,
-    fontWeight: '600',
+  continueButtonText: {
     color: '#FFFFFF',
-  },
-  footerSection: {
-    alignItems: 'center',
-    gap: 16,
-    paddingVertical: 16,
-  },
-  legalLinksRow: {
-    flexDirection: 'row',
-    gap: 24,
-  },
-  legalLink: {
-    fontFamily: 'PlusJakartaSans_400Regular',
-    fontSize: 15,
-    color: '#707A6F',
-    textDecorationLine: 'underline',
-  },
-  logoutButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    borderRadius: 999,
-  },
-  logoutButtonText: {
-    fontFamily: 'PlusJakartaSans_700Bold',
     fontSize: 16,
-    color: '#BA1A1A',
-  },
-  appVersionText: {
-    fontFamily: 'PlusJakartaSans_400Regular',
-    fontSize: 12,
-    color: '#C0C9BD',
+    fontWeight: '800',
+    fontFamily: 'PlusJakartaSans_700Bold',
   },
 });

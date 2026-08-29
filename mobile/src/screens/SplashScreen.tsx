@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, StatusBar, Animated, Dimensions } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors, Typography, Spacing, BorderRadius } from '../constants/theme';
 
 const { width } = Dimensions.get('window');
@@ -100,8 +101,16 @@ export default function SplashScreen({ navigation }: any) {
     );
     glowLoop.start();
 
-    // Navigate to Onboarding after entrance animations complete
-    const timer = setTimeout(() => {
+    // Navigate after entrance animations complete
+    const timer = setTimeout(async () => {
+      let nextScreen = 'Language';
+      try {
+        const completed = await AsyncStorage.getItem('@language_onboarding_completed');
+        if (completed === 'true') {
+          nextScreen = 'Main';
+        }
+      } catch (e) {}
+
       // Animate exit: logo scales up and fades out, then navigate
       Animated.parallel([
         Animated.timing(scaleAnim, {
@@ -125,9 +134,9 @@ export default function SplashScreen({ navigation }: any) {
           useNativeDriver: true,
         }),
       ]).start(() => {
-        navigation.replace('Onboarding');
+        navigation.replace(nextScreen);
       });
-    }, 2500);
+    }, 2200);
     return () => {
       clearTimeout(timer);
       glowLoop.stop();

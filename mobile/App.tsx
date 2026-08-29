@@ -27,6 +27,7 @@ import AppNavigator from './src/navigation/AppNavigator';
 import { initializeOfflineSync, stopOfflineSync } from './src/services/offlineSync';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 import { QueryProvider } from './src/context/QueryProvider';
+import { LanguageProvider } from './src/context/LanguageContext';
 import { ThemeProvider, useAppTheme } from './src/context/ThemeContext';
 
 // Keep the splash screen visible while we fetch resources
@@ -64,22 +65,14 @@ export default function App() {
   useEffect(() => {
     if (!fontsLoaded) return;
 
-    // Initialize offline sync with NetInfo listener
-    initializeOfflineSync({
-      onSyncStart: () => console.log('[OfflineSync] Sync started'),
-      onSyncProgress: (completed, total) => console.log(`[OfflineSync] Progress: ${completed}/${total}`),
-      onSyncComplete: (result) => {
-        console.log(`[OfflineSync] Complete: ${result.success} success, ${result.failed} failed`);
-        updateSyncStatus();
-      },
-      onSyncError: (error) => console.error('[OfflineSync] Error:', error),
-    });
-
-    // Initial status check
+    initializeOfflineSync();
     updateSyncStatus();
+
+    const interval = setInterval(updateSyncStatus, 10000);
 
     return () => {
       stopOfflineSync();
+      clearInterval(interval);
     };
   }, [fontsLoaded]);
 
@@ -98,24 +91,26 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider>
-    <SafeAreaProvider>
-      <SafeAreaFrame
-        edges={Platform.OS === 'android' ? ['top'] : []}
-        style={styles.appFrame}
-        onLayout={onLayoutRootView}
-      >
-        <QueryProvider>
-          <AuthProvider>
-            <NavigationContainer>
-              <ThemedStatusBar />
-              <AppWithAuth />
-            </NavigationContainer>
-          </AuthProvider>
-        </QueryProvider>
-      </SafeAreaFrame>
-    </SafeAreaProvider>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider>
+        <SafeAreaProvider>
+          <SafeAreaFrame
+            edges={Platform.OS === 'android' ? ['top'] : []}
+            style={styles.appFrame}
+            onLayout={onLayoutRootView}
+          >
+            <QueryProvider>
+              <AuthProvider>
+                <NavigationContainer>
+                  <ThemedStatusBar />
+                  <AppWithAuth />
+                </NavigationContainer>
+              </AuthProvider>
+            </QueryProvider>
+          </SafeAreaFrame>
+        </SafeAreaProvider>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 
