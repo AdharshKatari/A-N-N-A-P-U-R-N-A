@@ -42,7 +42,6 @@ import VoiceAssistantModal from '../components/VoiceAssistantModal';
 import FloatingVoiceButton from '../components/FloatingVoiceButton';
 import { CalendarWidget } from '../components/CalendarWidget';
 import { FloatingDisclosure } from '../components/FloatingDisclosure';
-import { useLanguage } from '../context/LanguageContext';
 
 const AVATAR_URL =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDAoI8pXqz5UIVImYP4_1U_SYCwn0-QyQaKO_oL7FRLJDHZcnXOiEVFZ00nEXT1FEOIIaEHzJGKZZw2EhEllzfNebbmYmgB26uUxHLLZCcyD95hQzxvAfdiKnsNS3zqLyQkyo3tCNxyK5-3NBgLUcQzh7SrabAfONySEkNe0yck4gstrbqO86Jw3xCT9Y_wEYxLaB3EnS6O8-MiYGXcdWDnODUkfOz5yPPxRtdmo8rs120wYsHGfw8fJQ';
@@ -292,8 +291,6 @@ function HomeScreen({ navigation }: any) {
 
   const displayTemp = weather ? `${Math.round(weather.temp)}°C` : '28°C';
   const displayCondition = weather ? weather.description : 'Sunny';
-
-  const { t, language } = useLanguage();
 
   const actionCards = [
     {

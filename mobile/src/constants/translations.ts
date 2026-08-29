@@ -202,7 +202,6 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     faq_a6: 'అవును, మార్గం చూడండి నొక్కి మండి పూర్తి వివరాలు చూడవచ్చు.',
 
     // Recent Activities
-    recent_activity: 'ఇటీవలి కార్యకలాపాలు',
     act_scan_ready: '5-నమూనాల నాణ్యత స్కాన్ సిద్ధం · చేను ఆరోగ్యం చూడండి',
     act_mandi_update: 'నాసిక్ & మహారాష్ట్ర మండి తాజా ధరలు వచ్చాయి',
     act_smart_move: 'మీ పంటలకు స్మార్ట్ మూవ్ సలహాలు అందుబాటులో ఉన్నాయి',
@@ -401,7 +400,6 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     faq_a6: 'हाँ, मार्ग देखें पर टैप करके मंडी का पूरा रूट और विवरण देखें।',
 
     // Recent Activities
-    recent_activity: 'हाल की गतिविधि',
     act_scan_ready: '5-नमूना गुणवत्ता स्कैन तैयार · खेत की सेहत जांचें',
     act_mandi_update: 'नासिक और महाराष्ट्र के लिए मंडी भाव अपडेट प्राप्त हुए',
     act_smart_move: 'आपकी फसलों के लिए स्मार्ट मूव सिफारिशें सक्रिय हैं',
@@ -600,7 +598,6 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     faq_a6: 'होय, मार्ग पहा वर टॅप करून संपूर्ण तपशील आणि अंतर पहा.',
 
     // Recent Activities
-    recent_activity: 'अलीकडील हालचाली',
     act_scan_ready: '५-नमुने गुणवत्ता स्कॅन तयार · शेताचे आरोग्य तपासा',
     act_mandi_update: 'नाशिक व महाराष्ट्रासाठी बाजारभाव अद्यतने प्राप्त झाली',
     act_smart_move: 'तुमच्या पिकांसाठी स्मार्ट मूव्ह शिफारसी सक्रिय आहेत',
@@ -799,7 +796,6 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     faq_a6: 'Yes. Choose a scenario with a destination and tap View Route to see the route and market details.',
 
     // Recent Activities
-    recent_activity: 'Recent Activity',
     act_scan_ready: '5-sample quality scan ready · Assess field health',
     act_mandi_update: 'Mandi price updates received for Nashik & Maharashtra',
     act_smart_move: 'Smart Move recommendations active for your crops',
