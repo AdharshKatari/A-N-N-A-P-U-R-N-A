@@ -255,6 +255,23 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     shared_truck_reserved: 'ఉమ్మడి ట్రక్ రిజర్వ్ చేయబడింది',
     join_shared_truck: 'ఉమ్మడి ట్రక్‌లో చేరండి',
 
+    // Mandi Arbitrage & PDF Quality Passport
+    mandi_compare_title: 'మండీ ధరల పోలిక & ఆర్బిట్రేజ్',
+    compare_real_profit: 'డీజిల్ మరియు రవాణా కుళ్ళిపోవడాన్ని లెక్కించిన తర్వాత నికర లాభం',
+    compare_target: 'దీనితో పోల్చండి',
+    calculating_arbitrage: 'Q10 ఉష్ణోగ్రత క్షీణత మరియు నికర మార్జిన్‌లను లెక్కిస్తోంది...',
+    recommended_mandi: 'సిఫార్సు చేయబడింది',
+    transit_distance: 'రవాణా / దూరం',
+    net_in_pocket: 'నికర రాబడి',
+    dispatch_fpo_truck: 'రవాణా చేయండి',
+    compare_mandis_btn: 'మండీ ఆర్బిట్రేజ్',
+    quality_passport_title: 'కిసాన్ నాణ్యత పాస్‌పోర్ట్',
+    crop_weight: 'నికర బరువు',
+    floor_price: 'కనీస ధర',
+    download_pdf_cert: 'పీడీఎఫ్ సర్టిఫికేట్ డౌన్‌లోడ్ / ప్రింట్',
+    share_with_buyer: 'వాట్సాప్ ద్వారా కొనుగోలుదారుతో పంచుకోండి',
+    export_quality_passport: 'నాణ్యత పాస్‌పోర్ట్ ఎగుమతి చేయండి (పీడీఎఫ్)',
+
     // Profile & Settings
     profile_title: 'రైతు ప్రొఫైల్',
     farmer_id: 'రైతు గుర్తింపు సంఖ్య',
@@ -452,6 +469,23 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     save_amount_badge: 'बचत ₹2,950 (78%)',
     shared_truck_reserved: 'साझा ट्रक आरक्षित व निर्धारित',
     join_shared_truck: 'साझा ट्रक में शामिल हों',
+
+    // Mandi Arbitrage & PDF Quality Passport
+    mandi_compare_title: 'मंडी भाव तुलना व आर्बिट्राज',
+    compare_real_profit: 'डीजल और परिवहन सड़न के बाद वास्तविक शुद्ध लाभ',
+    compare_target: 'इसके साथ तुलना करें',
+    calculating_arbitrage: 'Q10 तापीय सड़न और शुद्ध लाभ की गणना की जा रही है...',
+    recommended_mandi: 'अनुशंसित',
+    transit_distance: 'परिवहन / दूरी',
+    net_in_pocket: 'शुद्ध लाभ',
+    dispatch_fpo_truck: 'भेजें',
+    compare_mandis_btn: 'मंडी आर्बिट्राज',
+    quality_passport_title: 'किसान गुणवत्ता पासपोर्ट',
+    crop_weight: 'शुद्ध वजन',
+    floor_price: 'न्यूनतम भाव',
+    download_pdf_cert: 'पीडीएफ सर्टिफिकेट डाउनलोड / प्रिंट करें',
+    share_with_buyer: 'व्हाट्सएप पर खरीदार से साझा करें',
+    export_quality_passport: 'गुणवत्ता पासपोर्ट निर्यात करें (PDF)',
 
     // Profile & Settings
     profile_title: 'किसान प्रोफाइल',
@@ -651,6 +685,23 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     shared_truck_reserved: 'सामायिक ट्रक आरक्षित व नियोजित',
     join_shared_truck: 'सामायिक ट्रकमध्ये सामील व्हा',
 
+    // Mandi Arbitrage & PDF Quality Passport
+    mandi_compare_title: 'बाजारभाव तुलना आणि आर्बिट्राज',
+    compare_real_profit: 'इंधन आणि वाहतूक नासाडीनंतरचा खरा नफा',
+    compare_target: 'या बाजाराशी तुलना करा',
+    calculating_arbitrage: 'Q10 उष्णता क्षय आणि नफा गणित मोजत आहे...',
+    recommended_mandi: 'शिफारस केलेले',
+    transit_distance: 'वाहतूक / अंतर',
+    net_in_pocket: 'निव्वळ नफा',
+    dispatch_fpo_truck: 'वाहतूक सुरू करा',
+    compare_mandis_btn: 'बाजार आर्बिट्राज',
+    quality_passport_title: 'शेतकरी गुणवत्ता पासपोर्ट',
+    crop_weight: 'निव्वळ वजन',
+    floor_price: 'हमीभाव',
+    download_pdf_cert: 'पीडीएफ प्रमाणपत्र डाउनलोड / प्रिंट',
+    share_with_buyer: 'व्हॉट्सॲपवर खरेदीदाराशी शेअर करा',
+    export_quality_passport: 'गुणवत्ता पासपोर्ट निर्यात करा (PDF)',
+
     // Profile & Settings
     profile_title: 'शेतकरी प्रोफाइल',
     farmer_id: 'शेतकरी ओळख क्रमांक',
@@ -848,6 +899,23 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     save_amount_badge: 'SAVE ₹2,950 (78%)',
     shared_truck_reserved: 'Shared Truck Reserved & Scheduled',
     join_shared_truck: 'Join Shared Truck',
+
+    // Mandi Arbitrage & PDF Quality Passport
+    mandi_compare_title: 'Side-by-Side Mandi Arbitrage',
+    compare_real_profit: 'Real profit after diesel & transit decay',
+    compare_target: 'Compare With',
+    calculating_arbitrage: 'Calculating Q10 thermal decay & net margins...',
+    recommended_mandi: 'Recommended',
+    transit_distance: 'Transit / Dist',
+    net_in_pocket: 'Net Realized',
+    dispatch_fpo_truck: 'Dispatch to',
+    compare_mandis_btn: 'Mandi Arbitrage',
+    quality_passport_title: 'Kisan Quality Passport',
+    crop_weight: 'Net Weight',
+    floor_price: 'Floor Price',
+    download_pdf_cert: 'Download / Print PDF Certificate',
+    share_with_buyer: 'Share with Buyer via WhatsApp',
+    export_quality_passport: 'Export Quality Passport (PDF)',
 
     // Profile & Settings
     profile_title: 'Farmer Profile',

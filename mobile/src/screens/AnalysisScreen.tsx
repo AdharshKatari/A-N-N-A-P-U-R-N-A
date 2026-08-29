@@ -34,6 +34,7 @@ import {
   MotionTokens,
 } from '../components/MotionSystem';
 import AnalyzingCropView from '../components/AnalyzingCropView';
+import { QualityPassportModal } from '../components/QualityPassportModal';
 import { useLanguage } from '../context/LanguageContext';
 
 interface AnalysisScreenParams {
@@ -88,6 +89,7 @@ function AnalysisScreen({ navigation, route }: any) {
     firmness: 2,
   });
   const [isProcessingManual, setIsProcessingManual] = useState(false);
+  const [passportModalVisible, setPassportModalVisible] = useState(false);
   
   // Progressive disclosure states
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
@@ -646,6 +648,18 @@ function AnalysisScreen({ navigation, route }: any) {
               </AnimatedPressable>
 
               <AnimatedPressable
+                style={[styles.secondaryButton, { backgroundColor: '#E8F5E9', borderColor: '#A7F3D0', borderWidth: 1 }]}
+                onPress={() => setPassportModalVisible(true)}
+                activeOpacity={0.85}
+                haptic="medium"
+              >
+                <MaterialIcons name="picture-as-pdf" size={20} color="#145C2E" />
+                <Text style={[styles.secondaryButtonText, { color: '#145C2E', fontWeight: '800' }]}>
+                  {t('export_quality_passport', 'Export Quality Passport (PDF)')}
+                </Text>
+              </AnimatedPressable>
+
+              <AnimatedPressable
                 style={styles.secondaryButton}
                 onPress={navigateToSpoilage}
                 activeOpacity={0.85}
@@ -791,6 +805,18 @@ function AnalysisScreen({ navigation, route }: any) {
           </View>
         </View>
       </Modal>
+
+      {/* Kisan Quality Passport PDF Certificate Modal */}
+      <QualityPassportModal
+        visible={passportModalVisible}
+        onClose={() => setPassportModalVisible(false)}
+        batchId={batchId || 'BAT-2026-TOM-01'}
+        cropType={cropType}
+        weightKg={500}
+        visualScore={visionResult?.visual_quality_score || 88}
+        gradeTier={(visionResult?.visual_quality_score || 88) >= 80 ? 'GRADE-A PRIME' : 'GRADE-B STANDARD'}
+        shelfLifeDays={9.2}
+      />
     </SafeAreaView>
   );
 }

@@ -602,3 +602,19 @@ export const analyzeBatch = async (imagesBase64: string[], mimeType = 'image/web
 
   return response.json();
 };
+
+export const compareMandis = async (
+  crop: string = 'Tomato',
+  mandiA: string = 'Nashik',
+  mandiB: string = 'Vashi Mumbai',
+  quantityKg: number = 500,
+  visualScore: number = 85.0
+) => {
+  const url = `${BASE_URL}/api/v5/market/compare?crop=${encodeURIComponent(crop)}&mandi_a=${encodeURIComponent(mandiA)}&mandi_b=${encodeURIComponent(mandiB)}&quantity_kg=${quantityKg}&visual_score=${visualScore}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Failed to fetch mandi comparison');
+  }
+  return response.json();
+};
+

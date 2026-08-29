@@ -16,6 +16,7 @@ import { api, Batch, DashboardStats } from '../lib/apiClient';
 import { withErrorBoundary } from '../components/ErrorBoundary';
 import { FadeIn, ScaleIn, MotionTokens } from '../components/Animations';
 import { useReducedMotion } from '../components/GlassPrimitives';
+import { QualityPassportModal } from '../components/QualityPassportModal';
 import { useLanguage } from '../context/LanguageContext';
 
 const DEFAULT_CROP_THUMB =
@@ -85,6 +86,7 @@ function CropBatchesScreen({ navigation }: any) {
   const [activeFilter, setActiveFilter] = useState<'active' | 'completed' | 'all'>('active');
   const [batches, setBatches] = useState<Batch[]>(FALLBACK_BATCHES);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
+  const [selectedPassportBatch, setSelectedPassportBatch] = useState<Batch | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -365,7 +367,15 @@ function CropBatchesScreen({ navigation }: any) {
                     onPress={() => navigation?.navigate('CropDetails', { batchId: batch.batch_id, crop: batch.field_id || 'Crop', field: batch.field_id || 'Field' })}
                     activeOpacity={0.85}
                   >
-                    <Text style={styles.viewCropText}>View Details</Text>
+                    <Text style={styles.viewCropText}>{t('view_passport', 'View Details')}</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[styles.scanIconButton, { backgroundColor: '#E8F5E9', borderColor: '#A7F3D0', borderWidth: 1 }]}
+                    onPress={() => setSelectedPassportBatch(batch)}
+                    activeOpacity={0.85}
+                  >
+                    <MaterialIcons name="picture-as-pdf" size={20} color="#145C2E" />
                   </TouchableOpacity>
 
                   <TouchableOpacity
@@ -373,7 +383,7 @@ function CropBatchesScreen({ navigation }: any) {
                     onPress={() => navigation?.navigate('Scan', { batchId: batch.batch_id, cropType: batch.field_id })}
                     activeOpacity={0.85}
                   >
-                    <MaterialIcons name="qr-code-scanner" size={22} color="#145C2E" />
+                    <MaterialIcons name="qr-code-scanner" size={20} color="#145C2E" />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -398,12 +408,26 @@ function CropBatchesScreen({ navigation }: any) {
               activeOpacity={0.85}
             >
               <MaterialIcons name="add" size={22} color="#00431D" />
-              <Text style={styles.dashedAddText}>Add Crop</Text>
+              <Text style={styles.dashedAddText}>{t('action_add_crop', 'Add Crop')}</Text>
             </TouchableOpacity>
             </ScaleIn>
           </View>
         )}
       </ScrollView>
+
+      {/* Quality Passport PDF Certificate Modal */}
+      {selectedPassportBatch && (
+        <QualityPassportModal
+          visible={selectedPassportBatch !== null}
+          onClose={() => setSelectedPassportBatch(null)}
+          batchId={selectedPassportBatch.batch_id}
+          cropType={selectedPassportBatch.field_id}
+          weightKg={selectedPassportBatch.initial_weight_kg}
+          visualScore={selectedPassportBatch.initial_visual_score}
+          gradeTier={selectedPassportBatch.initial_visual_score >= 80 ? 'GRADE-A PRIME' : 'GRADE-B STANDARD'}
+          qrToken={selectedPassportBatch.qr_code_secure_token || `BID:${selectedPassportBatch.batch_id}|CRP:${selectedPassportBatch.field_id}|WGT:${selectedPassportBatch.initial_weight_kg}`}
+        />
+      )}
     </SafeAreaView>
   );
 }

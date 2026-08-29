@@ -41,6 +41,7 @@ import DynamicToolbar from '../components/DynamicToolbar';
 import { MorphingDiscoveryBar } from '../components/MorphingDiscoveryBar';
 import { MarketTrendsAnalytics } from '../components/MarketTrendsAnalytics';
 import FavoriteMarketsList from '../components/FavoriteMarketsList';
+import { MandiComparisonModal } from '../components/MandiComparisonModal';
 import { useLanguage } from '../context/LanguageContext';
 
 type FilterType = 'all' | 'nearby' | 'cheap' | 'premium';
@@ -98,6 +99,7 @@ function MarketScreen({ navigation }: any) {
   const [detailSheetVisible, setDetailSheetVisible] = useState(false);
   const [nearbyModalVisible, setNearbyModalVisible] = useState(false);
   const [statsModalVisible, setStatsModalVisible] = useState(false);
+  const [compareModalVisible, setCompareModalVisible] = useState(false);
   const [activeRoute, setActiveRoute] = useState<MapRoute | null>(null);
   const scrollRef = useRef<ScrollView>(null);
   const reducedMotion = useReducedMotion();
@@ -656,7 +658,7 @@ function MarketScreen({ navigation }: any) {
         </FadeIn>
         )}
 
-        {/* Quick Actions — Nearby Markets & Prices & Statistics */}
+        {/* Quick Actions — Nearby Markets, Statistics, & Side-by-Side Comparison */}
         <FadeIn delay={300} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
         <View style={styles.quickActionsGrid}>
           {/* Action 1: Nearby Markets (secondary) */}
@@ -682,12 +684,27 @@ function MarketScreen({ navigation }: any) {
             <View style={styles.actionIconCircle}>
               <MaterialIcons name="analytics" size={24} color={Colors.primaryDark} />
             </View>
-            <Text style={styles.actionCardTitleSecondary}>{t('prices_and_stats', 'Prices & Statistics')}</Text>
+            <Text style={styles.actionCardTitleSecondary}>{t('prices_and_stats', 'Prices & Stats')}</Text>
+          </AnimatedPressable>
+
+          {/* Action 3: Side-by-Side Mandi Comparison (Arbitrage) */}
+          <AnimatedPressable
+            style={[styles.actionCardSecondary, { backgroundColor: '#E8F5E9', borderColor: '#A7F3D0', borderWidth: 1 }]}
+            activeOpacity={0.85}
+            onPress={() => setCompareModalVisible(true)}
+            haptic="medium"
+          >
+            <View style={[styles.actionIconCircle, { backgroundColor: '#C8E6C9' }]}>
+              <MaterialIcons name="compare-arrows" size={24} color="#145C2E" />
+            </View>
+            <Text style={[styles.actionCardTitleSecondary, { color: '#145C2E', fontWeight: '800' }]}>
+              {t('compare_mandis_btn', 'Mandi Arbitrage')}
+            </Text>
           </AnimatedPressable>
         </View>
         </FadeIn>
 
-        {/* Action 3: Sell / Buy — Primary CTA */}
+        {/* Action 4: Sell / Buy — Primary CTA */}
         <FadeIn delay={350} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
         <AnimatedPressable
           style={styles.sellBuyPrimaryButton}
@@ -932,6 +949,14 @@ function MarketScreen({ navigation }: any) {
           </View>
         </View>
       </Modal>
+
+      {/* 3. Side-by-Side Mandi Comparison Arbitrage Modal */}
+      <MandiComparisonModal
+        visible={compareModalVisible}
+        onClose={() => setCompareModalVisible(false)}
+        cropName={selectedCrop}
+        quantityKg={500}
+      />
     </SafeAreaView>
   );
 }

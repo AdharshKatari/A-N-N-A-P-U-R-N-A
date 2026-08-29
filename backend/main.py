@@ -49,6 +49,7 @@ from routers.metadata import router as metadata_router
 from routers.notifications import router as notifications_router
 from routers.scans import router as scans_router
 from routers.voice import router as voice_router
+from routers.mandi_compare import router as mandi_compare_router
 from sync_gateway import router as sync_router
 
 logging.basicConfig(level=logging.INFO)
@@ -80,6 +81,7 @@ app.include_router(metadata_router)
 app.include_router(notifications_router)
 app.include_router(scans_router)
 app.include_router(voice_router)
+app.include_router(mandi_compare_router)
 app.include_router(sync_router)
 
 # CORS for mobile client connections.
