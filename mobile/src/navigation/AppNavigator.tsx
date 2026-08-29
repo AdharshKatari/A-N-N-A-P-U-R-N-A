@@ -40,6 +40,8 @@ import DrawAOIScreen from '../screens/DrawAOIScreen';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 import TermsScreen from '../screens/TermsScreen';
 import HelpCenterScreen from '../screens/HelpCenterScreen';
+import CropCareStoresScreen from '../screens/CropCareStoresScreen';
+import NurseriesScreen from '../screens/NurseriesScreen';
 
 import { GlassMotion } from '../components/GlassPrimitives';
 
@@ -301,6 +303,16 @@ export default function AppNavigator() {
       <Stack.Screen
         name="Settings"
         component={LanguageScreen}
+        options={transitions.slideFromRight}
+      />
+      <Stack.Screen
+        name="CropCareStores"
+        component={CropCareStoresScreen}
+        options={transitions.slideFromRight}
+      />
+      <Stack.Screen
+        name="Nurseries"
+        component={NurseriesScreen}
         options={transitions.slideFromRight}
       />
     </Stack.Navigator>

@@ -193,7 +193,7 @@ export default function PestScreen({ navigation }: any) {
         <Text style={styles.sectionTitle}>{t('nearby_support', 'Nearby Support')}</Text>
 
         <View style={styles.supportCardsContainer}>
-          <TouchableOpacity style={styles.supportCard} activeOpacity={0.8} onPress={() => navigation?.navigate('Market')}>
+          <TouchableOpacity style={styles.supportCard} activeOpacity={0.8} onPress={() => navigation?.navigate('CropCareStores')}>
             <View style={styles.supportCardLeft}>
               <View style={styles.supportIconCircle}>
                 <MaterialIcons name="storefront" size={24} color={Colors.primaryDark} />
@@ -206,13 +206,13 @@ export default function PestScreen({ navigation }: any) {
             <MaterialIcons name="chevron-right" size={24} color={Colors.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.supportCard} activeOpacity={0.8} onPress={() => navigation?.navigate('Market')}>
+          <TouchableOpacity style={styles.supportCard} activeOpacity={0.8} onPress={() => navigation?.navigate('Nurseries')}>
             <View style={styles.supportCardLeft}>
               <View style={styles.supportIconCircle}>
                 <MaterialIcons name="local-florist" size={24} color={Colors.primaryDark} />
               </View>
               <View>
-                <Text style={styles.supportCardTitle}>{t('nurseries', 'Nearby Nurseries')}</Text>
+                <Text style={styles.supportCardTitle}>{t('nurseries', 'Nearby Nurseries & Seed Hubs')}</Text>
                 <Text style={styles.supportCardDesc}>Healthy saplings and seeds</Text>
               </View>
             </View>
