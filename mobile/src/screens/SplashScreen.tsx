@@ -1,275 +1,152 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, StatusBar, Animated, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Animated, Dimensions, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Colors, Typography, Spacing, BorderRadius } from '../constants/theme';
+import { FontFamily } from '../constants/theme';
 
-const { width } = Dimensions.get('window');
-
-// Premium easing curves (Emil Kowalski style)
-const easeOut = { tension: 80, friction: 12 };
+const { width, height } = Dimensions.get('window');
 
 export default function SplashScreen({ navigation }: any) {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.88)).current;
-  const titleFade = useRef(new Animated.Value(0)).current;
-  const titleSlide = useRef(new Animated.Value(12)).current;
-  const subtitleFade = useRef(new Animated.Value(0)).current;
-  const subtitleSlide = useRef(new Animated.Value(8)).current;
-  const glowAnim = useRef(new Animated.Value(0)).current;
-  const ringScale = useRef(new Animated.Value(0.6)).current;
-  const ringOpacity = useRef(new Animated.Value(0)).current;
+  const overlayFade   = useRef(new Animated.Value(0)).current;
+  const titleFade     = useRef(new Animated.Value(0)).current;
+  const titleSlide    = useRef(new Animated.Value(20)).current;
+  const subtitleFade  = useRef(new Animated.Value(0)).current;
+  const subtitleSlide = useRef(new Animated.Value(10)).current;
+  const footerFade    = useRef(new Animated.Value(0)).current;
+  const exitFade      = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    // Staggered entrance — logo → title → subtitle, each with spring physics
+    // Staggered entrance animations
     Animated.sequence([
-      // Logo entrance with spring
+      Animated.timing(overlayFade, { toValue: 1, duration: 600, useNativeDriver: true }),
       Animated.parallel([
-        Animated.spring(fadeAnim, {
-          toValue: 1,
-          ...easeOut,
-          useNativeDriver: true,
-        }),
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          tension: 60,
-          friction: 8,
-          useNativeDriver: true,
-        }),
-      ]),
-      // Ring pulse effect
-      Animated.parallel([
-        Animated.spring(ringScale, {
-          toValue: 1.3,
-          tension: 40,
-          friction: 6,
-          useNativeDriver: true,
-        }),
-        Animated.timing(ringOpacity, {
-          toValue: 0.3,
-          duration: 400,
-          useNativeDriver: true,
-        }),
+        Animated.timing(titleFade,  { toValue: 1, duration: 500, useNativeDriver: true }),
+        Animated.timing(titleSlide, { toValue: 0, duration: 500, useNativeDriver: true }),
       ]),
     ]).start();
 
-    // Title entrance (staggered after logo)
     Animated.parallel([
-      Animated.spring(titleFade, {
-        toValue: 1,
-        delay: 200,
-        ...easeOut,
-        useNativeDriver: true,
-      }),
-      Animated.spring(titleSlide, {
-        toValue: 0,
-        delay: 200,
-        ...easeOut,
-        useNativeDriver: true,
-      }),
+      Animated.timing(subtitleFade,  { toValue: 1, duration: 500, delay: 700, useNativeDriver: true }),
+      Animated.timing(subtitleSlide, { toValue: 0, duration: 500, delay: 700, useNativeDriver: true }),
     ]).start();
 
-    // Subtitle entrance (staggered after title)
-    Animated.parallel([
-      Animated.spring(subtitleFade, {
-        toValue: 1,
-        delay: 400,
-        ...easeOut,
-        useNativeDriver: true,
-      }),
-      Animated.spring(subtitleSlide, {
-        toValue: 0,
-        delay: 400,
-        ...easeOut,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    Animated.timing(footerFade, { toValue: 1, duration: 500, delay: 1000, useNativeDriver: true }).start();
 
-    // Breathing glow on logo
-    const glowLoop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(glowAnim, {
-          toValue: 1,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(glowAnim, {
-          toValue: 0,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    glowLoop.start();
-
-    // Navigate after entrance animations complete
+    // Navigate after 2.8 seconds
     const timer = setTimeout(async () => {
       let nextScreen = 'Language';
       try {
-        const completed = await AsyncStorage.getItem('@language_onboarding_completed');
-        if (completed === 'true') {
+        const languageDone = await AsyncStorage.getItem('@language_onboarding_completed');
+        const loggedIn     = await AsyncStorage.getItem('@auth_token');
+        if (languageDone === 'true' && loggedIn) {
           nextScreen = 'Main';
+        } else if (languageDone === 'true') {
+          nextScreen = 'Login';
         }
       } catch (e) {}
 
-      // Animate exit: logo scales up and fades out, then navigate
-      Animated.parallel([
-        Animated.timing(scaleAnim, {
-          toValue: 1.15,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(titleFade, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(subtitleFade, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
+      Animated.timing(exitFade, { toValue: 0, duration: 350, useNativeDriver: true }).start(() => {
         navigation.replace(nextScreen);
       });
-    }, 2200);
-    return () => {
-      clearTimeout(timer);
-      glowLoop.stop();
-    };
+    }, 2800);
+
+    return () => clearTimeout(timer);
   }, []);
 
-  const glowOpacity = glowAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.15, 0.35],
-  });
-
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
+    <Animated.View style={[styles.container, { opacity: exitFade }]}>
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-      {/* Logo with ring pulse */}
-      <View style={styles.logoWrapper}>
-        <Animated.View
-          style={[
-            styles.logoRing,
-            {
-              opacity: ringOpacity,
-              transform: [{ scale: ringScale }],
-            },
-          ]}
-        />
-        <Animated.View
-          style={[
-            styles.logoCircle,
-            {
-              opacity: fadeAnim,
-              transform: [{ scale: scaleAnim }],
-            },
-          ]}
+      {/* Full-bleed splash artwork */}
+      <Image
+        source={require('../../assets/splash_art.png')}
+        style={styles.artImage}
+        resizeMode="cover"
+      />
+
+      {/* Semi-transparent dark gradient so text pops */}
+      <Animated.View style={[styles.gradientOverlay, { opacity: overlayFade }]} />
+
+      {/* App name + tagline in upper region */}
+      <View style={styles.topContent}>
+        <Animated.Text
+          style={[styles.appName, { opacity: titleFade, transform: [{ translateY: titleSlide }] }]}
         >
-          <Animated.View style={[styles.glowOverlay, { opacity: glowOpacity }]} />
-          <Text style={styles.logoIcon}>🌾</Text>
-        </Animated.View>
+          Annapurna
+        </Animated.Text>
+        <Animated.Text
+          style={[styles.tagline, { opacity: subtitleFade, transform: [{ translateY: subtitleSlide }] }]}
+        >
+          Harvest Today, Prosper Tomorrow
+        </Animated.Text>
       </View>
 
-      {/* Title — staggered entrance */}
-      <Animated.Text
-        style={[
-          styles.title,
-          {
-            opacity: titleFade,
-            transform: [{ translateY: titleSlide }],
-          },
-        ]}
-      >
-        Annapurna
-      </Animated.Text>
-
-      {/* Subtitle — staggered entrance */}
-      <Animated.Text
-        style={[
-          styles.subtitle,
-          {
-            opacity: subtitleFade,
-            transform: [{ translateY: subtitleSlide }],
-          },
-        ]}
-      >
-        Harvest Today, Prosper Tomorrow
-      </Animated.Text>
-
-      {/* Footer */}
-      <View style={styles.footer}>
+      {/* Bottom footer pill */}
+      <Animated.View style={[styles.footer, { opacity: footerFade }]}>
         <Text style={styles.footerText}>AI for a Better Harvest</Text>
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primaryDark,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#0A2E1A',
   },
-  logoWrapper: {
-    width: 140,
-    height: 140,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 28,
-  },
-  logoRing: {
+  artImage: {
     position: 'absolute',
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.3)',
+    width,
+    height,
+    top: 0,
+    left: 0,
   },
-  logoCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    justifyContent: 'center',
+  gradientOverlay: {
+    position: 'absolute',
+    width,
+    height,
+    backgroundColor: 'rgba(10,46,26,0.40)',
+  },
+  topContent: {
+    flex: 1,
     alignItems: 'center',
-    overflow: 'hidden',
+    justifyContent: 'flex-start',
+    paddingTop: height * 0.08,
+    paddingHorizontal: 24,
   },
-  glowOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    borderRadius: 60,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-  },
-  logoIcon: {
-    fontSize: 56,
-  },
-  title: {
-    ...Typography.display,
-    color: Colors.textOnPrimary,
-    fontSize: 36,
+  appName: {
+    fontFamily: FontFamily.bold,
+    fontSize: 42,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
+    textShadowColor: 'rgba(0,0,0,0.65)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 10,
     marginBottom: 8,
-    textAlign: 'center',
   },
-  subtitle: {
-    ...Typography.body,
-    color: 'rgba(255,255,255,0.85)',
-    fontSize: 16,
+  tagline: {
+    fontFamily: FontFamily.medium,
+    fontSize: 17,
+    color: 'rgba(255,255,255,0.92)',
     textAlign: 'center',
+    lineHeight: 24,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
   },
   footer: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 56,
+    alignSelf: 'center',
+    backgroundColor: 'rgba(0,0,0,0.32)',
+    paddingHorizontal: 22,
+    paddingVertical: 9,
+    borderRadius: 22,
   },
   footerText: {
-    ...Typography.caption,
-    color: 'rgba(255,255,255,0.7)',
+    fontFamily: FontFamily.semibold,
     fontSize: 14,
+    color: 'rgba(255,255,255,0.92)',
+    letterSpacing: 0.4,
   },
 });

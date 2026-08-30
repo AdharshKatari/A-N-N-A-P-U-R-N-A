@@ -59,7 +59,8 @@ export default function LanguageScreen({ navigation, route }: any) {
     if (navigation.canGoBack() && isFromSettings) {
       navigation.goBack();
     } else {
-      navigation.replace('Main');
+      // After language is selected → go to Login (voice-assisted sign in/up)
+      navigation.replace('Login');
     }
   };
 

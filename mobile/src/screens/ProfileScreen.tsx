@@ -38,8 +38,7 @@ import { FarmSatelliteFieldMap } from '../components/FarmSatelliteFieldMap';
 import { PrecisionAgriCommandDashboard } from '../components/PrecisionAgriCommandDashboard';
 import { hapticHeavy, hapticLight, hapticMedium } from '../utils/haptics';
 
-const PROFILE_AVATAR =
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&dpr=2&q=80';
+const PROFILE_AVATAR = require('../../assets/farmer_ramesh.png');
 
 const PROFILE_STORAGE_KEY = '@annapurna_farmer_profile';
 

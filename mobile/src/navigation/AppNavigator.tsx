@@ -100,13 +100,11 @@ const transitions = {
 export default function AppNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="Main"
+      initialRouteName="Splash"
       screenOptions={{
         headerShown: false,
-        // Default transition for all screens
         animation: 'slide_from_right',
         animationDuration: GlassMotion.duration.standard,
-        // Enable gesture-based back navigation
         gestureEnabled: true,
         gestureDirection: 'horizontal',
       }}

@@ -16,7 +16,7 @@ import { hapticLight, hapticSelection } from '../utils/haptics';
 export interface FarmerProfileData {
   name: string;
   handle: string;
-  avatarUrl: string;
+  avatarUrl: any;
   role: string;
   farmLocation: string;
   joinedDate: string;
@@ -35,8 +35,7 @@ export interface FarmerProfileCardProps {
 const DEFAULT_FARMER: FarmerProfileData = {
   name: 'Ramesh Patel',
   handle: '@ramesh.patel',
-  avatarUrl:
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&dpr=2&q=80',
+  avatarUrl: require('../../assets/farmer_ramesh.png'),
   role: 'Lead Cultivator & Farm Manager at Annapurna Farms.',
   farmLocation: 'East Field, Nashik Zone',
   joinedDate: 'December 2023',
@@ -68,7 +67,7 @@ export function FarmerProfileCard({
         activeOpacity={0.8}
       >
         <View style={styles.avatarWrapSmall}>
-          <Image source={{ uri: data.avatarUrl }} style={styles.avatarSmall} />
+          <Image source={typeof data.avatarUrl === 'string' ? { uri: data.avatarUrl } : data.avatarUrl} style={styles.avatarSmall} />
           <View style={styles.onlineBadge} />
         </View>
 
@@ -91,7 +90,7 @@ export function FarmerProfileCard({
       {isOpen && (
         <View style={styles.hoverCardContainer}>
           <View style={styles.hoverCardHeader}>
-            <Image source={{ uri: data.avatarUrl }} style={styles.avatarLarge} />
+            <Image source={typeof data.avatarUrl === 'string' ? { uri: data.avatarUrl } : data.avatarUrl} style={styles.avatarLarge} />
             <View style={styles.hoverHeaderContent}>
               <View style={styles.nameLine}>
                 <Text style={styles.hoverName}>{data.name}</Text>

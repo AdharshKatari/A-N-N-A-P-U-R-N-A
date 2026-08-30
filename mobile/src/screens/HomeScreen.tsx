@@ -47,8 +47,8 @@ import { BiologicalExpiryClock } from '../components/BiologicalExpiryClock';
 import { KisanVoiceSpeaker } from '../components/KisanVoiceSpeaker';
 import WeatherClimateHeroCard from '../components/WeatherClimateHeroCard';
 
-const AVATAR_URL =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuDAoI8pXqz5UIVImYP4_1U_SYCwn0-QyQaKO_oL7FRLJDHZcnXOiEVFZ00nEXT1FEOIIaEHzJGKZZw2EhEllzfNebbmYmgB26uUxHLLZCcyD95hQzxvAfdiKnsNS3zqLyQkyo3tCNxyK5-3NBgLUcQzh7SrabAfONySEkNe0yck4gstrbqO86Jw3xCT9Y_wEYxLaB3EnS6O8-MiYGXcdWDnODUkfOz5yPPxRtdmo8rs120wYsHGfw8fJQ';
+// Local farmer avatar (Ramesh Patel — provided by team)
+const FARMER_AVATAR = require('../../assets/farmer_ramesh.png');
 
 import { getWeatherByCoords, getWeatherAlerts, getFaq } from '../services/api';
 
@@ -341,7 +341,7 @@ function HomeScreen({ navigation }: any) {
           accessibilityLabel="Open Farmer Profile"
         >
           <View style={styles.avatarContainer}>
-            <Image source={{ uri: AVATAR_URL }} style={styles.avatar} resizeMode="cover" />
+            <Image source={FARMER_AVATAR} style={styles.avatar} resizeMode="cover" />
           </View>
           <View style={styles.titleContainer}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
