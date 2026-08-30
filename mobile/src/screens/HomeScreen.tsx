@@ -411,53 +411,8 @@ function HomeScreen({ navigation }: any) {
             </View>
         </FadeIn>
 
-        {/* ⚡ 1-Tap SIH Hackathon Live Demo Hero Banner */}
+        {/* Visual Weather & Climate Degree-Hour Hero Card (At Top) */}
         <FadeIn delay={70} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
-          <TouchableOpacity
-            activeOpacity={0.88}
-            style={styles.sihDemoHeroCard}
-            onPress={() => {
-              hapticMedium();
-              setDemoModalVisible(true);
-            }}
-          >
-            <View style={styles.sihDemoTopRow}>
-              <View style={styles.sihDemoBadge}>
-                <MaterialCommunityIcons name="trophy-award" size={15} color="#B45309" />
-                <Text style={styles.sihDemoBadgeText}>SIH 2026 LIVE DEMO</Text>
-              </View>
-              <View style={styles.sihDemoProfitPill}>
-                <Text style={styles.sihDemoProfitText}>+₹4,875 Net Gain</Text>
-              </View>
-            </View>
-            
-            <Text style={styles.sihDemoTitle}>⚡ 1-Tap Showcase: Kisan Ramesh</Text>
-            <Text style={styles.sihDemoSub}>
-              500kg Nashik Tomatoes → AGMARK 88/100 → ISRO NDVI → Q10 6.8 Days → Vashi APMC Arbitrage
-            </Text>
-
-            <View style={styles.sihDemoActionRow}>
-              <View style={styles.sihDemoBtn}>
-                <Text style={styles.sihDemoBtnText}>Launch 60s End-to-End Walkthrough</Text>
-                <MaterialIcons name="arrow-forward" size={16} color="#FFFFFF" />
-              </View>
-            </View>
-          </TouchableOpacity>
-        </FadeIn>
-
-        {/* Interactive Q10 Biological Shelf-Life & Temperature Decay Clock */}
-        <FadeIn delay={100} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
-          <BiologicalExpiryClock
-            cropType="Tomatoes"
-            initialTemp={typeof weather?.temp === 'number' ? weather.temp : 34}
-            baseShelfLifeDays={12.0}
-            visualQualityScore={88}
-            showSlider={true}
-          />
-        </FadeIn>
-
-        {/* Visual Weather & Climate Degree-Hour Hero Card */}
-        <FadeIn delay={120} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
           <WeatherClimateHeroCard
             temp={typeof weather?.temp === 'number' ? weather.temp : 34}
             condition={weather?.description || 'Partly Sunny'}
@@ -466,6 +421,17 @@ function HomeScreen({ navigation }: any) {
             windSpeed={14}
             rainChance={15}
             onPressForecast={() => navigation?.navigate('Weather')}
+          />
+        </FadeIn>
+
+        {/* Interactive Q10 Biological Shelf-Life & Temperature Decay Clock (Directly Below Climate) */}
+        <FadeIn delay={100} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
+          <BiologicalExpiryClock
+            cropType="Tomatoes"
+            initialTemp={typeof weather?.temp === 'number' ? weather.temp : 34}
+            baseShelfLifeDays={12.0}
+            visualQualityScore={88}
+            showSlider={true}
           />
         </FadeIn>
 
@@ -611,6 +577,40 @@ function HomeScreen({ navigation }: any) {
                 </View>
               </View>
             </FadeIn>
+
+            {/* ⚡ 1-Tap SIH Hackathon Live Demo Showcase (Placed at Very Bottom) */}
+            <FadeIn delay={450} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
+              <TouchableOpacity
+                activeOpacity={0.88}
+                style={[styles.sihDemoHeroCard, { marginTop: 14, marginBottom: 12 }]}
+                onPress={() => {
+                  hapticMedium();
+                  setDemoModalVisible(true);
+                }}
+              >
+                <View style={styles.sihDemoTopRow}>
+                  <View style={styles.sihDemoBadge}>
+                    <MaterialCommunityIcons name="trophy-award" size={15} color="#B45309" />
+                    <Text style={styles.sihDemoBadgeText}>SIH 2026 LIVE DEMO</Text>
+                  </View>
+                  <View style={styles.sihDemoProfitPill}>
+                    <Text style={styles.sihDemoProfitText}>+₹4,875 Net Gain</Text>
+                  </View>
+                </View>
+                
+                <Text style={styles.sihDemoTitle}>⚡ 1-Tap Showcase: Kisan Ramesh</Text>
+                <Text style={styles.sihDemoSub}>
+                  500kg Nashik Tomatoes → AGMARK 88/100 → ISRO NDVI → Q10 6.8 Days → Vashi APMC Arbitrage
+                </Text>
+
+                <View style={styles.sihDemoActionRow}>
+                  <View style={styles.sihDemoBtn}>
+                    <Text style={styles.sihDemoBtnText}>Launch 60s End-to-End Walkthrough</Text>
+                    <MaterialIcons name="arrow-forward" size={16} color="#FFFFFF" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </FadeIn>
       </ScrollView>
 
       {/* Multilingual Voice Assistant Modal */}
@@ -692,19 +692,20 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   voiceHeaderBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#E8F4E6',
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#E8F5E9',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#A8D5A2',
+    marginRight: 4,
   },
   notifButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: Colors.surfaceAlt,
     alignItems: 'center',
     justifyContent: 'center',

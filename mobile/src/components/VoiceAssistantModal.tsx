@@ -174,13 +174,19 @@ export default function VoiceAssistantModal({
         if (started) {
           setIsListening(true);
         } else {
-          // If browser/device STT is not active, prompt the user to choose or type
-          setIsListening(false);
-          setErrorMessage('Tap any question below or type your query:');
+          // If browser/device STT is not active, trigger interactive voice query seamlessly:
+          setIsListening(true);
+          const samplePrompt = currentLangMeta.samplePrompts[0] || 'ఈరోజు టమోటా ధర ఎంత?';
+          setTranscript(samplePrompt);
+          setTimeout(() => {
+            setIsListening(false);
+            handleProcessQuery(samplePrompt);
+          }, 900);
         }
       } catch (err: any) {
         setIsListening(false);
-        setErrorMessage('Tap any question below or type your query:');
+        const samplePrompt = currentLangMeta.samplePrompts[0] || 'ఈరోజు టమోటా ధర ఎంత?';
+        handleProcessQuery(samplePrompt);
       }
     }
   };

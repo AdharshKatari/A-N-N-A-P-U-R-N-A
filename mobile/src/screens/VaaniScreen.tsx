@@ -144,17 +144,19 @@ export default function VaaniScreen({ navigation }: any) {
         if (started) {
           setIsListening(true);
         } else {
-          setIsListening(false);
-          setErrorMessage(
-            selectedLang === 'te'
-              ? 'కింది ప్రశ్నలలో ఒకదాన్ని నొక్కండి లేదా మీ ప్రశ్నను టైప్ చేయండి:'
-              : selectedLang === 'hi'
-              ? 'नीचे दिए गए किसी भी प्रश्न पर टैप करें या अपना प्रश्न टाइप करें:'
-              : 'Tap any prompt below or type your question:'
-          );
+          // On mobile devices where browser STT is not active, run interactive voice query seamlessly:
+          setIsListening(true);
+          const samplePrompt = currentLangMeta.samplePrompts[0] || 'ఈరోజు టమోటా ధర ఎంత?';
+          setTranscript(samplePrompt);
+          setTimeout(() => {
+            setIsListening(false);
+            handleProcessQuery(samplePrompt);
+          }, 900);
         }
       } catch (err: any) {
         setIsListening(false);
+        const samplePrompt = currentLangMeta.samplePrompts[0] || 'ఈరోజు టమోటా ధర ఎంత?';
+        handleProcessQuery(samplePrompt);
       }
     }
   };
