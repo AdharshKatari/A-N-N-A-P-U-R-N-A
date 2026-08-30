@@ -414,14 +414,14 @@ function SmartMoveScreen({ navigation, route }: any) {
                           </View>
                         </View>
                         {isRecommended && (
-                          <GlassBadge variant="success" size="sm" style={styles.recommendedPill}>
+                          <View style={styles.recommendedPill}>
                             <Text style={styles.recommendedPillText}>{t('recommended', 'Recommended')}</Text>
-                          </GlassBadge>
+                          </View>
                         )}
                         {scenario.risk_level === 'HIGH' && !isRecommended && (
-                          <GlassBadge variant="error" size="sm" style={styles.highRiskPill}>
+                          <View style={styles.highRiskPill}>
                             <Text style={styles.highRiskPillText}>{t('high_risk', 'High Risk')}</Text>
-                          </GlassBadge>
+                          </View>
                         )}
                       </View>
 
@@ -801,30 +801,30 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   recommendedPill: {
-    backgroundColor: Colors.successBg,
-    paddingHorizontal: Spacing.xs,
-    paddingVertical: Spacing.xxs - 1,
-    borderRadius: BorderRadius.sm,
+    backgroundColor: '#145C2E',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
   },
   recommendedPillText: {
     fontFamily: FontFamily.bold,
     fontSize: 11,
     lineHeight: 14,
     fontWeight: '700',
-    color: Colors.textOnPrimary,
+    color: '#FFFFFF',
   },
   highRiskPill: {
-    backgroundColor: Colors.errorBg,
-    paddingHorizontal: Spacing.xs,
-    paddingVertical: Spacing.xxs - 1,
-    borderRadius: BorderRadius.sm,
+    backgroundColor: '#FEE2E2',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
   },
   highRiskPillText: {
     fontFamily: FontFamily.bold,
     fontSize: 11,
     lineHeight: 14,
     fontWeight: '700',
-    color: Colors.error,
+    color: '#DC2626',
   },
   optionFeaturesRow: {
     flexDirection: 'row',

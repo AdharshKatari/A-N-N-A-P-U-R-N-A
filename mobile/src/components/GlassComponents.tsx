@@ -491,7 +491,7 @@ export const GlassButton = forwardRef<View, GlassButtonProps>(
               />
             ) : (
               <>
-                {leftIcon && <View style={{ marginRight: 4 }}>{leftIcon}</View>}
+                {leftIcon ? <View style={{ marginRight: 4 }}>{leftIcon}</View> : null}
                 <Text
                   style={[
                     {
@@ -505,7 +505,7 @@ export const GlassButton = forwardRef<View, GlassButtonProps>(
                 >
                   {children}
                 </Text>
-                {rightIcon && <View style={{ marginLeft: 4 }}>{rightIcon}</View>}
+                {rightIcon ? <View style={{ marginLeft: 4 }}>{rightIcon}</View> : null}
               </>
             )}
           </Animated.View>
@@ -862,11 +862,11 @@ export const GlassModal = ({
           GlassLevels.modal.shadow,
         ]}
       >
-        {(title || subtitle) && (
+        {(!!title || !!subtitle) && (
           <View style={styles.modalHeader}>
             <View style={styles.modalHeaderContent}>
-              {title && <Text style={styles.modalTitle}>{title}</Text>}
-              {subtitle && <Text style={styles.modalSubtitle}>{subtitle}</Text>}
+              {title ? <Text style={styles.modalTitle}>{title}</Text> : null}
+              {subtitle ? <Text style={styles.modalSubtitle}>{subtitle}</Text> : null}
             </View>
             <TouchableOpacity
               onPress={onClose}
@@ -908,10 +908,10 @@ export const GlassSheet = ({
       />
       <Animated.View style={[styles.sheetContent, GlassLevels.modal.shadow]}>
         <View style={styles.sheetHandle} />
-        {(title || subtitle) && (
+        {(!!title || !!subtitle) && (
           <View style={styles.sheetHeader}>
-            {title && <Text style={styles.sheetTitle}>{title}</Text>}
-            {subtitle && <Text style={styles.sheetSubtitle}>{subtitle}</Text>}
+            {title ? <Text style={styles.sheetTitle}>{title}</Text> : null}
+            {subtitle ? <Text style={styles.sheetSubtitle}>{subtitle}</Text> : null}
           </View>
         )}
         <View style={styles.sheetBody}>{children}</View>

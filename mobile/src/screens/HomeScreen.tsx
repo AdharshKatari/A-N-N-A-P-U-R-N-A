@@ -45,6 +45,7 @@ import { FloatingDisclosure } from '../components/FloatingDisclosure';
 import { DemoScenarioModal } from '../components/DemoScenarioModal';
 import { BiologicalExpiryClock } from '../components/BiologicalExpiryClock';
 import { KisanVoiceSpeaker } from '../components/KisanVoiceSpeaker';
+import WeatherClimateHeroCard from '../components/WeatherClimateHeroCard';
 
 const AVATAR_URL =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDAoI8pXqz5UIVImYP4_1U_SYCwn0-QyQaKO_oL7FRLJDHZcnXOiEVFZ00nEXT1FEOIIaEHzJGKZZw2EhEllzfNebbmYmgB26uUxHLLZCcyD95hQzxvAfdiKnsNS3zqLyQkyo3tCNxyK5-3NBgLUcQzh7SrabAfONySEkNe0yck4gstrbqO86Jw3xCT9Y_wEYxLaB3EnS6O8-MiYGXcdWDnODUkfOz5yPPxRtdmo8rs120wYsHGfw8fJQ';
@@ -455,37 +456,18 @@ function HomeScreen({ navigation }: any) {
           />
         </FadeIn>
 
-        {/* Weather Summary Card */}
-        <ScaleIn delay={120} duration={MotionTokens.duration.standard} reducedMotion={false}>
-              <TouchableOpacity
-                style={styles.weatherCardWrapper}
-                onPress={() => {
-                  hapticLight();
-                  navigation?.navigate('Weather');
-                }}
-                activeOpacity={0.85}
-              >
-                <View style={styles.weatherCard}>
-                  <View style={styles.weatherLeft}>
-                    <View style={styles.weatherIconCircle}>
-                      <MaterialIcons name="wb-sunny" size={24} color={Colors.primary} />
-                    </View>
-                    <View style={styles.weatherInfo}>
-                      <Text style={styles.weatherTempText} numberOfLines={1}>
-                        {displayTemp} {displayCondition}
-                      </Text>
-                      <Text style={styles.weatherLocationText} numberOfLines={1}>
-                        {locationName}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.forecastPill}>
-                    <Text style={styles.forecastLink}>Forecast</Text>
-                    <MaterialIcons name="chevron-right" size={16} color={Colors.primary} />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </ScaleIn>
+        {/* Visual Weather & Climate Degree-Hour Hero Card */}
+        <FadeIn delay={120} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
+          <WeatherClimateHeroCard
+            temp={typeof weather?.temp === 'number' ? weather.temp : 34}
+            condition={weather?.description || 'Partly Sunny'}
+            locationName={locationName || 'Nashik Farm'}
+            humidity={weather?.humidity || 62}
+            windSpeed={14}
+            rainChance={15}
+            onPressForecast={() => navigation?.navigate('Weather')}
+          />
+        </FadeIn>
 
             <FadeIn delay={140} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
               <FarmInsightsCarousel cards={[

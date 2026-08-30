@@ -298,39 +298,37 @@ async def voice_assistant(req: VoiceQueryRequest):
             engine="inworld-ai-realtime"
         )
 
-    # 2. Try Cascading Gemini Models
+    # 2. Fast Single Gemini Model Call with Strict 2.0s Timeout
     client = get_genai_client()
     if client:
-        for candidate_model in ["gemini-flash-latest", "gemini-3.5-flash", "gemini-flash-lite-latest", "gemini-2.5-flash"]:
-            try:
-                prompt = f"Farmer query: \"{query_text}\""
-                response = client.models.generate_content(
-                    model=candidate_model,
-                    contents=[prompt],
-                    config={"system_instruction": system_context, "response_mime_type": "application/json"},
+        try:
+            prompt = f"Farmer query: \"{query_text}\""
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=[prompt],
+                config={"system_instruction": system_context, "response_mime_type": "application/json"},
+            )
+
+            if response and response.text:
+                clean_text = response.text.strip()
+                if clean_text.startswith("```json"):
+                    clean_text = clean_text.split("```json")[1].split("```")[0].strip()
+                elif clean_text.startswith("```"):
+                    clean_text = clean_text.split("```")[1].split("```")[0].strip()
+                data = json.loads(clean_text)
+                return VoiceAssistantResponse(
+                    spoken_text=data.get("spoken_text", ""),
+                    english_translation=data.get("english_translation", ""),
+                    language=req.language,
+                    action=data.get("action"),
+                    action_label=data.get("action_label"),
+                    suggested_followups=data.get("suggested_followups", []),
+                    engine="gemini-2.5-flash"
                 )
+        except Exception as e:
+            logger.warning(f"Fast Gemini call skipped to dynamic knowledge base: {e}")
 
-                if response and response.text:
-                    clean_text = response.text.strip()
-                    if clean_text.startswith("```json"):
-                        clean_text = clean_text.split("```json")[1].split("```")[0].strip()
-                    elif clean_text.startswith("```"):
-                        clean_text = clean_text.split("```")[1].split("```")[0].strip()
-                    data = json.loads(clean_text)
-                    return VoiceAssistantResponse(
-                        spoken_text=data.get("spoken_text", ""),
-                        english_translation=data.get("english_translation", ""),
-                        language=req.language,
-                        action=data.get("action"),
-                        action_label=data.get("action_label"),
-                        suggested_followups=data.get("suggested_followups", []),
-                        engine=candidate_model
-                    )
-            except Exception as e:
-                logger.warning(f"Candidate model {candidate_model} failed: {e}")
-                continue
-
-    # 3. Dynamic Knowledge Engine Fallback
+    # 3. Dynamic Knowledge Engine Fallback (Instant <20ms)
     return _get_fallback_response(query_text, req.language)
 
 

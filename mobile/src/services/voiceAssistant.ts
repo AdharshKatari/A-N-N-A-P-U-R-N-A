@@ -299,7 +299,7 @@ class VoiceAssistantService {
   }
 
   // -------------------------------------------------------------
-  // TEXT-TO-SPEECH (TTS) - High Quality Cloud Voice + Native Fallback
+  // TEXT-TO-SPEECH (TTS) - Instant High-Speed Native Voice
   // -------------------------------------------------------------
   public async speak(
     text: string,
@@ -316,7 +316,7 @@ class VoiceAssistantService {
 
     const langMeta = SUPPORTED_VOICE_LANGUAGES.find((l) => l.code === langCode) || SUPPORTED_VOICE_LANGUAGES[0];
 
-    // Ensure iOS audio session is set to speaker playback
+    // Ensure audio session is ready for speaker output
     try {
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: false,
@@ -327,7 +327,23 @@ class VoiceAssistantService {
       });
     } catch (e) {}
 
-    // 1. Primary for regional languages: Cloud audio stream (Human voice MP3)
+    // Primary: Native Instant Regional Speech via Expo Speech (Zero lag, works 100% offline)
+    try {
+      Speech.speak(text, {
+        language: langMeta.bcp47,
+        pitch: 1.0,
+        rate: 0.92,
+        onStart: () => onStart?.(),
+        onDone: () => onEnd?.(),
+        onStopped: () => onEnd?.(),
+        onError: () => onEnd?.(),
+      });
+      return;
+    } catch (speechErr) {
+      console.warn('Native speech error, attempting cloud audio stream:', speechErr);
+    }
+
+    // Secondary fallback: Cloud audio stream
     try {
       const audioUrl = `${API_BASE_URL}/api/v5/voice/synthesize?text=${encodeURIComponent(text.slice(0, 190))}&lang=${langMeta.code}`;
       const { sound } = await Audio.Sound.createAsync(
@@ -342,24 +358,8 @@ class VoiceAssistantService {
       );
       this.currentSound = sound;
       await sound.playAsync();
-      return;
     } catch (cloudErr) {
-      console.warn('Cloud audio stream failed, falling back to native TTS:', cloudErr);
-    }
-
-    // 2. Secondary: Native expo-speech
-    try {
-      Speech.speak(text, {
-        language: langMeta.bcp47,
-        pitch: 1.0,
-        rate: 0.90,
-        onStart: () => onStart?.(),
-        onDone: () => onEnd?.(),
-        onStopped: () => onEnd?.(),
-        onError: () => onEnd?.(),
-      });
-    } catch (speechErr) {
-      console.warn('expo-speech also failed:', speechErr);
+      console.warn('Cloud audio stream also failed:', cloudErr);
       onEnd?.();
     }
   }

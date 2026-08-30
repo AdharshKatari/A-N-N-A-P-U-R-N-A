@@ -341,7 +341,7 @@ function WeatherScreen({ navigation }: any) {
         </FadeIn>
 
         {/* Location Map — FadeIn */}
-        {mapCenter && (
+        {!!mapCenter && (
         <FadeIn delay={160} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
         <GlassCard level="level1" style={styles.mapSection}>
           <MapSearchBar

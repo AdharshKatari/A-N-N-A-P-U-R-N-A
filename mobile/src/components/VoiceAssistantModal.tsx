@@ -380,12 +380,12 @@ export default function VoiceAssistantModal({
                       <Text style={styles.aiSpokenBody}>{response.spoken_text}</Text>
 
                       {/* English Translation */}
-                      {response.english_translation && selectedLang !== 'en' && (
+                      {!!response.english_translation && selectedLang !== 'en' ? (
                         <Text style={styles.aiTransBody}>{response.english_translation}</Text>
-                      )}
+                      ) : null}
 
                       {/* Action Button */}
-                      {response.action && (
+                      {!!response.action ? (
                         <TouchableOpacity
                           style={styles.actionShortcutBtn}
                           onPress={() => handleExecuteAction(response.action)}
@@ -396,7 +396,7 @@ export default function VoiceAssistantModal({
                             {response.action_label || 'Proceed'}
                           </Text>
                         </TouchableOpacity>
-                      )}
+                      ) : null}
                     </View>
                   )}
                 </View>
@@ -429,12 +429,12 @@ export default function VoiceAssistantModal({
               )}
 
               {/* Error Banner */}
-              {errorMessage && (
+              {!!errorMessage ? (
                 <View style={styles.errorCard}>
                   <MaterialIcons name="info-outline" size={16} color="#C62828" />
                   <Text style={styles.errorCardText}>{errorMessage}</Text>
                 </View>
-              )}
+              ) : null}
             </ScrollView>
 
             {/* Direct Query Input Bar */}

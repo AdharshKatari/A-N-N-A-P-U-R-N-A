@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useLanguage } from '../context/LanguageContext';
 import HomeScreen from '../screens/HomeScreen';
 import PestScreen from '../screens/PestScreen';
-import ScanScreen from '../screens/ScanScreen';
+import VaaniScreen from '../screens/VaaniScreen';
 import SmartMoveScreen from '../screens/SmartMoveScreen';
 import MarketScreen from '../screens/MarketScreen';
 import { hapticLight } from '../utils/haptics';
@@ -14,9 +14,9 @@ import { Colors, FontFamily, Shadows } from '../constants/theme';
 const Tab = createBottomTabNavigator();
 const icons: Record<string, keyof typeof MaterialIcons.glyphMap> = {
   Home: 'home',
-  'Pest & Soil': 'eco',
-  Scan: 'qr-code-scanner',
   'Smart Move': 'local-shipping',
+  Vaani: 'record-voice-over',
+  'Pest & Soil': 'eco',
   Market: 'storefront',
 };
 
@@ -119,19 +119,19 @@ export default function BottomTabs() {
         options={{ tabBarLabel: t('tab_home', 'Home') }}
       />
       <Tab.Screen
-        name="Pest & Soil"
-        component={PestScreen}
-        options={{ tabBarLabel: t('tab_crops', 'Pest & Soil') }}
-      />
-      <Tab.Screen
-        name="Scan"
-        component={ScanScreen}
-        options={{ tabBarLabel: t('tab_scan', 'Scan') }}
-      />
-      <Tab.Screen
         name="Smart Move"
         component={SmartMoveScreen}
         options={{ tabBarLabel: t('tab_smart_move', 'Smart Move') }}
+      />
+      <Tab.Screen
+        name="Vaani"
+        component={VaaniScreen}
+        options={{ tabBarLabel: t('tab_voice', 'Vaani AI') }}
+      />
+      <Tab.Screen
+        name="Pest & Soil"
+        component={PestScreen}
+        options={{ tabBarLabel: t('tab_crops', 'Pest & Soil') }}
       />
       <Tab.Screen
         name="Market"

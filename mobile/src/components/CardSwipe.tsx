@@ -17,17 +17,21 @@ interface CardSwipeProps {
   maxCardWidth?: number;
 }
 
-export default function CardSwipe({ children, gap = 16, maxCardWidth = 320 }: CardSwipeProps) {
+export default function CardSwipe({ children, gap = 12, maxCardWidth = 340 }: CardSwipeProps) {
   const items = useMemo(() => React.Children.toArray(children), [children]);
   const { width } = useWindowDimensions();
-  const cardWidth = Math.min(maxCardWidth, width - 48);
+  // Safe responsive card width: fits neatly on smaller screens like Realme/Redmi while allowing full breathing room
+  const cardWidth = Math.min(maxCardWidth, width - 40);
   const interval = cardWidth + gap;
   const scrollX = useRef(new Animated.Value(0)).current;
   const scroller = useRef<any>(null);
   const [index, setIndex] = useState(0);
 
   const settle = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const next = Math.max(0, Math.min(items.length - 1, Math.round(event.nativeEvent.contentOffset.x / interval)));
+    const next = Math.max(
+      0,
+      Math.min(items.length - 1, Math.round(event.nativeEvent.contentOffset.x / interval))
+    );
     if (next !== index) hapticLight();
     setIndex(next);
   };
@@ -39,6 +43,7 @@ export default function CardSwipe({ children, gap = 16, maxCardWidth = 320 }: Ca
   };
 
   if (!items.length) return null;
+
   return (
     <View style={styles.root}>
       <Animated.ScrollView
@@ -50,34 +55,38 @@ export default function CardSwipe({ children, gap = 16, maxCardWidth = 320 }: Ca
         decelerationRate="fast"
         disableIntervalMomentum
         bounces={false}
-        contentContainerStyle={[styles.track, { gap, paddingHorizontal: 2 }]}
+        contentContainerStyle={[styles.track, { gap, paddingHorizontal: 4 }]}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: true },
+          { useNativeDriver: true }
         )}
         onMomentumScrollEnd={settle}
         scrollEventThrottle={16}
       >
         {items.map((child, itemIndex) => {
-          const inputRange = [(itemIndex - 1) * interval, itemIndex * interval, (itemIndex + 1) * interval];
+          const inputRange = [
+            (itemIndex - 1) * interval,
+            itemIndex * interval,
+            (itemIndex + 1) * interval,
+          ];
           return (
             <Animated.View
               key={itemIndex}
               style={{
                 width: cardWidth,
-                opacity: scrollX.interpolate({ inputRange, outputRange: [0.72, 1, 0.72], extrapolate: 'clamp' }),
+                opacity: scrollX.interpolate({
+                  inputRange,
+                  outputRange: [0.85, 1, 0.85],
+                  extrapolate: 'clamp',
+                }),
                 transform: [
-                  { perspective: 1000 },
-                  { rotateY: scrollX.interpolate({
-                    inputRange,
-                    outputRange: ['-16deg', '0deg', '16deg'],
-                    extrapolate: 'clamp',
-                  }) },
-                  { scale: scrollX.interpolate({
-                    inputRange,
-                    outputRange: [0.94, 1, 0.94],
-                    extrapolate: 'clamp',
-                  }) },
+                  {
+                    scale: scrollX.interpolate({
+                      inputRange,
+                      outputRange: [0.97, 1, 0.97],
+                      extrapolate: 'clamp',
+                    }),
+                  },
                 ],
               }}
             >
@@ -104,9 +113,28 @@ export default function CardSwipe({ children, gap = 16, maxCardWidth = 320 }: Ca
 }
 
 const styles = StyleSheet.create({
-  root: { marginHorizontal: -2 },
-  track: { paddingVertical: 10 },
-  dots: { minHeight: 22, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 9 },
-  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: Colors.divider },
-  dotActive: { width: 20, backgroundColor: Colors.primaryDeep },
+  root: {
+    marginHorizontal: -4,
+  },
+  track: {
+    paddingVertical: 8,
+  },
+  dots: {
+    minHeight: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 6,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#D1D5DB',
+  },
+  dotActive: {
+    width: 18,
+    backgroundColor: Colors.primaryDeep,
+  },
 });
