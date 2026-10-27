@@ -3,36 +3,172 @@
   <head>
     <meta charset="utf-8" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
     <title>Annapurna FreshGuard — The Farmer Market</title>
-    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    
+    <!-- PWA & Mobile Web Capabilities -->
+    <meta name="theme-color" content="#00431D" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Annapurna" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Google Fonts: Plus Jakarta Sans & Noto Sans Telugu (for complete Indic/Telugu ligature shaping on iOS Safari) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <!-- Vector Icon Fonts for React Native Web / @expo/vector-icons -->
+    <style id="vector-icons-fonts">
+      @font-face {
+        font-family: 'MaterialIcons';
+        src: url('/fonts/MaterialIcons.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/MaterialIcons.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'MaterialCommunityIcons';
+        src: url('/fonts/MaterialCommunityIcons.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/MaterialCommunityIcons.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Ionicons';
+        src: url('/fonts/Ionicons.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/Ionicons.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Feather';
+        src: url('/fonts/Feather.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/Feather.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'FontAwesome';
+        src: url('/fonts/FontAwesome.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/FontAwesome.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'FontAwesome5_Solid';
+        src: url('/fonts/FontAwesome5_Solid.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/FontAwesome5_Solid.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'FontAwesome5_Regular';
+        src: url('/fonts/FontAwesome5_Regular.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/FontAwesome5_Regular.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'FontAwesome5_Brands';
+        src: url('/fonts/FontAwesome5_Brands.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/FontAwesome5_Brands.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'FontAwesome6_Solid';
+        src: url('/fonts/FontAwesome6_Solid.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'FontAwesome6_Regular';
+        src: url('/fonts/FontAwesome6_Regular.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'FontAwesome6_Brands';
+        src: url('/fonts/FontAwesome6_Brands.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'AntDesign';
+        src: url('/fonts/AntDesign.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/AntDesign.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Entypo';
+        src: url('/fonts/Entypo.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/Entypo.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'EvilIcons';
+        src: url('/fonts/EvilIcons.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/EvilIcons.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Fontisto';
+        src: url('/fonts/Fontisto.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/Fontisto.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Foundation';
+        src: url('/fonts/Foundation.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/Foundation.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Octicons';
+        src: url('/fonts/Octicons.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/Octicons.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'SimpleLineIcons';
+        src: url('/fonts/SimpleLineIcons.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/SimpleLineIcons.ttf') format('truetype');
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Zocial';
+        src: url('/fonts/Zocial.ttf') format('truetype'),
+             url('https://cdn.jsdelivr.net/npm/react-native-vector-icons@10.2.0/Fonts/Zocial.ttf') format('truetype');
+        font-display: block;
+      }
+    </style>
+
+    <!-- Global typography & Indic text rendering reset -->
     <style id="expo-reset">
-      /* These styles make the body full-height */
       html,
       body {
         height: 100%;
+        background-color: #FEF9F0;
       }
-      /* These styles disable body scrolling if you are using <ScrollView> */
       body {
         overflow: hidden;
       }
-      /* These styles make the root element full-height */
       #root {
         display: flex;
         height: 100%;
         flex: 1;
       }
+      /* Ensure proper complex text layout (CTL) and ligature shaping for Telugu & Indic scripts */
+      * {
+        font-family: 'Plus Jakarta Sans', 'Noto Sans Telugu', 'Kohinoor Telugu', 'Telugu Sangam MN', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      /* Prevent Safari from dropping ligatures or rendering dotted circles on matras */
+      body, div, span, p, h1, h2, h3, h4, h5, h6 {
+        font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+      }
     </style>
-  <meta name="theme-color" content="#145C2E">
-<link rel="icon" href="/favicon.ico" /></head>
+  </head>
 
   <body>
-    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <!-- The root element for your Expo app. -->
     <div id="root"></div>
-  <script src="/_expo/static/js/web/AppEntry-fc9e1dca69c4b0cf60e388883067cabf.js" defer></script>
-</body>
+    <script src="/_expo/static/js/web/AppEntry-fc9e1dca69c4b0cf60e388883067cabf.js" defer></script>
+  </body>
 </html>

@@ -143,12 +143,16 @@ export const BorderRadius = {
 // ============================================================================
 // TYPOGRAPHY — Formal type scale with weights
 // ============================================================================
+import { Platform } from 'react-native';
+
 const FONT = 'PlusJakartaSans';
+const TELUGU_FALLBACK = "'Noto Sans Telugu', 'Kohinoor Telugu', 'Telugu Sangam MN', sans-serif";
+
 export const FontFamily = {
-  regular: `${FONT}_400Regular`,
-  medium: `${FONT}_500Medium`,
-  semibold: `${FONT}_600SemiBold`,
-  bold: `${FONT}_700Bold`,
+  regular: Platform.select({ web: `${FONT}_400Regular, ${TELUGU_FALLBACK}`, default: `${FONT}_400Regular` }),
+  medium: Platform.select({ web: `${FONT}_500Medium, ${TELUGU_FALLBACK}`, default: `${FONT}_500Medium` }),
+  semibold: Platform.select({ web: `${FONT}_600SemiBold, ${TELUGU_FALLBACK}`, default: `${FONT}_600SemiBold` }),
+  bold: Platform.select({ web: `${FONT}_700Bold, ${TELUGU_FALLBACK}`, default: `${FONT}_700Bold` }),
 } as const;
 
 export const Typography = {

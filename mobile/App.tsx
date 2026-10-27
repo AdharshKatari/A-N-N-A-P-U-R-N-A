@@ -23,6 +23,7 @@ import {
   PlusJakartaSans_800ExtraBold_Italic,
 } from '@expo-google-fonts/plus-jakarta-sans';
 
+import { MaterialIcons, MaterialCommunityIcons, Ionicons, Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import AppNavigator from './src/navigation/AppNavigator';
 import PwaInstallModal from './src/components/PwaInstallModal';
 import { initializeOfflineSync, stopOfflineSync } from './src/services/offlineSync';
@@ -52,6 +53,12 @@ export default function App() {
     PlusJakartaSans_600SemiBold_Italic,
     PlusJakartaSans_700Bold_Italic,
     PlusJakartaSans_800ExtraBold_Italic,
+    ...MaterialIcons.font,
+    ...MaterialCommunityIcons.font,
+    ...Ionicons.font,
+    ...Feather.font,
+    ...FontAwesome.font,
+    ...FontAwesome5.font,
   });
 
   const [syncStatus, setSyncStatus] = useState<{ isOnline: boolean; pendingCount: number }>({
