@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "/api/index.py"
+      "destination": "/api/index.py?__path=:path*"
     },
     {
       "source": "/api",
-      "destination": "/api/index.py"
+      "destination": "/api/index.py?__path=health"
     },
     {
       "source": "/((?!_expo|assets|icons|favicon.ico|manifest.json|sw.js).*)",
