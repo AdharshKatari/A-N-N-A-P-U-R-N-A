@@ -61,6 +61,29 @@ class AsgiPathNormalizer:
                 elif curr_path in ("/", "", "/api", "/api/", "/api/index.py", "/health", "/api/health"):
                     scope["path"] = "/api/v5/health"
 
+            # 3. Intercept response to inject Edge CDN caching headers on read-only GET requests
+            async def send_with_caching(message):
+                if message["type"] == "http.response.start":
+                    if scope.get("method") == "GET" and message.get("status") == 200:
+                        norm_path = scope.get("path", "")
+                        cache_val = None
+                        if "/metadata" in norm_path or "/faq" in norm_path:
+                            cache_val = b"public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+                        elif "/weather" in norm_path or "/mandi/prices" in norm_path or "/dashboard" in norm_path:
+                            cache_val = b"public, max-age=60, s-maxage=300, stale-while-revalidate=600"
+                        elif "/health" in norm_path:
+                            cache_val = b"public, max-age=15, s-maxage=60"
+
+                        if cache_val:
+                            orig_headers = [h for h in message.get("headers", []) if h[0].lower() != b"cache-control"]
+                            orig_headers.append((b"cache-control", cache_val))
+                            message["headers"] = orig_headers
+
+                await send(message)
+
+            await self.app(scope, receive, send_with_caching)
+            return
+
         await self.app(scope, receive, send)
 
 app = AsgiPathNormalizer(fapp)

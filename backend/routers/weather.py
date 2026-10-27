@@ -30,6 +30,8 @@ def _estimate_rain_chance(owm_data: dict) -> int:
     return min(100, max(0, int(clouds * 0.7)))
 
 
+_weather_cache = {}
+
 @router.get("/api/v5/weather")
 async def get_weather(
     latitude: float = Query(...),
@@ -39,6 +41,13 @@ async def get_weather(
     Backend proxy for OpenWeatherMap. Returns current weather data.
     Falls back to internal defaults if OWM is unreachable.
     """
+    cache_key = (round(latitude, 2), round(longitude, 2))
+    now = datetime.datetime.now(datetime.timezone.utc)
+    if cache_key in _weather_cache:
+        entry = _weather_cache[cache_key]
+        if (now - entry["cached_at"]).total_seconds() < 600:
+            return entry["data"]
+
     owm_key = os.environ.get("OPENWEATHER_API_KEY") or os.environ.get("OWM_API_KEY")
 
     if not owm_key:
@@ -70,7 +79,7 @@ async def get_weather(
         wind = data.get("wind", {})
         weather_desc = data.get("weather", [{}])[0] if data.get("weather") else {}
 
-        return {
+        res = {
             "source": "OPENWEATHERMAP_LIVE",
             "temp": round(main.get("temp", 0), 1),
             "humidity": main.get("humidity", 0),
@@ -82,6 +91,8 @@ async def get_weather(
             "rain_chance": _estimate_rain_chance(data),
             "api_status": "SUCCESS",
         }
+        _weather_cache[cache_key] = {"data": res, "cached_at": now}
+        return res
     except Exception as e:
         logger.warning(f"Weather API failed, using fallback: {str(e)}")
         return {

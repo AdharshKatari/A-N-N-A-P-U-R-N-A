@@ -275,6 +275,8 @@ async def get_nearby_salvage_facilities(
 # MANDI PRICES (data.gov.in government API)
 # ====================================================================================
 
+_mandi_cache = {}
+
 @router.get("/api/v5/mandi/prices")
 async def get_mandi_prices(
     crop: str = Query(default="Tomato", description="Crop name to filter prices"),
@@ -284,6 +286,13 @@ async def get_mandi_prices(
     Fetches real-time mandi (agricultural market) prices from the Indian government
     data.gov.in API. Falls back to estimated prices if the API is unreachable.
     """
+    ck = (crop.lower().strip(), state.lower().strip() if state else "")
+    now = datetime.datetime.now(datetime.timezone.utc)
+    if ck in _mandi_cache:
+        cached = _mandi_cache[ck]
+        if (now - cached["cached_at"]).total_seconds() < 600:
+            return cached["data"]
+
     mandi_api_key = os.environ.get("MANDI_API_KEY")
 
     # Fallback prices per crop (in ₹/kg, approximate mandi averages)
@@ -335,13 +344,15 @@ async def get_mandi_prices(
                         "commodity": rec.get("commodity", crop),
                         "arrival_date": rec.get("arrival_date", ""),
                     })
-                return {
+                res = {
                     "source": "DATA_GOV_IN_LIVE",
                     "crop": crop,
                     "prices": prices,
                     "count": len(prices),
                     "api_status": "SUCCESS",
                 }
+                _mandi_cache[ck] = {"data": res, "cached_at": now}
+                return res
         except Exception as e:
             logger.warning(f"Mandi API failed, using fallback: {str(e)}")
 

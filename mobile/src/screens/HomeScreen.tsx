@@ -175,38 +175,36 @@ function HomeScreen({ navigation }: any) {
         console.warn('Location resolution warning:', e);
       }
 
-      // 1. Fetch weather using backend proxy API (with graceful fallback)
-      try {
-        const weatherData = await getWeatherByCoords(lat, lng);
-        if (weatherData) {
-          setWeather({
-            temp: weatherData.temp,
-            humidity: weatherData.humidity,
-            description: weatherData.description || 'Clear',
-            location_name: weatherData.location_name && weatherData.location_name !== 'Unknown' ? weatherData.location_name : locationName,
-          });
-        }
-      } catch (e) {
-        console.warn('Backend weather fetch failed, using fallback:', e);
+      // Execute all major dashboard API requests concurrently in parallel
+      const [weatherResult, alertsResult, dashResult, faqResult] = await Promise.allSettled([
+        getWeatherByCoords(lat, lng),
+        getWeatherAlerts(lat, lng, 'Tomato'),
+        refetchDashboard(),
+        getFaq(),
+      ]);
+
+      // 1. Process Weather
+      if (weatherResult.status === 'fulfilled' && weatherResult.value) {
+        const weatherData = weatherResult.value;
+        setWeather({
+          temp: weatherData.temp,
+          humidity: weatherData.humidity,
+          description: weatherData.description || 'Clear',
+          location_name: weatherData.location_name && weatherData.location_name !== 'Unknown' ? weatherData.location_name : locationName,
+        });
       }
 
-      // 2. Fetch weather alerts from backend
-      try {
-        const alertRes = await getWeatherAlerts(lat, lng, 'Tomato');
-        if (alertRes && alertRes.alerts) {
-          setWeatherAlerts(alertRes.alerts.map((a: any) => ({
-            severity: a.severity,
-            title: a.title,
-            recommended_action: a.recommended_action || a.description,
-          })));
-        }
-      } catch (e) {
-        console.warn('Weather alerts fetch warning:', e);
+      // 2. Process Alerts
+      if (alertsResult.status === 'fulfilled' && alertsResult.value?.alerts) {
+        setWeatherAlerts(alertsResult.value.alerts.map((a: any) => ({
+          severity: a.severity,
+          title: a.title,
+          recommended_action: a.recommended_action || a.description,
+        })));
       }
 
-      // 3. Fetch dashboard stats
-      const dashData = await refetchDashboard();
-      const currentDash = dashData.data || dashboard;
+      // 3. Process Dashboard stats
+      const currentDash = (dashResult.status === 'fulfilled' && dashResult.value?.data) ? dashResult.value.data : dashboard;
 
       // 4. Populate dynamic Recent Activities
       const activities: Array<{ id: string; icon: string; text: string; color: string; onPress: () => void }> = [];
@@ -249,10 +247,10 @@ function HomeScreen({ navigation }: any) {
       }
       setActivityItems(activities);
 
-      // 5. Fetch dynamic FAQs
-      try {
-        const faqRes = await getFaq();
-        if (faqRes && Array.isArray(faqRes.categories) && faqRes.categories.length > 0) {
+      // 5. Process FAQs
+      if (faqResult.status === 'fulfilled' && faqResult.value) {
+        const faqRes = faqResult.value;
+        if (Array.isArray(faqRes.categories) && faqRes.categories.length > 0) {
           setFaqCategories(faqRes.categories.map((c: any) => ({
             id: c.category.toLowerCase().replace(/\s+/g, '-'),
             title: c.category,
@@ -264,8 +262,6 @@ function HomeScreen({ navigation }: any) {
             })) : [],
           })));
         }
-      } catch (e) {
-        console.warn('FAQ fetch warning:', e);
       }
 
     } catch (err) {

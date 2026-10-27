@@ -13,13 +13,41 @@ from config import settings
 logger = logging.getLogger("BhoonidhiClient")
 logging.basicConfig(level=logging.INFO)
 
-# Initialize Redis client (suppress errors if Redis is down)
-try:
-    redis_client = redis.Redis.from_url(settings.REDIS_URL, decode_responses=True)
-    redis_client.ping()
-except Exception as e:
-    logger.warning(f"Redis unavailable for caching: {e}")
-    redis_client = None
+# Lazy Redis client initialization with strict socket timeout
+_redis_client = None
+_redis_checked = False
+
+def get_redis_client():
+    global _redis_client, _redis_checked
+    if not _redis_checked:
+        _redis_checked = True
+        if os.environ.get("VERCEL") and "localhost" in getattr(settings, "REDIS_URL", ""):
+            _redis_client = None
+            return None
+        try:
+            client = redis.Redis.from_url(
+                settings.REDIS_URL,
+                decode_responses=True,
+                socket_connect_timeout=0.3,
+                socket_timeout=0.3
+            )
+            client.ping()
+            _redis_client = client
+        except Exception:
+            _redis_client = None
+    return _redis_client
+
+class _RedisProxy:
+    def __getattr__(self, name):
+        client = get_redis_client()
+        if client is None:
+            raise RuntimeError("Redis not available")
+        return getattr(client, name)
+
+    def __bool__(self):
+        return get_redis_client() is not None
+
+redis_client = _RedisProxy()
 
 class BhoonidhiClient:
     """

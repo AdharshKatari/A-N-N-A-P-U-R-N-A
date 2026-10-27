@@ -21,12 +21,40 @@ from config import settings
 
 logger = logging.getLogger("BhuvanVedasScraperWorker")
 
-try:
-    redis_client = redis.Redis.from_url(settings.REDIS_URL, decode_responses=True)
-    redis_client.ping()
-except Exception as e:
-    logger.warning(f"Redis unavailable for VEDAS caching: {e}")
-    redis_client = None
+_vedas_redis = None
+_vedas_checked = False
+
+def get_vedas_redis():
+    global _vedas_redis, _vedas_checked
+    if not _vedas_checked:
+        _vedas_checked = True
+        if os.environ.get("VERCEL") and "localhost" in getattr(settings, "REDIS_URL", ""):
+            _vedas_redis = None
+            return None
+        try:
+            client = redis.Redis.from_url(
+                settings.REDIS_URL,
+                decode_responses=True,
+                socket_connect_timeout=0.3,
+                socket_timeout=0.3
+            )
+            client.ping()
+            _vedas_redis = client
+        except Exception:
+            _vedas_redis = None
+    return _vedas_redis
+
+class _VedasRedisProxy:
+    def __getattr__(self, name):
+        client = get_vedas_redis()
+        if client is None:
+            raise RuntimeError("Redis not available")
+        return getattr(client, name)
+
+    def __bool__(self):
+        return get_vedas_redis() is not None
+
+redis_client = _VedasRedisProxy()
 
 
 class BhuvanVedasScraperWorker:

@@ -32,6 +32,7 @@ if settings.DATABASE_URL if hasattr(settings, 'DATABASE_URL') else None:
         "password": parsed.password or settings.DB_PASSWORD,
         "host": parsed.hostname or settings.DB_HOST,
         "port": parsed.port or settings.DB_PORT,
+        "connect_timeout": 1,
     }
     # Add SSL mode from query params
     query = urllib.parse.parse_qs(parsed.query)
@@ -44,6 +45,7 @@ else:
         "password": settings.DB_PASSWORD,
         "host": settings.DB_HOST,
         "port": settings.DB_PORT,
+        "connect_timeout": 1,
     }
 
 
