@@ -2,13 +2,13 @@
  * Annapurna Vaani — Multilingual Speech-to-Speech Voice Assistant Service
  *
  * Supports Telugu (తెలుగు), Hindi (हिन्दी), English, Marathi (मराठी),
- * Tamil (தமிழ்), Kannada (ಕನ್ನಡ) with native iOS/Android expo-av Sound playback,
+ * Tamil (தமிழ்), Kannada (ಕನ್ನಡ) with native iOS/Android expo-audio playback,
  * expo-speech fallback, and resilient offline agricultural knowledge.
  */
 
 import { Platform } from 'react-native';
 import * as Speech from 'expo-speech';
-import { Audio } from 'expo-av';
+import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-audio';
 import { API_BASE_URL } from '../constants/api';
 
 export interface VoiceLanguage {
@@ -216,7 +216,8 @@ const LOCAL_FALLBACK_KNOWLEDGE: Record<string, Record<string, { text: string; en
 };
 
 class VoiceAssistantService {
-  private currentSound: Audio.Sound | null = null;
+  private currentSound: AudioPlayer | null = null;
+  private currentWebAudio: any = null;
   private isRecording = false;
 
   constructor() {
@@ -225,13 +226,14 @@ class VoiceAssistantService {
   }
 
   private async configureAudioSession() {
+    if (Platform.OS === 'web') return;
     try {
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-        shouldDuckAndroid: true,
-        playThroughEarpieceAndroid: false,
+      await setAudioModeAsync({
+        allowsRecording: false,
+        playsInSilentMode: true,
+        shouldPlayInBackground: false,
+        interruptionMode: 'duckOthers',
+        shouldRouteThroughEarpiece: false,
       });
     } catch (e) {
       console.warn('Audio session config warning:', e);
@@ -318,30 +320,94 @@ class VoiceAssistantService {
 
     // Ensure iOS audio session is set to speaker playback
     try {
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-        shouldDuckAndroid: true,
-        playThroughEarpieceAndroid: false,
+      await setAudioModeAsync({
+        allowsRecording: false,
+        playsInSilentMode: true,
+        shouldPlayInBackground: false,
+        interruptionMode: 'duckOthers',
+        shouldRouteThroughEarpiece: false,
       });
     } catch (e) {}
 
+    // Web Platform Audio & Speech synthesis
+    if (Platform.OS === 'web') {
+      try {
+        const audioUrl = `${API_BASE_URL}/api/v5/voice/synthesize?text=${encodeURIComponent(text.slice(0, 190))}&lang=${langMeta.code}`;
+        const webAudio = new Audio(audioUrl);
+        this.currentWebAudio = webAudio;
+        webAudio.onplay = () => onStart?.();
+        webAudio.onended = () => {
+          this.currentWebAudio = null;
+          onEnd?.();
+        };
+        webAudio.onerror = () => {
+          this.currentWebAudio = null;
+          if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = langMeta.bcp47;
+            utter.onstart = () => onStart?.();
+            utter.onend = () => onEnd?.();
+            utter.onerror = () => onEnd?.();
+            window.speechSynthesis.speak(utter);
+          } else {
+            onEnd?.();
+          }
+        };
+        webAudio.play().catch(() => {
+          if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = langMeta.bcp47;
+            utter.onstart = () => onStart?.();
+            utter.onend = () => onEnd?.();
+            window.speechSynthesis.speak(utter);
+          } else {
+            onEnd?.();
+          }
+        });
+        return;
+      } catch (_) {
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = langMeta.bcp47;
+          utter.onstart = () => onStart?.();
+          utter.onend = () => onEnd?.();
+          window.speechSynthesis.speak(utter);
+          return;
+        }
+      }
+    }
+
     // 1. Primary for regional languages: Cloud audio stream (Human voice MP3)
     try {
-      const audioUrl = `${API_BASE_URL}/api/v5/voice/synthesize?text=${encodeURIComponent(text.slice(0, 190))}&lang=${langMeta.code}`;
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: audioUrl },
-        { shouldPlay: true, volume: 1.0 },
-        (status) => {
-          if (status.isLoaded) {
-            if (status.isPlaying) onStart?.();
-            if (status.didJustFinish) onEnd?.();
-          }
-        }
-      );
+        const audioUrl = `${API_BASE_URL}/api/v5/voice/synthesize?text=${encodeURIComponent(text.slice(0, 190))}&lang=${langMeta.code}`;
+      const sound = createAudioPlayer({ uri: audioUrl });
       this.currentSound = sound;
-      await sound.playAsync();
+      let started = false;
+      sound.addListener('playbackStatusUpdate', (status) => {
+        if (this.currentSound !== sound) return;
+        if (status.playing && !started) {
+          started = true;
+          onStart?.();
+        }
+        if (status.didJustFinish) {
+          this.currentSound = null;
+          sound.remove();
+          onEnd?.();
+        } else if (status.playbackState === 'error' || status.playbackState === 'failed') {
+          this.currentSound = null;
+          sound.remove();
+          Speech.speak(text, {
+            language: langMeta.bcp47,
+            pitch: 1.0,
+            rate: 0.90,
+            onStart: () => onStart?.(),
+            onDone: () => onEnd?.(),
+            onStopped: () => onEnd?.(),
+            onError: () => onEnd?.(),
+          });
+        }
+      });
+      sound.play();
       return;
     } catch (cloudErr) {
       console.warn('Cloud audio stream failed, falling back to native TTS:', cloudErr);
@@ -365,14 +431,29 @@ class VoiceAssistantService {
   }
 
   public async stopSpeaking(): Promise<void> {
+    if (Platform.OS === 'web') {
+      if (this.currentWebAudio) {
+        try {
+          this.currentWebAudio.pause();
+          this.currentWebAudio.currentTime = 0;
+        } catch (_) {}
+        this.currentWebAudio = null;
+      }
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (_) {}
+      }
+    }
+
     try {
       await Speech.stop();
     } catch (e) {}
 
     if (this.currentSound) {
       try {
-        await this.currentSound.stopAsync();
-        await this.currentSound.unloadAsync();
+        this.currentSound.pause();
+        this.currentSound.remove();
       } catch (e) {}
       this.currentSound = null;
     }

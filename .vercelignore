@@ -1,0 +1,15 @@
+.venv/
+node_modules/
+mobile/node_modules/
+mobile/android/
+.pytest_cache/
+apk-build-archive/
+apk-build-archive-verified/
+apk-final-archive-check/
+apk-splash-archive-check/
+dist-apk-check/
+tests/
+__pycache__/
+*.pyc
+.git/
+.expo/

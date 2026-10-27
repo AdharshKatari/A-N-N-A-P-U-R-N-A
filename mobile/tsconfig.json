@@ -3,7 +3,7 @@
     "target": "esnext",
     "module": "esnext",
     "lib": [
-      "es2019",
+      "es2020",
       "dom"
     ],
     "jsx": "react-jsx",
@@ -13,10 +13,9 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "noEmit": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     }
   },

@@ -61,7 +61,7 @@ function CropDetailsScreen({ navigation, route }: any) {
 
   const [batchData, setBatchData] = useState<any>(() => ({
     batch_id: batchId || 'BAT-2026-TOM-01',
-    field_id: cropName ? `${cropName} - Field Plot 1` : 'Tomato (Hybrid Roma) - East Field',
+    field_id: `${crop} - ${field}`,
     initial_weight_kg: 500,
     harvest_timestamp: new Date().toISOString(),
     initial_visual_score: 88,

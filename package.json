@@ -1,4 +1,17 @@
 {
+  "name": "the-farmer-market",
+  "version": "1.0.0",
+  "description": "Annapurna FreshGuard - AI-Powered Post-Harvest Intelligence & Agri Logistics Web/Mobile App",
+  "scripts": {
+    "start": "npm --prefix mobile run start --",
+    "start:offline": "npm --prefix mobile run start:offline --",
+    "android": "npm --prefix mobile run android --",
+    "ios": "npm --prefix mobile run ios --",
+    "web": "npm --prefix mobile run web --",
+    "build:web": "npm --prefix mobile run export:web",
+    "backend": ".venv\\Scripts\\python.exe -m uvicorn main:app --app-dir backend --host 0.0.0.0 --port 8000 --reload",
+    "serve": "npm run backend"
+  },
   "dependencies": {
     "pg": "^8.23.0"
   }

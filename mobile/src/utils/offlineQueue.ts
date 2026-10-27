@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { v4 as uuidv4 } from 'uuid';
+import { uuid } from 'expo-modules-core';
 import { API_BASE_URL } from '../constants/api';
 
 const OFFLINE_QUEUE_KEY = '@freshguard_offline_queue';
@@ -25,8 +25,9 @@ async function getQueue(): Promise<OfflineTransaction[]> {
   try {
     const data = await AsyncStorage.getItem(OFFLINE_QUEUE_KEY);
     return data ? JSON.parse(data) : [];
-  } catch {
-    return [];
+  } catch (err) {
+    console.error('Failed to read offline queue:', err);
+    throw err;
   }
 }
 
@@ -35,6 +36,7 @@ async function saveQueue(transactions: OfflineTransaction[]): Promise<void> {
     await AsyncStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(transactions));
   } catch (err) {
     console.error('Failed to save offline queue:', err);
+    throw err;
   }
 }
 
@@ -45,7 +47,7 @@ export async function enqueueTransaction(
   const queue = await getQueue();
   if (queue.length >= MAX_QUEUE_SIZE) throw new Error('Offline queue full');
   const transaction: OfflineTransaction = {
-    id: uuidv4(), type, payload, timestamp: new Date().toISOString(), retryCount: 0, status: 'pending',
+    id: uuid.v4(), type, payload, timestamp: new Date().toISOString(), retryCount: 0, status: 'pending',
   };
   await saveQueue([...queue, transaction]);
   return transaction.id;
@@ -68,7 +70,7 @@ export function useOfflineQueue() {
     }
 
     const transaction: OfflineTransaction = {
-      id: uuidv4(),
+      id: uuid.v4(),
       type,
       payload,
       timestamp: new Date().toISOString(),

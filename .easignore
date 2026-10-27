@@ -1,0 +1,11 @@
+/*
+!/mobile
+!/mobile/**
+/mobile/node_modules
+/mobile/.expo
+/mobile/android
+/mobile/.env*
+/mobile/dist*
+/mobile/tests
+/mobile/*-check.json
+/mobile/*.md

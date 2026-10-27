@@ -41,7 +41,8 @@ import {
 } from '../components/GlassPrimitives';
 import { hapticMedium, hapticLight } from '../utils/haptics';
 
-export default function LoginScreen({ navigation }: any) {
+export default function LoginScreen({ navigation, route }: any) {
+  const returnTo = route?.params?.returnTo;
   const [username, setUsername] = useState('ramesh.patel');
   const [password, setPassword] = useState('kisan123');
   const [showPassword, setShowPassword] = useState(false);
@@ -62,7 +63,8 @@ export default function LoginScreen({ navigation }: any) {
       await login(username.trim(), password);
       setShowSuccess(true);
       setTimeout(() => {
-        navigation.replace('Main');
+        if (returnTo === 'Analysis') navigation.popTo('Analysis', undefined, { merge: true });
+        else navigation.replace('Main');
       }, 500);
     } catch (err: any) {
       const message = err.message || 'Please try again.';
@@ -71,7 +73,7 @@ export default function LoginScreen({ navigation }: any) {
     } finally {
       setLoading(false);
     }
-  }, [username, password, isFormValid, loading, navigation, login]);
+  }, [username, password, isFormValid, loading, navigation, login, returnTo]);
 
   const handleQuickDemo = async () => {
     hapticLight();
@@ -80,9 +82,10 @@ export default function LoginScreen({ navigation }: any) {
     setLoading(true);
     try {
       await login('ramesh.patel', 'kisan123');
-      navigation.replace('Main');
+      if (returnTo === 'Analysis') navigation.popTo('Analysis', undefined, { merge: true });
+      else navigation.replace('Main');
     } catch (e) {
-      navigation.replace('Main');
+      Alert.alert('Login Failed', e instanceof Error ? e.message : 'Please try again.');
     } finally {
       setLoading(false);
     }
@@ -187,7 +190,7 @@ export default function LoginScreen({ navigation }: any) {
               <FadeIn delay={300} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
                 <TouchableOpacity
                   style={styles.registerLink}
-                  onPress={() => navigation.navigate('Register')}
+                  onPress={() => navigation.navigate('Register', { returnTo })}
                   activeOpacity={0.7}
                 >
                   <Text style={styles.registerLinkText}>Don't have an account? </Text>

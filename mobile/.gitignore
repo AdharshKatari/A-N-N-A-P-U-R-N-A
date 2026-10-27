@@ -1,0 +1,4 @@
+/dist-apk-check/
+/android/
+/*-check.json
+!/src/assets/splashscreen.png

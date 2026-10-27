@@ -67,6 +67,8 @@ interface AggregatedVisionResult {
   }>;
 }
 
+const EMPTY_SAMPLES: AnalysisScreenParams['samples'] = [];
+
 function AnalysisScreen({ navigation, route }: any) {
   const { t } = useLanguage();
   const params = route?.params as AnalysisScreenParams | undefined;
@@ -82,6 +84,7 @@ function AnalysisScreen({ navigation, route }: any) {
   const [loadingWeather, setLoadingWeather] = useState(false);
   const [loadingWhatIf, setLoadingWhatIf] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [requiresLogin, setRequiresLogin] = useState(false);
   const [showManualFallback, setShowManualFallback] = useState(false);
   const [manualInputs, setManualInputs] = useState({
     bruisingIndex: 0,
@@ -102,7 +105,7 @@ function AnalysisScreen({ navigation, route }: any) {
 
   const cropType = params?.cropType || 'Tomatoes';
   const field = params?.field || 'East Field';
-  const samples = params?.samples || [];
+  const samples = params?.samples || EMPTY_SAMPLES;
   const scanGps = params?.gps;
   const batchId = params?.batchId;
 
@@ -146,22 +149,24 @@ function AnalysisScreen({ navigation, route }: any) {
 
     setLoadingVision(true);
     setError(null);
+    setRequiresLogin(false);
 
     try {
       const base64Images = samples.map(s => s.base64);
       const lat = effectiveGps?.lat || 0;
       const lng = effectiveGps?.lng || 0;
       
-      const batchResult = await analyzeBatch(base64Images, 'image/webp', cropType, lat, lng);
+      const response = await analyzeBatch(base64Images, 'image/webp', cropType, lat, lng);
+      const batchResult = response.aggregated ?? response;
       
       const aggregated: AggregatedVisionResult = {
         crop_identified: batchResult.crop_identified || cropType,
-        visual_quality_score: batchResult.visual_quality_score || 85,
+        visual_quality_score: batchResult.visual_quality_score ?? 85,
         ripeness_stage: batchResult.ripeness_stage || 'Optimal',
         fungal_pathogen_presence: batchResult.fungal_pathogen_presence || false,
-        confidence: batchResult.confidence || 90,
+        confidence: batchResult.confidence ?? 90,
         sampleCount: samples.length,
-        individualResults: batchResult.individual_results?.map((r: any, i: number) => ({
+        individualResults: response.individual_results?.map((r: any, i: number) => ({
           sequence: i + 1,
           ...r
         })) || []
@@ -178,6 +183,11 @@ function AnalysisScreen({ navigation, route }: any) {
       }
     } catch (err: any) {
       console.error('Batch analysis failed:', err);
+      if (err.status === 401) {
+        setRequiresLogin(true);
+        setError('Sign in to analyze your crop. Your captured samples will stay here. After signing in, tap Retry Vision.');
+        return;
+      }
       
       // Offline Sync Logic Fallback
       try {
@@ -191,20 +201,14 @@ function AnalysisScreen({ navigation, route }: any) {
           timestamp: new Date().toISOString()
         });
         
-        Alert.alert(
-          "Offline Mode",
-          "No internet connection. The batch has been saved securely to your device and will sync automatically when connection is restored.",
-          [{ text: "OK" }]
-        );
-        
-        navigation.navigate('Main', { screen: 'Home' });
+        setError(`${err.message || 'AI analysis is unavailable.'} Scan saved on this device for later sync. Retry Vision or use Manual Assessment to continue.`);
       } catch (syncErr) {
         setError(err.message || 'Analysis failed and offline sync is unavailable.');
       }
     } finally {
       setLoadingVision(false);
     }
-  }, [samples, effectiveGps, cropType, navigation]);
+  }, [samples, effectiveGps, cropType]);
 
   const fetchSatelliteData = useCallback(async () => {
     if (!effectiveGps) return;
@@ -306,6 +310,8 @@ function AnalysisScreen({ navigation, route }: any) {
       };
 
       setVisionResult(manualResult);
+      setError(null);
+      setRequiresLogin(false);
       setShowManualFallback(false);
       Alert.alert('Manual Assessment Saved', 'Analysis will use manual inputs. Results marked as manual assessment.');
     } catch (err: any) {
@@ -419,10 +425,13 @@ function AnalysisScreen({ navigation, route }: any) {
             <View style={styles.errorActions}>
               <AnimatedPressable
                 style={styles.retryButton}
-                onPress={processVision}
+                onPress={requiresLogin ? () => {
+                  setRequiresLogin(false);
+                  navigation.navigate('Login', { returnTo: 'Analysis' });
+                } : processVision}
                 activeOpacity={0.8}
               >
-                <Text style={styles.retryButtonText}>Retry Vision</Text>
+                <Text style={styles.retryButtonText}>{requiresLogin ? 'Sign In' : 'Retry Vision'}</Text>
               </AnimatedPressable>
               <AnimatedPressable
                 style={styles.manualFallbackButton}

@@ -667,7 +667,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.xs,
     borderWidth: 1,
     borderColor: Colors.divider,
-    ...Shadows.subtle,
+    ...Shadows.card,
   },
   searchInput: {
     flex: 1,

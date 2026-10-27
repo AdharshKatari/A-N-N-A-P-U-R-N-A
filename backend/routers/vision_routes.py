@@ -104,6 +104,7 @@ async def analyze_batch_images(
                 "visual_quality_score": vision_metrics.visual_quality_score,
                 "ripeness_stage": vision_metrics.ripeness_stage,
                 "fungal_pathogen_presence": vision_metrics.fungal_pathogen_presence,
+                "confidence": vision_metrics.confidence,
             })
 
         # Aggregate results
@@ -119,6 +120,7 @@ async def analyze_batch_images(
                 "ripeness_stage": ripeness_stage,
                 "fungal_pathogen_presence": pathogen_detected,
                 "sample_count": len(results),
+                "confidence": round(sum(r["confidence"] for r in results) / len(results)),
             },
             "individual_results": results,
         }

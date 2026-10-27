@@ -1,11 +1,11 @@
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_BASE_URL, REQUEST_TIMEOUT_MS } from '../constants/api';
+import { analyzeBatch } from './api';
 
 export interface OfflineBatch {
   id?: number;
   crop_type: string;
-  images: string; // JSON array of base64 strings or URIs
+  images: string; // JSON array of base64 strings
   latitude: number;
   longitude: number;
   timestamp: string;
@@ -84,7 +84,7 @@ class SyncService {
       return newId;
     } catch (err) {
       console.error('AsyncStorage queueBatch failed:', err);
-      return Date.now();
+      throw err;
     }
   }
 
@@ -92,7 +92,7 @@ class SyncService {
     if (this.db) {
       try {
         return await this.db.getAllAsync(
-          `SELECT * FROM offline_batches WHERE status = 'pending' OR status = 'failed'`
+          `SELECT * FROM offline_batches WHERE status IN ('pending', 'failed', 'syncing')`
         );
       } catch (err) {
         console.warn('SQLite getPendingBatches failed, fallback to AsyncStorage:', err);
@@ -102,7 +102,7 @@ class SyncService {
     try {
       const existingStr = await AsyncStorage.getItem(STORAGE_KEY);
       const batches: OfflineBatch[] = existingStr ? JSON.parse(existingStr) : [];
-      return batches.filter(b => b.status === 'pending' || b.status === 'failed');
+      return batches.filter(b => b.status === 'pending' || b.status === 'failed' || b.status === 'syncing');
     } catch {
       return [];
     }
@@ -147,43 +147,8 @@ class SyncService {
       await this.updateBatchStatus(batch.id, 'syncing');
 
       try {
-        const formData = new FormData();
-        const images: string[] = JSON.parse(batch.images);
-        
-        for (let i = 0; i < images.length; i++) {
-          const uri = images[i];
-          const filename = uri.split('/').pop() || `image${i}.jpg`;
-          
-          formData.append('files', {
-            uri,
-            name: filename,
-            type: 'image/jpeg',
-          } as any);
-        }
-
-        formData.append('crop_type', batch.crop_type);
-        formData.append('latitude', batch.latitude.toString());
-        formData.append('longitude', batch.longitude.toString());
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-        
-        const response = await fetch(`${API_BASE_URL}/api/v5/vision/analyze-batch`, {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-          },
-          body: formData,
-          signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          await this.updateBatchStatus(batch.id, 'completed');
-        } else {
-          await this.updateBatchStatus(batch.id, 'failed');
-        }
+        await analyzeBatch(JSON.parse(batch.images), 'image/webp', batch.crop_type, batch.latitude, batch.longitude);
+        await this.updateBatchStatus(batch.id, 'completed');
       } catch (error) {
         console.error('Offline Sync Error:', error);
         await this.updateBatchStatus(batch.id, 'failed');

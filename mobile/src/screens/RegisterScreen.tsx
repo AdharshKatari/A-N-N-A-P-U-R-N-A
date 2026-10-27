@@ -34,7 +34,8 @@ import {
 } from '../components/GlassPrimitives';
 import { hapticMedium, hapticLight } from '../utils/haptics';
 
-export default function RegisterScreen({ navigation }: any) {
+export default function RegisterScreen({ navigation, route }: any) {
+  const returnTo = route?.params?.returnTo;
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -71,7 +72,8 @@ export default function RegisterScreen({ navigation }: any) {
       setShowSuccess(true);
       setShowConfetti(true);
       setTimeout(() => {
-        navigation.replace('Main');
+        if (returnTo === 'Analysis') navigation.popTo('Analysis', undefined, { merge: true });
+        else navigation.replace('Main');
       }, 700);
     } catch (err: any) {
       const message = err.message || 'Please try again.';
@@ -80,7 +82,7 @@ export default function RegisterScreen({ navigation }: any) {
     } finally {
       setLoading(false);
     }
-  }, [username, password, confirmPassword, isFormValid, loading, navigation, register]);
+  }, [username, password, confirmPassword, isFormValid, loading, navigation, register, returnTo]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -187,7 +189,7 @@ export default function RegisterScreen({ navigation }: any) {
               <FadeIn delay={300} duration={MotionTokens.duration.standard} direction="up" reducedMotion={false}>
                 <TouchableOpacity
                   style={styles.loginLink}
-                  onPress={() => navigation.navigate('Login')}
+                  onPress={() => navigation.navigate('Login', { returnTo })}
                   activeOpacity={0.7}
                 >
                   <Text style={styles.loginLinkText}>Already have an account? </Text>

@@ -24,6 +24,7 @@ import {
 } from '@expo-google-fonts/plus-jakarta-sans';
 
 import AppNavigator from './src/navigation/AppNavigator';
+import PwaInstallModal from './src/components/PwaInstallModal';
 import { initializeOfflineSync, stopOfflineSync } from './src/services/offlineSync';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 import { QueryProvider } from './src/context/QueryProvider';
@@ -31,7 +32,9 @@ import { LanguageProvider } from './src/context/LanguageContext';
 import { ThemeProvider, useAppTheme } from './src/context/ThemeContext';
 
 // Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
+if (Platform.OS !== 'web') {
+  SplashScreen.preventAutoHideAsync().catch(() => {});
+}
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -57,8 +60,10 @@ export default function App() {
   });
 
   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+    if (fontsLoaded && Platform.OS !== 'web') {
+      try {
+        await SplashScreen.hideAsync();
+      } catch (_) {}
     }
   }, [fontsLoaded]);
 
@@ -75,6 +80,65 @@ export default function App() {
       clearInterval(interval);
     };
   }, [fontsLoaded]);
+
+  // Progressive Web App (PWA) Manifest & Service Worker Registration
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof window === 'undefined') return;
+
+    // 1. Ensure PWA Meta & Manifest tags in <head>
+    if (typeof document !== 'undefined') {
+      const head = document.head;
+
+      if (!document.querySelector('link[rel="manifest"]')) {
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = '/manifest.json';
+        head.appendChild(link);
+      }
+
+      if (!document.querySelector('meta[name="theme-color"]')) {
+        const meta = document.createElement('meta');
+        meta.name = 'theme-color';
+        meta.content = '#145C2E';
+        head.appendChild(meta);
+      }
+
+      if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]')) {
+        const meta = document.createElement('meta');
+        meta.name = 'apple-mobile-web-app-capable';
+        meta.content = 'yes';
+        head.appendChild(meta);
+      }
+
+      if (!document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')) {
+        const meta = document.createElement('meta');
+        meta.name = 'apple-mobile-web-app-status-bar-style';
+        meta.content = 'black-translucent';
+        head.appendChild(meta);
+      }
+
+      if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+        const link = document.createElement('link');
+        link.rel = 'apple-touch-icon';
+        link.href = '/icons/icon-192.png';
+        head.appendChild(link);
+      }
+    }
+
+    // 2. Register Service Worker for offline PWA functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/sw.js', { scope: '/' })
+          .then((reg) => {
+            console.log('[PWA] Service Worker registered with scope:', reg.scope);
+          })
+          .catch((err) => {
+            console.warn('[PWA] Service Worker registration failed:', err);
+          });
+      });
+    }
+  }, []);
 
   const updateSyncStatus = async () => {
     try {
@@ -130,7 +194,12 @@ function AppWithAuth() {
     );
   }
 
-  return <AppNavigator />;
+  return (
+    <>
+      <AppNavigator />
+      <PwaInstallModal delayMs={2400} />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({

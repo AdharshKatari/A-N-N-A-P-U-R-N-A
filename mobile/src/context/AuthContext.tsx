@@ -32,16 +32,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (storedToken && storedUserId && storedUsername) {
         setToken(storedToken);
-        api.setAuthToken(storedToken);
+        await api.setAuthToken(storedToken);
         setUser({ id: storedUserId, username: storedUsername, status: 'authenticated' });
-        await refreshUser();
-      } else {
-        // Auto-seed default active farmer session for seamless local usage
-        const defaultUser: UserInfo = { id: 'ANN-98234-FARM', username: 'Ramesh Patel', status: 'authenticated' };
-        setUser(defaultUser);
-        setToken('dev-session-token');
+        setUser(await api.auth.me());
       }
     } catch (e) {
+      if (e instanceof ApiError && e.status === 401) {
+        await api.clearAuthToken();
+        setToken(null);
+        setUser(null);
+      }
       console.warn('Failed to load stored auth:', e);
     } finally {
       setIsLoading(false);
@@ -61,56 +61,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [token]);
 
   const login = useCallback(async (username: string, password: string, recaptchaToken?: string) => {
-    try {
-      const data = await api.auth.login({ username, password, recaptcha_token: recaptchaToken || '' });
-      await api.setAuthToken(data.access_token);
-      await AsyncStorage.setItem('auth_token', data.access_token);
-      await AsyncStorage.setItem('user_id', data.user_id);
-      await AsyncStorage.setItem('username', data.username);
-      setToken(data.access_token);
-      setUser({ id: data.user_id, username: data.username, status: 'authenticated' });
-      return data;
-    } catch (err) {
-      // Local fallback session
-      const fallbackToken: TokenResponse = {
-        access_token: 'jwt-session-' + Date.now(),
-        token_type: 'bearer',
-        user_id: 'USR-' + username.slice(0, 4).toUpperCase(),
-        username: username,
-      };
-      await AsyncStorage.setItem('auth_token', fallbackToken.access_token);
-      await AsyncStorage.setItem('user_id', fallbackToken.user_id);
-      await AsyncStorage.setItem('username', fallbackToken.username);
-      setToken(fallbackToken.access_token);
-      setUser({ id: fallbackToken.user_id, username: fallbackToken.username, status: 'authenticated' });
-      return fallbackToken;
-    }
+    const data = await api.auth.login({ username, password, recaptcha_token: recaptchaToken || '' });
+    await api.setAuthToken(data.access_token);
+    await AsyncStorage.setItem('auth_token', data.access_token);
+    await AsyncStorage.setItem('user_id', data.user_id);
+    await AsyncStorage.setItem('username', data.username);
+    setToken(data.access_token);
+    setUser({ id: data.user_id, username: data.username, status: 'authenticated' });
+    return data;
   }, []);
 
   const register = useCallback(async (username: string, password: string, recaptchaToken?: string) => {
-    try {
-      const data = await api.auth.register({ username, password, recaptcha_token: recaptchaToken || '' });
-      await api.setAuthToken(data.access_token);
-      await AsyncStorage.setItem('auth_token', data.access_token);
-      await AsyncStorage.setItem('user_id', data.user_id);
-      await AsyncStorage.setItem('username', data.username);
-      setToken(data.access_token);
-      setUser({ id: data.user_id, username: data.username, status: 'authenticated' });
-      return data;
-    } catch (err) {
-      const fallbackToken: TokenResponse = {
-        access_token: 'jwt-session-' + Date.now(),
-        token_type: 'bearer',
-        user_id: 'USR-' + username.slice(0, 4).toUpperCase(),
-        username: username,
-      };
-      await AsyncStorage.setItem('auth_token', fallbackToken.access_token);
-      await AsyncStorage.setItem('user_id', fallbackToken.user_id);
-      await AsyncStorage.setItem('username', fallbackToken.username);
-      setToken(fallbackToken.access_token);
-      setUser({ id: fallbackToken.user_id, username: fallbackToken.username, status: 'authenticated' });
-      return fallbackToken;
-    }
+    const data = await api.auth.register({ username, password, recaptcha_token: recaptchaToken || '' });
+    await api.setAuthToken(data.access_token);
+    await AsyncStorage.setItem('auth_token', data.access_token);
+    await AsyncStorage.setItem('user_id', data.user_id);
+    await AsyncStorage.setItem('username', data.username);
+    setToken(data.access_token);
+    setUser({ id: data.user_id, username: data.username, status: 'authenticated' });
+    return data;
   }, []);
 
   const logout = useCallback(async () => {

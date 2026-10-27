@@ -1,0 +1,62 @@
+{
+  "name": "Annapurna FreshGuard — The Farmer Market",
+  "short_name": "Annapurna",
+  "description": "AI-Powered Post-Harvest Intelligence, Biological Physics & Spatial Logistics Decision Engine",
+  "start_url": "/",
+  "id": "/?source=pwa",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FAF9F5",
+  "theme_color": "#145C2E",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "categories": [
+    "agriculture",
+    "business",
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Scan Crop Quality",
+      "short_name": "Scan",
+      "description": "5-Sample Produce Scanner with AGMARK AI grading",
+      "url": "/?action=scan",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mandi Arbitrage",
+      "short_name": "Markets",
+      "description": "APMC Mandi Price spread & net profit margin calculator",
+      "url": "/?action=market",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Ask Vaani Voice AI",
+      "short_name": "Vaani",
+      "description": "Multilingual regional voice assistant for farmers",
+      "url": "/?action=vaani",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

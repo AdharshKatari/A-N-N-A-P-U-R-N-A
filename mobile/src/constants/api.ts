@@ -10,13 +10,18 @@ import Constants from 'expo-constants';
 
 function resolveBaseUrl(): string {
   // 1. Explicit env var takes highest priority
-  const envUrl = (global as any).__EXPO_PUBLIC_API_URL ?? process.env?.EXPO_PUBLIC_API_URL;
+  const envUrl = (globalThis as any).__EXPO_PUBLIC_API_URL ?? process.env.EXPO_PUBLIC_API_URL;
   if (envUrl) return envUrl.replace(/\/+$/, ''); // strip trailing slashes
 
-  // 2. Web browser: use current host on port 8000
+  // 2. Web browser: use current host / origin
   if (Platform.OS === 'web') {
-    if (typeof window !== 'undefined' && window.location && window.location.hostname) {
-      return `http://${window.location.hostname}:8000`;
+    if (typeof window !== 'undefined' && window.location) {
+      // If we are served from the same server (port 8000, 80, 443, or reverse proxy), use origin
+      if (window.location.port === '8000' || !window.location.port || window.location.port === '80' || window.location.port === '443') {
+        return window.location.origin;
+      }
+      // If served from Expo dev server (e.g. 8081, 19006), target the backend on port 8000
+      return `${window.location.protocol}//${window.location.hostname}:8000`;
     }
     return 'http://localhost:8000';
   }

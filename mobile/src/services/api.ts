@@ -5,6 +5,8 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+import { File, Paths } from 'expo-file-system';
 import { API_BASE_URL, DEFAULT_HEADERS, REQUEST_TIMEOUT_MS } from '../constants/api';
 import { enqueueTransaction, isOnline } from '../utils/offlineQueue';
 
@@ -570,37 +572,54 @@ export const analyzeImage = async (imageBase64: string, mimeType = 'image/webp')
 
 export const analyzeBatch = async (imagesBase64: string[], mimeType = 'image/webp', cropType: string, latitude: number, longitude: number) => {
   const formData = new FormData();
-  
-  imagesBase64.forEach((base64, index) => {
-    const binaryStr = atob(base64);
-    const bytes = new Uint8Array(binaryStr.length);
-    for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
-    const blob = new Blob([bytes], { type: mimeType });
-    formData.append('files', blob, `crop_${index}.webp`);
-  });
-
-  formData.append('crop_type', cropType);
-  formData.append('latitude', latitude.toString());
-  formData.append('longitude', longitude.toString());
-
-  const token = await getAuthToken();
-  const authHeaders: Record<string, string> = {};
-  if (token) authHeaders['Authorization'] = `Bearer ${token}`;
-
-  const response = await fetch(`${BASE_URL}/api/v5/vision/analyze-batch`, {
-    method: 'POST',
-    body: formData,
-    headers: authHeaders,
-  });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ detail: 'Batch analysis failed' }));
-    throw createApiError(error.detail || `HTTP ${response.status}`, { 
-      status: response.status,
+  const temporaryFiles: File[] = [];
+  try {
+    imagesBase64.forEach((base64, index) => {
+      if (Platform.OS !== 'web') {
+        const file = new File(Paths.cache, `scan-${Date.now()}-${Math.random()}-${index}.webp`);
+        temporaryFiles.push(file);
+        file.write(base64, { encoding: 'base64' });
+        formData.append('files', { uri: file.uri, name: `crop_${index}.webp`, type: mimeType } as any);
+        return;
+      }
+      const binaryStr = atob(base64);
+      const bytes = new Uint8Array(binaryStr.length);
+      for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+      const blob = new Blob([bytes], { type: mimeType });
+      formData.append('files', blob, `crop_${index}.webp`);
     });
-  }
 
-  return response.json();
+    formData.append('crop_type', cropType);
+    formData.append('latitude', latitude.toString());
+    formData.append('longitude', longitude.toString());
+
+    const token = await getAuthToken();
+    const authHeaders: Record<string, string> = {};
+    if (token) authHeaders['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${BASE_URL}/api/v5/vision/analyze-batch`, {
+      method: 'POST',
+      body: formData,
+      headers: authHeaders,
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Batch analysis failed' }));
+      throw createApiError(error.detail || `HTTP ${response.status}`, {
+        status: response.status,
+      });
+    }
+
+    return await response.json();
+  } finally {
+    for (const file of temporaryFiles) {
+      try {
+        if (file.exists) file.delete();
+      } catch (err) {
+        console.warn('Scan upload cleanup failed:', err);
+      }
+    }
+  }
 };
 
 export const compareMandis = async (
