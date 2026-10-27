@@ -17,7 +17,7 @@ interface TextEffectProps {
   accessibilityLabel?: string;
 }
 
-/** Native equivalent of a per-character fade text effect. */
+/** Native equivalent of a per-character/grapheme fade text effect with Indic script support. */
 export default function TextEffect({
   children,
   style,
@@ -27,7 +27,21 @@ export default function TextEffect({
   numberOfLines,
   accessibilityLabel,
 }: TextEffectProps) {
-  const characters = useMemo(() => Array.from(children), [children]);
+  // Use Intl.Segmenter with 'grapheme' granularity so Telugu and other Indic combining marks (matras)
+  // are never separated from their base consonant into isolated spans (which causes dotted circles).
+  const characters = useMemo(() => {
+    if (!children) return [];
+    if (typeof Intl !== 'undefined' && (Intl as any).Segmenter) {
+      const segmenter = new (Intl as any).Segmenter(undefined, { granularity: 'grapheme' });
+      return Array.from(segmenter.segment(children), (s: any) => s.segment);
+    }
+    try {
+      const matches = children.match(/[\P{M}][\p{M}]*/gu);
+      if (matches) return matches;
+    } catch (_) {}
+    return Array.from(children);
+  }, [children]);
+
   const values = useRef<Animated.Value[]>([]);
   if (values.current.length !== characters.length) {
     values.current = characters.map(() => new Animated.Value(0));

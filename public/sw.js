@@ -3,7 +3,7 @@
  * High-reliability offline caching for Indian smallholders & FPOs.
  */
 
-const CACHE_NAME = 'annapurna-pwa-v1';
+const CACHE_NAME = 'annapurna-pwa-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -11,6 +11,11 @@ const STATIC_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/icon-maskable.png',
+  '/fonts/MaterialIcons.ttf',
+  '/fonts/MaterialCommunityIcons.ttf',
+  '/fonts/Ionicons.ttf',
+  '/fonts/Feather.ttf',
+  '/fonts/FontAwesome.ttf',
 ];
 
 // Install Event — precache essential app shell
@@ -57,7 +62,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Cache successful metadata or read-only responses
           if (response.ok && (url.pathname.includes('/metadata') || url.pathname.includes('/batches'))) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
@@ -76,50 +80,41 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Static Assets (_expo, assets, fonts, icons) — Cache First, Stale-While-Revalidate
-  if (
-    url.pathname.startsWith('/_expo/') ||
-    url.pathname.startsWith('/assets/') ||
-    url.pathname.startsWith('/icons/') ||
-    url.pathname.endsWith('.js') ||
-    url.pathname.endsWith('.css') ||
-    url.pathname.endsWith('.ttf') ||
-    url.pathname.endsWith('.png') ||
-    url.pathname.endsWith('.jpg')
-  ) {
-    event.respondWith(
-      caches.match(request).then((cachedResponse) => {
-        const fetchPromise = fetch(request)
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.ok) {
-              const clone = networkResponse.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-            }
-            return networkResponse;
-          })
-          .catch(() => cachedResponse);
-
-        return cachedResponse || fetchPromise;
-      })
-    );
-    return;
-  }
-
-  // 3. Navigation Requests (HTML SPA) — Network First, falling back to cached index.html
+  // 2. Navigation Requests (HTML SPA) — Network First, falling back to cached index.html
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(async () => {
-        const cached = await caches.match('/index.html') || await caches.match('/');
-        return cached || new Response('Offline: App shell is loading from storage.', {
-          headers: { 'Content-Type': 'text/html' },
-        });
-      })
+      fetch(request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.ok) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return networkResponse;
+        })
+        .catch(async () => {
+          const cached = (await caches.match('/index.html')) || (await caches.match('/'));
+          return cached || new Response('Offline: App shell is loading from storage.', {
+            headers: { 'Content-Type': 'text/html' },
+          });
+        })
     );
     return;
   }
 
-  // Default Fallback
+  // 3. Static Assets (fonts, _expo, assets, icons) — Stale-While-Revalidate
   event.respondWith(
-    caches.match(request).then((res) => res || fetch(request))
+    caches.match(request).then((cachedResponse) => {
+      const fetchPromise = fetch(request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.ok) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return networkResponse;
+        })
+        .catch(() => cachedResponse);
+
+      return cachedResponse || fetchPromise;
+    })
   );
 });

@@ -104042,7 +104042,7 @@ __d(function (global, require, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, expor
     numberOfLines,
     accessibilityLabel
   }) {
-    const characters = (0, _react.useMemo)(() => Array.from(children), [children]);
+    const characters = (0, _react.useMemo)(() => { if (!children) return []; if (typeof Intl !== 'undefined' && Intl.Segmenter) { return Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(children), x => x.segment); } try { const m = children.match(/[\P{M}][\p{M}]*/gu); if (m) return m; } catch (_) {} return Array.from(children); }, [children]);
     const values = (0, _react.useRef)([]);
     if (values.current.length !== characters.length) {
       values.current = characters.map(() => new Animated.default.Value(0));
