@@ -1,11 +1,5 @@
 .venv/
 node_modules/
-!public/assets/
-!public/assets/node_modules/
-!public/assets/node_modules/@expo-google-fonts/
-!public/assets/node_modules/@expo-google-fonts/plus-jakarta-sans/
-!public/assets/node_modules/@expo-google-fonts/plus-jakarta-sans/**/
-!public/assets/node_modules/@expo-google-fonts/plus-jakarta-sans/**/*.ttf
 mobile/node_modules/
 mobile/android/
 .pytest_cache/

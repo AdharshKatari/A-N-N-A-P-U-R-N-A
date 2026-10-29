@@ -10,6 +10,7 @@ Resolution order:
 for demos when all AI services are down.
 """
 
+import asyncio
 import json
 import base64
 import logging
@@ -166,7 +167,8 @@ async def run_vision_sensor_layer(file) -> VisionAgronomySchema:
             from google.genai import types
 
             logger.info("Attempting Vision Analysis via direct Google Gemini SDK...")
-            response = ai_client.models.generate_content(
+            response = await asyncio.to_thread(
+                ai_client.models.generate_content,
                 model="gemini-2.5-flash",
                 contents=[types.Part.from_bytes(data=image_bytes, mime_type=mime_type), prompt],
                 config=types.GenerateContentConfig(
@@ -189,8 +191,10 @@ async def run_vision_sensor_layer(file) -> VisionAgronomySchema:
         from ai.classifier.fruit_classifier import fruit_classifier
         from ai.preprocessing.image_quality import evaluate_image_quality
 
-        quality_res = evaluate_image_quality(image_bytes)
-        clf_res = fruit_classifier.predict(image_bytes)
+        quality_res, clf_res = await asyncio.gather(
+            asyncio.to_thread(evaluate_image_quality, image_bytes),
+            asyncio.to_thread(fruit_classifier.predict, image_bytes),
+        )
 
         final_conf = int(clf_res.confidence * 100)
         if not quality_res.is_valid:

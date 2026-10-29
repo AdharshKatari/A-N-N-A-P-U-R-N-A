@@ -118,6 +118,37 @@ class EnvironmentalLogRequest(BaseModel):
     timestamp: Optional[str] = None  # ISO format, defaults to server now
 
 
+
+
+class TransitInterceptRequest(BaseModel):
+    batch_id: str = Field(description="Unique batch identifier, e.g., 'FG-2026-TOM-001'")
+    crop_type: str = Field(default="Tomato", description="Crop type, e.g., 'Tomato', 'Mango'")
+    quantity_kg: float = Field(..., gt=0, description="Payload weight in kilograms")
+    current_lat: float = Field(..., description="Current vehicle GPS latitude")
+    current_lon: float = Field(..., description="Current vehicle GPS longitude")
+    remaining_transit_hours: float = Field(..., ge=0, description="Estimated remaining drive hours to primary mandi")
+    ambient_temp_c: float = Field(..., description="Current ambient or cargo temperature in Celsius")
+    degradation_index: float = Field(..., ge=0.0, le=1.0, description="Continuous degradation index D_i in [0.0, 1.0]")
+    ethylene_ppm: float = Field(default=0.0, ge=0.0, description="Ethylene gas accumulation in PPM")
+    primary_mandi_name: Optional[str] = Field(default="Vashi APMC Mumbai", description="Primary target mandi name")
+    primary_mandi_price_per_kg: Optional[float] = Field(default=34.0, description="Expected market price at primary mandi")
+    search_radius_km: Optional[float] = Field(default=80.0, description="PostGIS search radius for fallback facilities")
+
+
+class TransitInterceptResponse(BaseModel):
+    batch_id: str
+    routing_status: str
+    risk_tier: str
+    target_facility: str
+    facility_type: str
+    distance_to_target_km: Optional[float] = None
+    salvage_net_payout_inr: Optional[float] = None
+    residual_shelf_life_hours: float
+    remaining_transit_hours: float
+    diversion_recommended: bool
+    reason: str
+    candidate_fallbacks: List[Dict[str, Any]] = Field(default_factory=list)
+
 # ====================================================================================
 # SHARED HELPERS
 # ====================================================================================

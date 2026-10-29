@@ -46,6 +46,7 @@ from routers.satellite_routes import router as satellite_router
 from routers.whatif import router as whatif_router
 from routers.auth import router as auth_router
 from routers.vision_routes import router as vision_router
+from routers.logistics_routes import router as logistics_router
 from routers.metadata import router as metadata_router
 from routers.notifications import router as notifications_router
 from routers.scans import router as scans_router
@@ -86,6 +87,7 @@ app.include_router(satellite_router)
 app.include_router(auth_router)
 app.include_router(whatif_router)
 app.include_router(vision_router)
+app.include_router(logistics_router)
 app.include_router(metadata_router)
 app.include_router(notifications_router)
 app.include_router(scans_router)

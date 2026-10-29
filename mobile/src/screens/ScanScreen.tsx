@@ -47,6 +47,8 @@ const SAMPLE_COUNT = 5;
 
 interface FruitSample {
   uri: string;
+  uploadUri: string;
+  mimeType: string;
   base64: string;
   gps: { lat: number; lng: number } | null;
   timestamp: string;
@@ -148,7 +150,7 @@ function ScanScreen({ navigation, route }: any) {
     return true;
   };
 
-  const processImage = async (uri: string): Promise<string> => {
+  const processImage = async (uri: string): Promise<{ uri: string; base64: string; mimeType: string } | null> => {
     try {
       const manip = await ImageManipulator.manipulateAsync(
         uri,
@@ -159,7 +161,7 @@ function ScanScreen({ navigation, route }: any) {
           base64: true,
         }
       );
-      return manip.base64 || '';
+      return manip.base64 ? { uri: manip.uri, base64: manip.base64, mimeType: 'image/webp' } : null;
     } catch (err) {
       console.error('Image processing error:', err);
       try {
@@ -168,9 +170,9 @@ function ScanScreen({ navigation, route }: any) {
           [{ resize: { width: 800 } }],
           { base64: true, format: ImageManipulator.SaveFormat.JPEG, compress: 0.8 }
         );
-        return fallback.base64 || '';
+        return fallback.base64 ? { uri: fallback.uri, base64: fallback.base64, mimeType: 'image/jpeg' } : null;
       } catch {
-        return '';
+        return null;
       }
     }
   };
@@ -215,9 +217,9 @@ function ScanScreen({ navigation, route }: any) {
 
       if (!result.canceled && result.assets?.[0]) {
         const uri = result.assets[0].uri;
-        const base64 = await processImage(uri);
+        const processedImage = await processImage(uri);
         
-        if (!base64) {
+        if (!processedImage) {
           Alert.alert('Processing Failed', 'Could not process image. Try again.');
           setIsCapturing(false);
           return;
@@ -234,7 +236,9 @@ function ScanScreen({ navigation, route }: any) {
 
         const sample: FruitSample = {
           uri,
-          base64,
+          uploadUri: processedImage.uri,
+          mimeType: processedImage.mimeType,
+          base64: processedImage.base64,
           gps: sampleGps,
           timestamp: new Date().toISOString(),
           sequence: currentSampleIndex + 1,

@@ -570,54 +570,55 @@ export const analyzeImage = async (imageBase64: string, mimeType = 'image/webp')
   return response.json();
 };
 
-export const analyzeBatch = async (imagesBase64: string[], mimeType = 'image/webp', cropType: string, latitude: number, longitude: number) => {
+export const analyzeBatch = async (samples: Array<{ uploadUri: string; base64: string; mimeType?: string }> | string[], mimeType = 'image/webp', cropType: string, latitude: number, longitude: number) => {
   const formData = new FormData();
   const temporaryFiles: File[] = [];
   try {
-    imagesBase64.forEach((base64, index) => {
-      if (Platform.OS !== 'web') {
-        const file = new File(Paths.cache, `scan-${Date.now()}-${Math.random()}-${index}.webp`);
-        temporaryFiles.push(file);
-        file.write(base64, { encoding: 'base64' });
-        formData.append('files', { uri: file.uri, name: `crop_${index}.webp`, type: mimeType } as any);
-        return;
-      }
-      const binaryStr = atob(base64);
-      const bytes = new Uint8Array(binaryStr.length);
-      for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
-      const blob = new Blob([bytes], { type: mimeType });
-      formData.append('files', blob, `crop_${index}.webp`);
-    });
-
-    formData.append('crop_type', cropType);
-    formData.append('latitude', latitude.toString());
-    formData.append('longitude', longitude.toString());
-
-    const token = await getAuthToken();
-    const authHeaders: Record<string, string> = {};
-    if (token) authHeaders['Authorization'] = `Bearer ${token}`;
-
-    const response = await fetch(`${BASE_URL}/api/v5/vision/analyze-batch`, {
-      method: 'POST',
-      body: formData,
-      headers: authHeaders,
-    });
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ detail: 'Batch analysis failed' }));
-      throw createApiError(error.detail || `HTTP ${response.status}`, {
-        status: response.status,
-      });
+  for (const [index, sample] of samples.entries()) {
+    const base64 = typeof sample === 'string' ? sample : sample.base64;
+    const sampleMimeType = typeof sample === 'string' ? mimeType : (sample.mimeType || mimeType);
+    let uploadUri = typeof sample === 'string' ? '' : sample.uploadUri;
+    if (typeof sample === 'string' && Platform.OS !== 'web') {
+      const file = new File(Paths.cache, `scan-${Date.now()}-${index}.webp`);
+      temporaryFiles.push(file);
+      file.write(base64, { encoding: 'base64' });
+      uploadUri = file.uri;
     }
+    if (Platform.OS === 'web') {
+      const blob = typeof sample === 'string'
+        ? await fetch(`data:${sampleMimeType};base64,${base64}`).then(response => response.blob())
+        : await fetch(uploadUri).then(response => response.blob());
+      formData.append('files', blob, `crop_${index}.${sampleMimeType === 'image/jpeg' ? 'jpg' : 'webp'}`);
+    } else {
+      formData.append('files', { uri: uploadUri, name: `crop_${index}.${sampleMimeType === 'image/jpeg' ? 'jpg' : 'webp'}`, type: sampleMimeType } as any);
+    }
+  }
 
-    return await response.json();
+  formData.append('crop_type', cropType);
+  formData.append('latitude', latitude.toString());
+  formData.append('longitude', longitude.toString());
+
+  const token = await getAuthToken();
+  const authHeaders: Record<string, string> = {};
+  if (token) authHeaders['Authorization'] = `Bearer ${token}`;
+
+  const response = await fetch(`${BASE_URL}/api/v5/vision/analyze-batch`, {
+    method: 'POST',
+    body: formData,
+    headers: authHeaders,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: 'Batch analysis failed' }));
+    throw createApiError(error.detail || `HTTP ${response.status}`, {
+      status: response.status,
+    });
+  }
+
+  return await response.json();
   } finally {
     for (const file of temporaryFiles) {
-      try {
-        if (file.exists) file.delete();
-      } catch (err) {
-        console.warn('Scan upload cleanup failed:', err);
-      }
+      try { if (file.exists) file.delete(); } catch (err) { console.warn('Scan upload cleanup failed:', err); }
     }
   }
 };

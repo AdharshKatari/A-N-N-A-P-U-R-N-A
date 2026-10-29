@@ -42,6 +42,9 @@ interface AnalysisScreenParams {
   cropType: string;
   field: string;
   samples: Array<{
+    uri: string;
+    uploadUri: string;
+    mimeType: string;
     base64: string;
     gps: { lat: number; lng: number } | null;
     sequence: number;
@@ -152,11 +155,10 @@ function AnalysisScreen({ navigation, route }: any) {
     setRequiresLogin(false);
 
     try {
-      const base64Images = samples.map(s => s.base64);
       const lat = effectiveGps?.lat || 0;
       const lng = effectiveGps?.lng || 0;
       
-      const response = await analyzeBatch(base64Images, 'image/webp', cropType, lat, lng);
+      const response = await analyzeBatch(samples, 'image/webp', cropType, lat, lng);
       const batchResult = response.aggregated ?? response;
       
       const aggregated: AggregatedVisionResult = {

@@ -40,3 +40,6 @@ check_tables.py
 
 .venv/
 /env
+
+*.ipynb
+
