@@ -14,6 +14,10 @@
       "destination": "/fonts/:font"
     },
     {
+      "source": "/assets/node_modules/@expo-google-fonts/plus-jakarta-sans/:weight/:font",
+      "destination": "/fonts/:font"
+    },
+    {
       "source": "/((?!_expo|assets|icons|fonts|favicon.ico|manifest.json|sw.js).*)",
       "destination": "/index.html"
     }
