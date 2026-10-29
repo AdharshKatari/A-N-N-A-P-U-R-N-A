@@ -10,6 +10,10 @@
       "destination": "/api/index.py?__path=health"
     },
     {
+      "source": "/:font(.ttf)",
+      "destination": "/fonts/:font"
+    },
+    {
       "source": "/((?!_expo|assets|icons|fonts|favicon.ico|manifest.json|sw.js).*)",
       "destination": "/index.html"
     }
