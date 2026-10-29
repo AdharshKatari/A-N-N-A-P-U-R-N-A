@@ -1,4 +1,9 @@
 node_modules/
+!mobile/public/assets/
+!mobile/public/assets/node_modules/
+!mobile/public/assets/node_modules/@expo-google-fonts/
+!mobile/public/assets/node_modules/@expo-google-fonts/plus-jakarta-sans/
+!mobile/public/assets/node_modules/@expo-google-fonts/plus-jakarta-sans/**/
 __pycache__/
 *.pyc
 .env

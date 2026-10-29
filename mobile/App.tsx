@@ -110,6 +110,13 @@ export default function App() {
         head.appendChild(meta);
       }
 
+      if (!document.querySelector('meta[name="mobile-web-app-capable"]')) {
+        const meta = document.createElement('meta');
+        meta.name = 'mobile-web-app-capable';
+        meta.content = 'yes';
+        head.appendChild(meta);
+      }
+
       if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]')) {
         const meta = document.createElement('meta');
         meta.name = 'apple-mobile-web-app-capable';

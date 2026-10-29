@@ -51,6 +51,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') {
     return;
   }
+  if (url.origin !== self.location.origin) return;
 
   // 1. Backend API Requests (/api/v5/...) — Network First with Cache Fallback
   if (url.pathname.startsWith('/api/')) {
@@ -60,7 +61,7 @@ self.addEventListener('fetch', (event) => {
           // Cache successful metadata or read-only responses
           if (response.ok && (url.pathname.includes('/metadata') || url.pathname.includes('/batches'))) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone)).catch(() => {});
           }
           return response;
         })
@@ -93,7 +94,7 @@ self.addEventListener('fetch', (event) => {
           .then((networkResponse) => {
             if (networkResponse && networkResponse.ok) {
               const clone = networkResponse.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, clone)).catch(() => {});
             }
             return networkResponse;
           })
