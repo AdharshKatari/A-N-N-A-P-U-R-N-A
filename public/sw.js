@@ -3,7 +3,7 @@
  * High-reliability offline caching for Indian smallholders & FPOs.
  */
 
-const CACHE_NAME = 'annapurna-pwa-v2';
+const CACHE_NAME = 'annapurna-pwa-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -56,7 +56,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') {
     return;
   }
-  if (url.origin !== self.location.origin) return;
+  if (!['http:', 'https:'].includes(url.protocol) || url.origin !== self.location.origin) return;
 
   // 1. Backend API Requests (/api/v5/...) — Network First with Cache Fallback
   if (url.pathname.startsWith('/api/')) {
