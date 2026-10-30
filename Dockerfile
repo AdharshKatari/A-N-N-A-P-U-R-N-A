@@ -42,5 +42,5 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
-# Execute high-performance Uvicorn ASGI workers to handle massive mobile requests
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# The ASGI entry point and its imports live in backend/. Honor Render's assigned port.
+CMD ["sh", "-c", "exec uvicorn main:app --app-dir /app/backend --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
