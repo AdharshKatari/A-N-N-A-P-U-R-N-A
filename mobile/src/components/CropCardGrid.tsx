@@ -24,7 +24,7 @@ interface CropCardGridProps {
   onManage: (crop: CropCardItem) => void;
 }
 
-const COLORS = ['#4E9B42', '#D97732', '#8A6A3E', '#6B8E4E', '#B48A32'];
+const COLORS = ['#145C2E', '#D97732', '#8A6A3E', '#145C2E', '#B48A32'];
 const cropIcon = (title: string): keyof typeof MaterialCommunityIcons.glyphMap => {
   const value = title.toLowerCase();
   if (value.includes('tomato')) return 'food-apple';

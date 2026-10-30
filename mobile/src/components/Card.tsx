@@ -89,7 +89,7 @@ interface BadgeProps {
 }
 
 const BADGE_STYLES: Record<BadgeVariant, { bg: string; text: string }> = {
-  green: { bg: Colors.successBg, text: Colors.textOnDark },
+  green: { bg: Colors.successBg, text: Colors.textOnPrimary },
   amber: { bg: Colors.warningBg, text: Colors.warning },
   red: { bg: Colors.errorBg, text: Colors.error },
   gray: { bg: Colors.surfaceAlt, text: Colors.textSecondary },

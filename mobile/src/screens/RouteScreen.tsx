@@ -267,7 +267,7 @@ function RouteScreen({ navigation, route }: any) {
               )}
             </View>
             <TouchableOpacity style={styles.myLocationButton} activeOpacity={0.8} onPress={() => fetchData()}>
-              <MaterialIcons name="my-location" size={20} color="#8CD298" />
+              <MaterialIcons name="my-location" size={20} color="#145C2E" />
             </TouchableOpacity>
           </View>
         </View>
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   filterPillTextActive: {
-    color: '#8CD298',
+    color: '#145C2E',
   },
   mapCard: {
     height: 200,
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   smartSuggestionCard: {
-    backgroundColor: '#CCEAD0',
+    backgroundColor: '#F5F3ED',
     borderRadius: 24,
     padding: 16,
     flexDirection: 'row',
@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 20,
     borderWidth: 1.5,
-    borderColor: '#B1CEB4',
+    borderColor: '#145C2E',
     shadowColor: '#145C2E',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans_700Bold',
     fontSize: 10,
     letterSpacing: 0.5,
-    color: '#8CD298',
+    color: '#145C2E',
   },
   higherPriceBadge: {
     backgroundColor: '#FFDAD6',
@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
     color: '#93000A',
   },
   closestBadge: {
-    backgroundColor: '#91F5A3',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
@@ -574,7 +574,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans_700Bold',
     fontSize: 10,
     letterSpacing: 0.5,
-    color: '#007233',
+    color: '#145C2E',
   },
   priceRow: {
     flexDirection: 'row',
@@ -622,7 +622,7 @@ const styles = StyleSheet.create({
   directionsButtonText: {
     fontFamily: 'PlusJakartaSans_600SemiBold',
     fontSize: 14,
-    color: '#8CD298',
+    color: '#145C2E',
   },
   callButton: {
     width: 44,

@@ -39,7 +39,7 @@ export interface Batch {
   macro_satellite_modifier: number;
   micro_drone_modifier: number;
   logistics_road_penalty: number;
-  qr_code_secure_token: string;
+  qr_code_secure_token?: string;
   current_status: string;
 }
 

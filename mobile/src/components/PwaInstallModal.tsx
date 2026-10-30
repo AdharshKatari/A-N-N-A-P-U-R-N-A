@@ -2,7 +2,7 @@
  * PwaInstallModal — Progressive Web App Install & Download Prompt
  *
  * Designed to strictly match the Annapurna design system:
- * - Soft green agricultural palette (#00431D, #1A4122, #6BA35A)
+ * - Soft green agricultural palette (#00431D, #1A4122, #145C2E)
  * - Warm cream backgrounds (#FEF9F0, #F8F3EA)
  * - Plus Jakarta Sans typography
  * - Pill buttons (radius 28px) & card radius (28px)
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontFamily: FontFamily.bold,
     fontSize: 10.5,
-    color: Colors.textOnDark,
+    color: Colors.textOnPrimary,
     letterSpacing: 0.6,
   },
   closeButton: {
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   dismissButtonText: {
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.semibold,
     fontSize: 13,
     color: Colors.textMuted,
   },

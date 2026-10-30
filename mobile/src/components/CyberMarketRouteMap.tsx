@@ -82,7 +82,7 @@ const DEFAULT_HUBS = (originLat: number, originLng: number): MarketHubNode[] => 
     dailyCapacityKg: 1432,
     efficiencyPct: 92,
     distanceKm: 210,
-    color: '#10B981',
+    color: '#145C2E',
     latitude: 18.4975,
     longitude: 73.8652,
   },
@@ -487,7 +487,7 @@ export function CyberMarketRouteMap({
         <View style={styles.statusDivider} />
         <View style={styles.statusCol}>
           <Text style={styles.statusLabel}>SURPLUS GAIN</Text>
-          <Text style={[styles.statusValue, { color: '#10B981' }]}>
+          <Text style={[styles.statusValue, { color: '#145C2E' }]}>
             +{Math.round(((selectedHub.pricePerQtl - 2400) / 2400) * 100)}%
           </Text>
         </View>

@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#2E7D32',
+    backgroundColor: '#145C2E',
     marginRight: 10,
   },
   telemetryInfo: {
@@ -711,7 +711,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#2E7D32',
+    backgroundColor: '#145C2E',
   },
   pillarsContainer: {
     gap: 10,

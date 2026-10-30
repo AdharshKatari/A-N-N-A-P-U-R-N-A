@@ -57,8 +57,8 @@ export function FpoLogisticsAndBuyerHub({
     if (onSelectBuyer) onSelectBuyer(name, price);
     Alert.alert(
       '📝 Direct Contract Locked!',
-      `Guaranteed floor price of ₹${price}/kg locked with ${name}.\nPresent your Kisan QR code at the gate for instant weighment & UPI payout.`,
-      [{ text: 'View QR Passport' }]
+      `Guaranteed floor price of ₹${price}/kg locked with ${name}.\nPresent your batch ID at the gate for instant weighment & UPI payout.`,
+      [{ text: 'OK' }]
     );
   };
 
@@ -79,16 +79,12 @@ export function FpoLogisticsAndBuyerHub({
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.badgeCircle}>
-            <MaterialIcons name="local-shipping" size={20} color="#FFFFFF" />
+            <MaterialIcons name="local-shipping" size={20} color={Colors.primaryDeep} />
           </View>
-          <View>
-            <Text style={styles.headerTitle}>FPO Commercialization Hub</Text>
-            <Text style={styles.headerSub}>Shared Freight, B2B Off-takers & Plan-B Storage</Text>
+          <View style={styles.headerText}>
+            <Text style={styles.headerTitle} numberOfLines={1}>FPO Commercialization Hub</Text>
+            <Text style={styles.headerSub} numberOfLines={1}>Shared Freight, B2B Off-takers & Plan-B Storage</Text>
           </View>
-        </View>
-        <View style={styles.liveTag}>
-          <View style={styles.pulseDot} />
-          <Text style={styles.liveTagText}>LIVE DISPATCH</Text>
         </View>
       </View>
 
@@ -177,7 +173,7 @@ export function FpoLogisticsAndBuyerHub({
                 <View
                   style={[
                     styles.progressBarFill,
-                    { width: poolJoined ? '90%' : '65%', backgroundColor: '#22C55E' },
+                    { width: poolJoined ? '90%' : '65%', backgroundColor: '#145C2E' },
                   ]}
                 />
               </View>
@@ -262,7 +258,7 @@ export function FpoLogisticsAndBuyerHub({
       {activeTab === 'b2b_buyers' && (
         <View style={styles.tabContent}>
           <Text style={styles.sectionInfo}>
-            Guaranteed floor contracts with verified institutional off-takers. Scan your Kisan QR at the gate for instant settlement without mandi middlemen:
+            Guaranteed floor contracts with verified institutional off-takers. Use your batch ID at the gate for instant settlement without mandi middlemen:
           </Text>
 
           {/* Buyer 1: Kissan HUL */}
@@ -309,7 +305,7 @@ export function FpoLogisticsAndBuyerHub({
             <View style={styles.buyerSpecs}>
               <Text style={styles.specItem}>✅ AGMARK Score {'>'} 82 (Grade-A)</Text>
               <Text style={styles.specItem}>⚡ T+0 Same Day Bank Credit</Text>
-              <Text style={styles.specItem}>🛡️ Digital QC Passport Accepted</Text>
+              <Text style={styles.specItem}>🛡️ Digital QC Records Accepted</Text>
             </View>
             <TouchableOpacity
               style={[styles.lockBtn, { backgroundColor: '#0284C7' }, lockedBuyer === 'Reliance Fresh' && styles.lockedBtn]}
@@ -392,8 +388,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#0F2916',
+    backgroundColor: Colors.primaryDeep,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
@@ -401,12 +396,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    flex: 1,
+    minWidth: 0,
+  },
+  headerText: {
+    flex: 1,
+    minWidth: 0,
   },
   badgeCircle: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#1E5E2F',
+    backgroundColor: Colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: Colors.primaryDeep,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -419,28 +422,7 @@ const styles = StyleSheet.create({
   headerSub: {
     fontFamily: FontFamily.regular,
     fontSize: 11,
-    color: '#86EFAC',
-  },
-  liveTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: 'rgba(34, 197, 94, 0.2)',
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  pulseDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#22C55E',
-  },
-  liveTagText: {
-    fontFamily: FontFamily.bold,
-    fontSize: 9,
-    fontWeight: '700',
-    color: '#22C55E',
+    color: Colors.textOnPrimary,
   },
   tabBar: {
     flexDirection: 'row',
@@ -560,7 +542,7 @@ const styles = StyleSheet.create({
     padding: 6,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#A7F3D0',
+    borderColor: '#145C2E',
   },
   avatarMini: {
     width: 28,
@@ -587,7 +569,7 @@ const styles = StyleSheet.create({
   yourName: {
     fontFamily: FontFamily.bold,
     fontSize: 12,
-    color: '#065F46',
+    color: '#145C2E',
   },
   shipperSub: {
     fontFamily: FontFamily.regular,
@@ -602,7 +584,7 @@ const styles = StyleSheet.create({
   yourShare: {
     fontFamily: FontFamily.bold,
     fontSize: 13,
-    color: '#047857',
+    color: '#145C2E',
   },
   savingsBox: {
     flexDirection: 'row',
@@ -612,7 +594,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: '#145C2E',
   },
   savingsCol: {
     alignItems: 'center',
@@ -632,10 +614,10 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bold,
     fontSize: 15,
     fontWeight: '700',
-    color: '#16A34A',
+    color: '#145C2E',
   },
   savingsBadge: {
-    backgroundColor: '#16A34A',
+    backgroundColor: '#145C2E',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 5,
@@ -657,7 +639,7 @@ const styles = StyleSheet.create({
     ...Shadows.card,
   },
   joinedBtn: {
-    backgroundColor: '#059669',
+    backgroundColor: '#145C2E',
   },
   joinBtnText: {
     fontFamily: FontFamily.bold,
@@ -736,12 +718,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: '#15803D',
+    backgroundColor: '#145C2E',
     borderRadius: 10,
     paddingVertical: 9,
   },
   lockedBtn: {
-    backgroundColor: '#047857',
+    backgroundColor: '#145C2E',
   },
   lockBtnText: {
     fontFamily: FontFamily.bold,

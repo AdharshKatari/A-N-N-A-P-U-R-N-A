@@ -382,7 +382,7 @@ export function FarmSatelliteFieldMap({
               <Text style={styles.metricLabel}>Signal</Text>
               <View style={styles.multiBar}>
                 <View style={[styles.barSegment, { flex: 2, backgroundColor: '#EF4444' }]} />
-                <View style={[styles.barSegment, { flex: 11, backgroundColor: '#22C55E' }]} />
+                <View style={[styles.barSegment, { flex: 11, backgroundColor: '#145C2E' }]} />
               </View>
               <View style={styles.legendRow}>
                 <View style={styles.legendItem}>
@@ -390,7 +390,7 @@ export function FarmSatelliteFieldMap({
                   <Text style={styles.legendText}>Low: 2</Text>
                 </View>
                 <View style={styles.legendItem}>
-                  <View style={[styles.legendBox, { backgroundColor: '#22C55E' }]} />
+                  <View style={[styles.legendBox, { backgroundColor: '#145C2E' }]} />
                   <Text style={styles.legendText}>High: 11</Text>
                 </View>
               </View>
@@ -402,7 +402,7 @@ export function FarmSatelliteFieldMap({
               <View style={styles.multiBar}>
                 <View style={[styles.barSegment, { flex: 2, backgroundColor: '#EF4444' }]} />
                 <View style={[styles.barSegment, { flex: 8, backgroundColor: '#F59E0B' }]} />
-                <View style={[styles.barSegment, { flex: 4, backgroundColor: '#22C55E' }]} />
+                <View style={[styles.barSegment, { flex: 4, backgroundColor: '#145C2E' }]} />
               </View>
               <View style={styles.legendRowWrap}>
                 <View style={styles.legendItem}>
@@ -414,7 +414,7 @@ export function FarmSatelliteFieldMap({
                   <Text style={styles.legendText}>30-59%: 8</Text>
                 </View>
                 <View style={styles.legendItem}>
-                  <View style={[styles.legendBox, { backgroundColor: '#22C55E' }]} />
+                  <View style={[styles.legendBox, { backgroundColor: '#145C2E' }]} />
                   <Text style={styles.legendText}>60-100%: 4</Text>
                 </View>
               </View>

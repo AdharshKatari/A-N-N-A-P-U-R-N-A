@@ -139,12 +139,15 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // Pest & Soil Hub
     pest_hub_title: 'తెగుళ్లు & నేల ఆరోగ్య కేంద్రం',
     pest_hub_sub: 'పంట సమస్యలు మరియు నేల తేమను తనిఖీ చేయండి',
+    best_choice: 'ఉత్తమ ఎంపిక',
     pest_scanner: 'తెగుళ్ల స్కానర్',
     pest_scanner_desc: 'తక్షణ రోగ నిర్ధారణ కోసం ఆకును స్కాన్ చేయండి',
-    soil_scanner: 'నేల స్కానర్',
-    soil_scanner_desc: 'నేల తేమ మరియు పోషకాలను తనిఖీ చేయండి',
+    soil_report_analysis: 'నేల నివేదిక విశ్లేషణ',
+    soil_report_analysis_desc: 'మీ నేల పరీక్ష నివేదికను అప్‌లోడ్ చేసి సమీక్షించండి',
     start_scan: 'స్కాన్ ప్రారంభించండి',
-    scan_soil_btn: 'నేల స్కాన్',
+    analyze_soil_report_btn: 'నివేదికను విశ్లేషించండి',
+    soil_insights_btn: 'నేల వివరాలు చూడండి',
+    pest_scan_history_hint: 'మీ తెగుళ్ల స్కాన్ ఫలితాలు ఇక్కడ కనిపిస్తాయి.',
     recent_scans: 'ఇటీవలి స్కాన్లు',
     no_recent_scans: 'ఇటీవలి స్కాన్లు ఏవీ లేవు',
     view_history: 'చరిత్ర చూడండి',
@@ -161,8 +164,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     batch_status_active: 'చేలో ఉంది (పెరుగుతోంది)',
     batch_status_ready: 'కోతకు సిద్ధం',
     batch_status_sold: 'అమ్మబడింది',
-    qr_passport: 'క్యూఆర్ పాస్‌పోర్ట్',
-    view_passport: 'పాస్‌పోర్ట్ చూడండి',
+    view_details: 'వివరాలు చూడండి',
 
     // Scan & Analysis Screen
     scan_title: 'పంట నాణ్యత స్కాన్',
@@ -255,7 +257,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     shared_truck_reserved: 'ఉమ్మడి ట్రక్ రిజర్వ్ చేయబడింది',
     join_shared_truck: 'ఉమ్మడి ట్రక్‌లో చేరండి',
 
-    // Mandi Arbitrage & PDF Quality Passport
+    // Mandi Arbitrage
     mandi_compare_title: 'మండీ ధరల పోలిక & ఆర్బిట్రేజ్',
     compare_real_profit: 'డీజిల్ మరియు రవాణా కుళ్ళిపోవడాన్ని లెక్కించిన తర్వాత నికర లాభం',
     compare_target: 'దీనితో పోల్చండి',
@@ -265,12 +267,6 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     net_in_pocket: 'నికర రాబడి',
     dispatch_fpo_truck: 'రవాణా చేయండి',
     compare_mandis_btn: 'మండీ ఆర్బిట్రేజ్',
-    quality_passport_title: 'కిసాన్ నాణ్యత పాస్‌పోర్ట్',
-    crop_weight: 'నికర బరువు',
-    floor_price: 'కనీస ధర',
-    download_pdf_cert: 'పీడీఎఫ్ సర్టిఫికేట్ డౌన్‌లోడ్ / ప్రింట్',
-    share_with_buyer: 'వాట్సాప్ ద్వారా కొనుగోలుదారుతో పంచుకోండి',
-    export_quality_passport: 'నాణ్యత పాస్‌పోర్ట్ ఎగుమతి చేయండి (పీడీఎఫ్)',
 
     // Profile & Settings
     profile_title: 'రైతు ప్రొఫైల్',
@@ -354,12 +350,15 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // Pest & Soil Hub
     pest_hub_title: 'कीट एवं मृदा स्वास्थ्य केंद्र',
     pest_hub_sub: 'फसल की बीमारियों और मिट्टी की जांच करें',
+    best_choice: 'सर्वोत्तम विकल्प',
     pest_scanner: 'कीट स्कैनर',
     pest_scanner_desc: 'तत्काल रोग निदान के लिए पत्ते को स्कैन करें',
-    soil_scanner: 'मृदा स्कैनर',
-    soil_scanner_desc: 'मिट्टी की नमी और स्थिति की जांच करें',
+    soil_report_analysis: 'मृदा रिपोर्ट विश्लेषण',
+    soil_report_analysis_desc: 'अपनी मिट्टी की जांच रिपोर्ट अपलोड करके देखें',
     start_scan: 'स्कैन शुरू करें',
-    scan_soil_btn: 'मिट्टी स्कैन करें',
+    analyze_soil_report_btn: 'रिपोर्ट का विश्लेषण करें',
+    soil_insights_btn: 'मृदा जानकारी देखें',
+    pest_scan_history_hint: 'आपके कीट स्कैन के परिणाम यहां दिखेंगे।',
     recent_scans: 'हाल के स्कैन',
     no_recent_scans: 'कोई पिछला स्कैन नहीं मिला',
     view_history: 'इतिहास देखें',
@@ -376,8 +375,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     batch_status_active: 'खेत में सक्रिय',
     batch_status_ready: 'कटाई के लिए तैयार',
     batch_status_sold: 'बिक गया',
-    qr_passport: 'क्यूआर पासपोर्ट',
-    view_passport: 'पासपोर्ट देखें',
+    view_details: 'विवरण देखें',
 
     // Scan & Analysis Screen
     scan_title: 'फसल गुणवत्ता स्कैन',
@@ -470,7 +468,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     shared_truck_reserved: 'साझा ट्रक आरक्षित व निर्धारित',
     join_shared_truck: 'साझा ट्रक में शामिल हों',
 
-    // Mandi Arbitrage & PDF Quality Passport
+    // Mandi Arbitrage
     mandi_compare_title: 'मंडी भाव तुलना व आर्बिट्राज',
     compare_real_profit: 'डीजल और परिवहन सड़न के बाद वास्तविक शुद्ध लाभ',
     compare_target: 'इसके साथ तुलना करें',
@@ -480,12 +478,6 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     net_in_pocket: 'शुद्ध लाभ',
     dispatch_fpo_truck: 'भेजें',
     compare_mandis_btn: 'मंडी आर्बिट्राज',
-    quality_passport_title: 'किसान गुणवत्ता पासपोर्ट',
-    crop_weight: 'शुद्ध वजन',
-    floor_price: 'न्यूनतम भाव',
-    download_pdf_cert: 'पीडीएफ सर्टिफिकेट डाउनलोड / प्रिंट करें',
-    share_with_buyer: 'व्हाट्सएप पर खरीदार से साझा करें',
-    export_quality_passport: 'गुणवत्ता पासपोर्ट निर्यात करें (PDF)',
 
     // Profile & Settings
     profile_title: 'किसान प्रोफाइल',
@@ -569,12 +561,15 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // Pest & Soil Hub
     pest_hub_title: 'कीड व माती आरोग्य केंद्र',
     pest_hub_sub: 'पिकांचे रोग आणि मातीचे आरोग्य तपासा',
+    best_choice: 'सर्वोत्तम निवड',
     pest_scanner: 'कीड स्कॅनर',
     pest_scanner_desc: 'तातडीच्या रोग निदानासाठी पान स्कॅन करा',
-    soil_scanner: 'माती स्कॅनर',
-    soil_scanner_desc: 'मातीतील ओलावा आणि स्थिती तपासा',
+    soil_report_analysis: 'माती अहवाल विश्लेषण',
+    soil_report_analysis_desc: 'माती परीक्षण अहवाल अपलोड करून तपासा',
     start_scan: 'स्कॅन सुरू करा',
-    scan_soil_btn: 'माती स्कॅन करा',
+    analyze_soil_report_btn: 'अहवालाचे विश्लेषण करा',
+    soil_insights_btn: 'मातीची माहिती पहा',
+    pest_scan_history_hint: 'तुमचे कीड स्कॅन परिणाम येथे दिसतील.',
     recent_scans: 'अलीकडील स्कॅन',
     no_recent_scans: 'कोणतेही जुने स्कॅन आढळले नाहीत',
     view_history: 'इतिहास पहा',
@@ -591,8 +586,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     batch_status_active: 'शेतात वाढ चालू',
     batch_status_ready: 'कापणीसाठी तयार',
     batch_status_sold: 'विक्री झाली',
-    qr_passport: 'क्यूआर पासपोर्ट',
-    view_passport: 'पासपोर्ट पहा',
+    view_details: 'तपशील पहा',
 
     // Scan & Analysis Screen
     scan_title: 'पीक गुणवत्ता स्कॅन',
@@ -685,7 +679,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     shared_truck_reserved: 'सामायिक ट्रक आरक्षित व नियोजित',
     join_shared_truck: 'सामायिक ट्रकमध्ये सामील व्हा',
 
-    // Mandi Arbitrage & PDF Quality Passport
+    // Mandi Arbitrage
     mandi_compare_title: 'बाजारभाव तुलना आणि आर्बिट्राज',
     compare_real_profit: 'इंधन आणि वाहतूक नासाडीनंतरचा खरा नफा',
     compare_target: 'या बाजाराशी तुलना करा',
@@ -695,12 +689,6 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     net_in_pocket: 'निव्वळ नफा',
     dispatch_fpo_truck: 'वाहतूक सुरू करा',
     compare_mandis_btn: 'बाजार आर्बिट्राज',
-    quality_passport_title: 'शेतकरी गुणवत्ता पासपोर्ट',
-    crop_weight: 'निव्वळ वजन',
-    floor_price: 'हमीभाव',
-    download_pdf_cert: 'पीडीएफ प्रमाणपत्र डाउनलोड / प्रिंट',
-    share_with_buyer: 'व्हॉट्सॲपवर खरेदीदाराशी शेअर करा',
-    export_quality_passport: 'गुणवत्ता पासपोर्ट निर्यात करा (PDF)',
 
     // Profile & Settings
     profile_title: 'शेतकरी प्रोफाइल',
@@ -784,12 +772,27 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // Pest & Soil Hub
     pest_hub_title: 'Pest & Soil Health Hub',
     pest_hub_sub: 'Diagnose crop diseases and soil moisture',
+    best_choice: 'Best Choice',
     pest_scanner: 'Pest Scanner',
     pest_scanner_desc: 'Scan a leaf or crop problem for instant diagnosis',
-    soil_scanner: 'Soil Scanner',
-    soil_scanner_desc: 'Check soil condition and moisture levels',
+    soil_report_analysis: 'Soil Report Analysis',
+    soil_report_analysis_desc: 'Upload and review a soil test report',
     start_scan: 'Start Scan',
-    scan_soil_btn: 'Scan Soil',
+    analyze_soil_report_btn: 'Analyze Report',
+    soil_insights_btn: 'View Soil Insights',
+    pest_scan_history_hint: 'Your pest scan results will appear here.',
+    soil_report_title: 'Soil Report Analysis',
+    soil_report_subtitle: 'Choose a soil test report to review',
+    soil_report_upload_title: 'Upload Soil Report',
+    soil_report_upload_desc: 'Select a PDF or a JPG/PNG image of your soil test report.',
+    soil_report_choose_file: 'Choose report',
+    soil_report_change_file: 'Choose another report',
+    soil_report_picker_error: 'Could not open the report picker. Please try again.',
+    soil_report_demo_notice: 'Demo flow: the sample values below are not extracted from your selected report.',
+    soil_report_demo_button: 'Preview Demo Analysis',
+    soil_report_demo_results: 'Sample Soil Indicators',
+    soil_report_demo_footnote: 'These illustrative values are placeholders, not measurements from your file or agronomic advice.',
+    demo_label: 'DEMO',
     recent_scans: 'Recent Scans',
     no_recent_scans: 'No recent scans found',
     view_history: 'View History',
@@ -801,13 +804,12 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
 
     // Crop Batches
     batches_title: 'My Crop Batches',
-    batches_sub: 'Digital farm passport from harvest to terminal mandi',
+    batches_sub: 'Track your farm batches from harvest to market',
     add_crop_batch: 'Add New Batch',
     batch_status_active: 'Active in Field',
     batch_status_ready: 'Ready for Harvest',
     batch_status_sold: 'Sold in Mandi',
-    qr_passport: 'QR Passport',
-    view_passport: 'View Passport',
+    view_details: 'View Details',
 
     // Scan & Analysis Screen
     scan_title: 'Crop Quality Scan',
@@ -900,7 +902,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     shared_truck_reserved: 'Shared Truck Reserved & Scheduled',
     join_shared_truck: 'Join Shared Truck',
 
-    // Mandi Arbitrage & PDF Quality Passport
+    // Mandi Arbitrage
     mandi_compare_title: 'Side-by-Side Mandi Arbitrage',
     compare_real_profit: 'Real profit after diesel & transit decay',
     compare_target: 'Compare With',
@@ -910,12 +912,6 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     net_in_pocket: 'Net Realized',
     dispatch_fpo_truck: 'Dispatch to',
     compare_mandis_btn: 'Mandi Arbitrage',
-    quality_passport_title: 'Kisan Quality Passport',
-    crop_weight: 'Net Weight',
-    floor_price: 'Floor Price',
-    download_pdf_cert: 'Download / Print PDF Certificate',
-    share_with_buyer: 'Share with Buyer via WhatsApp',
-    export_quality_passport: 'Export Quality Passport (PDF)',
 
     // Profile & Settings
     profile_title: 'Farmer Profile',
@@ -999,12 +995,15 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // Pest & Soil Hub
     pest_hub_title: 'பூச்சி மற்றும் மண் நல மையம்',
     pest_hub_sub: 'பயிர் நோய்கள் மற்றும் மண்ணின் ஈரப்பதத்தை சரிபார்க்கவும்',
+    best_choice: 'சிறந்த தேர்வு',
     pest_scanner: 'பூச்சி ஸ்கேனர்',
     pest_scanner_desc: 'உடனடி நோய் கண்டறிதலுக்கு இலையை ஸ்கேன் செய்யவும்',
-    soil_scanner: 'மண் ஸ்கேனர்',
-    soil_scanner_desc: 'மண்ணின் ஈரப்பதம் மற்றும் நிலையை சரிபார்க்கவும்',
+    soil_report_analysis: 'மண் அறிக்கை பகுப்பாய்வு',
+    soil_report_analysis_desc: 'மண் பரிசோதனை அறிக்கையைப் பதிவேற்றி பார்க்கவும்',
     start_scan: 'ஸ்கேன் தொடங்கவும்',
-    scan_soil_btn: 'மண் ஸ்கேன் செய்க',
+    analyze_soil_report_btn: 'அறிக்கையை பகுப்பாய்வு செய்க',
+    soil_insights_btn: 'மண் விவரங்களைக் காண்க',
+    pest_scan_history_hint: 'பூச்சி ஸ்கேன் முடிவுகள் இங்கே தோன்றும்.',
     recent_scans: 'சமீபத்திய ஸ்கேன்கள்',
     no_recent_scans: 'முந்தைய ஸ்கேன்கள் எதுவும் இல்லை',
     view_history: 'வரலாற்றைக் காண்க',
@@ -1021,8 +1020,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     batch_status_active: 'வயலில் வளர்கிறது',
     batch_status_ready: 'அறுவடைக்கு தயார்',
     batch_status_sold: 'விற்கப்பட்டது',
-    qr_passport: 'கியூஆர் பாஸ்போர்ட்',
-    view_passport: 'பாஸ்போர்ட்டைக் காண்க',
+    view_details: 'விவரங்களைக் காண்க',
 
     // Scan & Analysis Screen
     scan_title: 'பயிர் தர ஸ்கேன்',
@@ -1126,12 +1124,15 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // Pest & Soil Hub
     pest_hub_title: 'ಕೀಟ ಮತ್ತು ಮಣ್ಣಿನ ಆರೋಗ್ಯ ಕೇಂದ್ರ',
     pest_hub_sub: 'ಬೆಳೆ ರೋಗಗಳು ಮತ್ತು ಮಣ್ಣಿನ ತೇವಾಂಶವನ್ನು ಪರೀಕ್ಷಿಸಿ',
+    best_choice: 'ಅತ್ಯುತ್ತಮ ಆಯ್ಕೆ',
     pest_scanner: 'ಕೀಟ ಸ್ಕ್ಯಾನರ್',
     pest_scanner_desc: 'ತ್ವರಿತ ರೋಗ ಪತ್ತೆಗಾಗಿ ಎಲೆಯನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ',
-    soil_scanner: 'ಮಣ್ಣಿನ ಸ್ಕ್ಯಾನರ್',
-    soil_scanner_desc: 'ಮಣ್ಣಿನ ತೇವಾಂಶ ಮತ್ತು ಸ್ಥಿತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ',
+    soil_report_analysis: 'ಮಣ್ಣಿನ ವರದಿ ವಿಶ್ಲೇಷಣೆ',
+    soil_report_analysis_desc: 'ಮಣ್ಣಿನ ಪರೀಕ್ಷಾ ವರದಿಯನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಪರಿಶೀಲಿಸಿ',
     start_scan: 'ಸ್ಕ್ಯಾನ್ ಪ್ರಾರಂಭಿಸಿ',
-    scan_soil_btn: 'ಮಣ್ಣು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ',
+    analyze_soil_report_btn: 'ವರದಿಯನ್ನು ವಿಶ್ಲೇಷಿಸಿ',
+    soil_insights_btn: 'ಮಣ್ಣಿನ ಒಳನೋಟಗಳನ್ನು ನೋಡಿ',
+    pest_scan_history_hint: 'ನಿಮ್ಮ ಕೀಟ ಸ್ಕ್ಯಾನ್ ಫಲಿತಾಂಶಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.',
     recent_scans: 'ಇತ್ತೀಚಿನ ಸ್ಕ್ಯಾನ್‌ಗಳು',
     no_recent_scans: 'ಯಾವುದೇ ಇತ್ತೀಚಿನ ಸ್ಕ್ಯಾನ್ ಕಂಡುಬಂದಿಲ್ಲ',
     view_history: 'ಇತಿಹಾಸ ವೀಕ್ಷಿಸಿ',
@@ -1148,8 +1149,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     batch_status_active: 'ಹೊಲದಲ್ಲಿ ಬೆಳೆಯುತ್ತಿದೆ',
     batch_status_ready: 'ಕೊಯ್ಲಿಗೆ ಸಿದ್ಧವಾಗಿದೆ',
     batch_status_sold: 'ಮಾರಾಟವಾಗಿದೆ',
-    qr_passport: 'ಕ್ಯೂಆರ್ ಪಾಸ್‌ಪೋರ್ಟ್',
-    view_passport: 'ಪಾಸ್‌ಪೋರ್ಟ್ ವೀಕ್ಷಿಸಿ',
+    view_details: 'ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ',
 
     // Scan & Analysis Screen
     scan_title: 'ಬೆಳೆ ಗುಣಮಟ್ಟ ಸ್ಕ್ಯಾನ್',

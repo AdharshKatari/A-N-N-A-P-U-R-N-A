@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(231, 226, 217, 0.6)',
   },
   notifCardUnread: {
-    borderColor: '#90D79C',
+    borderColor: '#145C2E',
     backgroundColor: '#FAF7F0',
   },
   iconCircle: {

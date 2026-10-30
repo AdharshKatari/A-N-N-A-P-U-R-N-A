@@ -55,7 +55,7 @@ const TIMELINE_DATA: Record<TimelineOption, TimelineData> = {
     ],
     factors: [
       { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '94/100', status: 'Optimal', color: '#145C2E' },
-      { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '88/100', status: 'Very High', color: '#2E7D32' },
+      { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '88/100', status: 'Very High', color: '#145C2E' },
       { titleKey: 'spoilage_decay_factor', defaultTitle: 'Crop Spoilage Decay Risk', score: 'Low (3%)', status: 'Safe', color: '#145C2E' },
     ],
   },
@@ -78,7 +78,7 @@ const TIMELINE_DATA: Record<TimelineOption, TimelineData> = {
       { label: 'W4', price: 2750, height: 95, isPeak: true },
     ],
     factors: [
-      { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '89/100', status: 'Good', color: '#2E7D32' },
+      { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '89/100', status: 'Good', color: '#145C2E' },
       { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '92/100', status: 'Strong', color: '#145C2E' },
       { titleKey: 'spoilage_decay_factor', defaultTitle: 'Crop Spoilage Decay Risk', score: 'Low (5%)', status: 'Safe', color: '#145C2E' },
     ],
@@ -102,7 +102,7 @@ const TIMELINE_DATA: Record<TimelineOption, TimelineData> = {
     ],
     factors: [
       { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '82/100', status: 'Moderate', color: '#D97706' },
-      { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '85/100', status: 'High', color: '#2E7D32' },
+      { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '85/100', status: 'High', color: '#145C2E' },
       { titleKey: 'spoilage_decay_factor', defaultTitle: 'Crop Spoilage Decay Risk', score: 'Mod (8%)', status: 'Manageable', color: '#D97706' },
     ],
   },
@@ -125,7 +125,7 @@ const TIMELINE_DATA: Record<TimelineOption, TimelineData> = {
       { label: 'Q4', price: 3100, height: 95, isPeak: true },
     ],
     factors: [
-      { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '80/100', status: 'Stable', color: '#2E7D32' },
+      { titleKey: 'weather_transit_factor', defaultTitle: 'Weather & Highway Transit', score: '80/100', status: 'Stable', color: '#145C2E' },
       { titleKey: 'buyer_demand_factor', defaultTitle: 'Terminal Mandi Buyer Demand', score: '90/100', status: 'High Peak', color: '#145C2E' },
       { titleKey: 'spoilage_decay_factor', defaultTitle: 'Crop Spoilage Decay Risk', score: 'Avg (10%)', status: 'Monitored', color: '#D97706' },
     ],
@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
   },
   barPill: {
     width: 26,
-    backgroundColor: '#A5D6A7',
+    backgroundColor: '#F5F3ED',
     borderRadius: 6,
   },
   barPillPeak: {

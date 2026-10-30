@@ -231,7 +231,7 @@ export default function LanguageScreen({ navigation, route }: any) {
             <Switch
               value={weatherAlerts}
               onValueChange={setWeatherAlerts}
-              trackColor={{ false: '#E2E8F0', true: '#C8E6C9' }}
+              trackColor={{ false: '#E2E8F0', true: '#145C2E' }}
               thumbColor={weatherAlerts ? '#145C2E' : '#94A3B8'}
             />
           </View>
@@ -254,7 +254,7 @@ export default function LanguageScreen({ navigation, route }: any) {
             <Switch
               value={marketPriceAlerts}
               onValueChange={setMarketPriceAlerts}
-              trackColor={{ false: '#E2E8F0', true: '#C8E6C9' }}
+              trackColor={{ false: '#E2E8F0', true: '#145C2E' }}
               thumbColor={marketPriceAlerts ? '#145C2E' : '#94A3B8'}
             />
           </View>
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 12,
-    color: '#55725E',
+    color: '#145C2E',
     marginTop: 2,
     fontFamily: 'PlusJakartaSans_400Regular',
   },
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#2E7D32',
+    backgroundColor: '#145C2E',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans_700Bold',
   },
   liveAiBadge: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#145C2E',
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
     borderColor: '#CBD5E1',
   },
   audioWavePill: {
-    backgroundColor: '#C8E6C9',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,

@@ -236,7 +236,7 @@ export function ComparisonVisual({ isActive }: { isActive: boolean }) {
           <Text style={styles.compPrice}>₹42,000</Text>
           <View style={styles.compRisk}>
             <View style={[styles.riskDot, { backgroundColor: Colors.success }]} />
-            <Text style={[styles.riskText, { color: Colors.success }]}>Low risk</Text>
+            <Text style={[styles.riskText, { color: Colors.primaryDeep }]}>Low risk</Text>
           </View>
           <Text style={styles.compNote}>Market stable, prices fair</Text>
         </Animated.View>
@@ -532,12 +532,12 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.success,
+    backgroundColor: Colors.textOnPrimary,
   },
   statusText: {
     fontFamily: FontFamily.bold,
     fontSize: 9,
-    color: Colors.primaryDark,
+    color: Colors.textOnPrimary,
     letterSpacing: 0.5,
   },
 
@@ -650,7 +650,7 @@ const styles = StyleSheet.create({
   bestBadgeText: {
     fontFamily: FontFamily.bold,
     fontSize: 9,
-    color: Colors.primaryDark,
+    color: Colors.textOnPrimary,
     letterSpacing: 0.3,
   },
 
@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
   },
   recGlow: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: Colors.successLight,
+    backgroundColor: 'rgba(20, 92, 46, 0.18)',
     borderRadius: BorderRadius.xl,
   },
   aiBadge: {
@@ -730,7 +730,7 @@ const styles = StyleSheet.create({
   profitBadgeText: {
     fontFamily: FontFamily.bold,
     fontSize: 13,
-    color: Colors.primaryDark,
+    color: Colors.textOnPrimary,
   },
   reasonSection: {
     marginTop: Spacing.xs,

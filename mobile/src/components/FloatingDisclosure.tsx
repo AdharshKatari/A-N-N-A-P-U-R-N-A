@@ -58,7 +58,7 @@ export function FloatingDisclosure({ items, navigation, style }: FloatingDisclos
       title: 'Check Mandi Prices',
       description: 'Live APMC rates & trends',
       icon: 'store',
-      iconColor: '#2E7D32',
+      iconColor: '#145C2E',
       badgeBg: '#E8F5E9',
       onPress: () => navigation?.navigate('Market'),
     },

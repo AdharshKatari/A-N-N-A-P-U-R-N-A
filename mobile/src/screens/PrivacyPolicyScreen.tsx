@@ -44,7 +44,7 @@ function PrivacyPolicyScreen({ navigation }: any) {
           <Text style={styles.sectionTitle}>2. How Your Data Is Used</Text>
           <Text style={styles.bodyText}>
             Your data is used solely to generate agronomic advice, market intelligence, spoilage velocity
-            models, and secure cryptographic Batch Passports for post-harvest traceability.
+            models, and secure batch records for post-harvest traceability.
           </Text>
 
           <Text style={styles.sectionTitle}>3. Local-First & Offline Privacy</Text>

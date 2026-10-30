@@ -103,7 +103,7 @@ export default function RegisterScreen({ navigation, route }: any) {
                 {showSuccess ? (
                   <Checkmark size={36} color="#FFFFFF" isVisible={showSuccess} />
                 ) : (
-                  <MaterialIcons name="person-add" size={32} color={Colors.primaryDeep} />
+                  <MaterialIcons name="person-add" size={32} color={Colors.textOnPrimary} />
                 )}
               </View>
               <Text style={styles.title}>Create Account</Text>

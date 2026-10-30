@@ -355,7 +355,7 @@ function SmartMoveScreen({ navigation, route }: any) {
           <View style={styles.recommendationHeader}>
             <Text style={styles.recommendationSuperText}>{t('best_move_super', 'BEST MOVE RIGHT NOW')}</Text>
             <GlassBadge variant="success" size="sm" style={styles.highlyRecommendedBadge}>
-              <MaterialIcons name="verified" size={14} color="#00210B" />
+              <MaterialIcons name="verified" size={14} color={Colors.textOnPrimary} />
               <Text style={styles.highlyRecommendedText}>{t('highly_recommended', 'Highly Recommended')}</Text>
             </GlassBadge>
           </View>
@@ -384,7 +384,7 @@ function SmartMoveScreen({ navigation, route }: any) {
             {(recommendedScenario?.reasoning || ['No reasoning available']).map((reason: string, idx: number) => (
               <View key={idx} style={styles.whyRow}>
                 <View style={[styles.whyDot, { backgroundColor: idx < 2 ? Colors.warningBg : Colors.successBg }]}>
-                  <MaterialIcons name={idx < 2 ? 'warning' : 'check-circle'} size={14} color={idx < 2 ? Colors.warning : Colors.success} />
+                  <MaterialIcons name={idx < 2 ? 'warning' : 'check-circle'} size={14} color={idx < 2 ? Colors.warning : Colors.textOnPrimary} />
                 </View>
                 <Text style={styles.whyText}>{reason}</Text>
               </View>
@@ -420,10 +420,7 @@ function SmartMoveScreen({ navigation, route }: any) {
               : scenario.id === 'transport_distant' || scenario.id === 'distant_market' ? 'local-shipping'
               : scenario.id === 'processing' ? 'factory'
               : 'store';
-            const iconBg = scenario.risk_level === 'Low' || scenario.risk_level === 'LOW' ? Colors.successBg
-              : scenario.risk_level === 'Medium' || scenario.risk_level === 'MEDIUM' ? Colors.warningBg
-              : Colors.errorBg;
-            const iconColor = scenario.risk_level === 'Low' || scenario.risk_level === 'LOW' ? Colors.primaryDeep
+            const riskColor = scenario.risk_level === 'Low' || scenario.risk_level === 'LOW' ? Colors.primaryDeep
               : scenario.risk_level === 'Medium' || scenario.risk_level === 'MEDIUM' ? Colors.warning
               : Colors.error;
             const isRecommended = scenario.is_recommended;
@@ -442,8 +439,8 @@ function SmartMoveScreen({ navigation, route }: any) {
               >
                 {/* Header row */}
                 <View style={styles.optionHeaderRow}>
-                  <View style={[styles.optionIconCircle, { backgroundColor: iconBg }]}>
-                    <MaterialIcons name={iconName} size={22} color={iconColor} />
+                  <View style={styles.optionIconCircle}>
+                    <MaterialIcons name={iconName} size={22} color={Colors.primaryDeep} />
                   </View>
                   <View style={styles.optionHeaderText}>
                     <Text style={isRecommended ? styles.optionTitleGreen : styles.optionTitle} numberOfLines={1}>
@@ -455,11 +452,11 @@ function SmartMoveScreen({ navigation, route }: any) {
                   </View>
                   {isRecommended ? (
                     <GlassBadge variant="success" size="sm">
-                      {t('recommended', 'Best')}
+                      <Text style={styles.recommendedBadgeText}>{t('recommended', 'Best')}</Text>
                     </GlassBadge>
                   ) : isSelected ? (
                     <View style={styles.selectedPill}>
-                      <MaterialIcons name="check" size={14} color="#145C2E" />
+                      <MaterialIcons name="check" size={14} color={Colors.textOnPrimary} />
                       <Text style={styles.selectedPillText}>Selected</Text>
                     </View>
                   ) : null}
@@ -483,7 +480,7 @@ function SmartMoveScreen({ navigation, route }: any) {
                   </View>
                   <View style={styles.optionMetricCell}>
                     <Text style={styles.optionMetricLabel}>{t('risk_tier', 'Risk Level')}</Text>
-                    <Text style={[styles.optionMetricValue, { color: iconColor }]}>{scenario.risk_level}</Text>
+                    <Text style={[styles.optionMetricValue, { color: riskColor }]}>{scenario.risk_level}</Text>
                   </View>
                 </View>
 
@@ -635,7 +632,7 @@ const styles = StyleSheet.create({
   },
   // Primary recommendation card
   recommendationCard: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.primaryDeep,
     borderRadius: BorderRadius.lg,
     padding: Spacing.cardPaddingSm,
     gap: Spacing.sm,
@@ -652,11 +649,11 @@ const styles = StyleSheet.create({
     lineHeight: Typography.label.lineHeight,
     letterSpacing: 0.8,
     fontWeight: '700',
-    color: Colors.successLight,
+    color: Colors.textOnPrimary,
     textTransform: 'uppercase',
   },
   highlyRecommendedBadge: {
-    backgroundColor: '#ABF3B6',
+    backgroundColor: 'rgba(255,255,255,0.16)',
     paddingHorizontal: Spacing.sm - 2,
     paddingVertical: Spacing.xxs - 1,
     borderRadius: BorderRadius.full,
@@ -669,7 +666,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 14,
     fontWeight: '700',
-    color: '#00210B',
+    color: Colors.textOnPrimary,
   },
   recommendationHeroText: {
     fontFamily: FontFamily.bold,
@@ -683,7 +680,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     fontSize: Typography.bodyMd.fontSize,
     lineHeight: Typography.bodyMd.lineHeight,
-    color: Colors.successLight,
+    color: Colors.textOnPrimary,
   },
   // Why explainability card
   whyCard: {
@@ -737,6 +734,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.xl,
+    flexDirection: 'column',
     padding: Spacing.md,
     gap: Spacing.sm,
     borderWidth: 1.5,
@@ -746,12 +744,12 @@ const styles = StyleSheet.create({
   },
   // Semantic border variants
   optionCardGreen: {
-    borderColor: '#ABF3B6',
-    backgroundColor: 'rgba(171, 243, 182, 0.08)',
+    borderColor: Colors.primaryDeep,
+    backgroundColor: Colors.surface,
   },
   optionCardSelected: {
     borderColor: Colors.primaryDeep,
-    backgroundColor: 'rgba(20, 92, 46, 0.04)',
+    backgroundColor: Colors.surfaceAlt,
     borderWidth: 2,
   },
   optionHeaderRow: {
@@ -767,7 +765,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#E8F5E9',
+    backgroundColor: Colors.primaryDeep,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: BorderRadius.full,
@@ -775,7 +773,7 @@ const styles = StyleSheet.create({
   selectedPillText: {
     fontFamily: FontFamily.bold,
     fontSize: 11,
-    color: '#145C2E',
+    color: Colors.textOnPrimary,
     fontWeight: '700',
   },
   badgeRow: {
@@ -786,6 +784,9 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: BorderRadius.full,
+    backgroundColor: Colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: Colors.primaryDeep,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     flexShrink: 0,
@@ -812,6 +813,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   optionMetricsGrid: {
+    width: '100%',
     flexDirection: 'row' as const,
     flexWrap: 'wrap' as const,
     backgroundColor: 'rgba(0, 0, 0, 0.02)',
@@ -822,6 +824,8 @@ const styles = StyleSheet.create({
   },
   optionMetricCell: {
     width: '50%' as any,
+    minWidth: 0,
+    flexShrink: 1,
     paddingVertical: 4,
     paddingRight: 6,
     gap: 2,
@@ -850,6 +854,11 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     fontWeight: '700' as const,
     color: Colors.textOnPrimary,
+  },
+  recommendedBadgeText: {
+    fontFamily: FontFamily.semibold,
+    fontSize: Typography.caption.fontSize,
+    color: Colors.primaryDeep,
   },
   highRiskPill: {
     backgroundColor: Colors.errorBg,

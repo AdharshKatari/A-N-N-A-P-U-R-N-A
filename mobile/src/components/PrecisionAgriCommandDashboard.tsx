@@ -169,7 +169,7 @@ function buildPrecisionSatelliteHTML(
       color: '#FACC15',
       weight: 3,
       dashArray: '4, 4',
-      fillColor: '#84CC16',
+      fillColor: '#145C2E',
       fillOpacity: 0.35
     }).addTo(map);
 
@@ -197,9 +197,9 @@ function buildPrecisionSatelliteHTML(
       [${centerLat + 0.0018}, ${centerLng + 0.0044}],
       [${centerLat + 0.0012}, ${centerLng + 0.0018}]
     ], {
-      color: '#84CC16',
+      color: '#145C2E',
       weight: 2,
-      fillColor: '#4D7C0F',
+      fillColor: '#145C2E',
       fillOpacity: 0.30
     }).addTo(map);
 
@@ -280,7 +280,7 @@ export function PrecisionAgriCommandDashboard({
         {/* Top Header Tag Overlay */}
         <View style={styles.mapTopHeader}>
           <View style={styles.farmTitleBadge}>
-            <MaterialIcons name="eco" size={16} color="#4ADE80" />
+            <MaterialIcons name="eco" size={16} color="#145C2E" />
             <View>
               <Text style={styles.farmTitleText}>{farmName}</Text>
               <Text style={styles.farmSubText}>{location} • 6 active parcels</Text>
@@ -412,7 +412,7 @@ export function PrecisionAgriCommandDashboard({
               <MaterialIcons
                 name={task.completed ? 'check-box' : 'check-box-outline-blank'}
                 size={18}
-                color={task.completed ? '#22C55E' : '#94A3B8'}
+                color={task.completed ? '#145C2E' : '#94A3B8'}
               />
               <Text style={[styles.taskTitle, task.completed && styles.taskTitleDone]}>
                 {task.title}
@@ -475,7 +475,7 @@ export function PrecisionAgriCommandDashboard({
           <View style={styles.distRow}>
             <Text style={styles.distCropName}>Soybeans</Text>
             <View style={styles.distSegmentBar}>
-              <View style={[styles.distFill, { flex: 26, backgroundColor: '#84CC16' }]} />
+              <View style={[styles.distFill, { flex: 26, backgroundColor: '#145C2E' }]} />
               <View style={[styles.distTrack, { flex: 74 }]} />
             </View>
             <Text style={styles.distAcreage}>26.5 ha</Text>
@@ -727,7 +727,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 4,
-    backgroundColor: '#16A34A',
+    backgroundColor: '#145C2E',
     borderRadius: 10,
     paddingVertical: 7,
   },
@@ -746,7 +746,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 12,
     borderLeftWidth: 3,
-    borderLeftColor: '#22C55E',
+    borderLeftColor: '#145C2E',
   },
   summarySpeechText: {
     fontFamily: FontFamily.regular,

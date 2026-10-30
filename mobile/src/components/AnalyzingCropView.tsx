@@ -157,8 +157,8 @@ export default function AnalyzingCropView({
           <Svg width={RING_SIZE} height={RING_SIZE} style={styles.svgRing}>
             <Defs>
               <LinearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <Stop offset="0%" stopColor="#10B981" />
-                <Stop offset="100%" stopColor="#047857" />
+                <Stop offset="0%" stopColor="#145C2E" />
+                <Stop offset="100%" stopColor="#145C2E" />
               </LinearGradient>
             </Defs>
 
@@ -210,10 +210,10 @@ export default function AnalyzingCropView({
                 {/* Left Icon */}
                 <View style={styles.stepLeftIcon}>
                   {isCompleted ? (
-                    <MaterialIcons name="check" size={18} color="#059669" />
+                    <MaterialIcons name="check" size={18} color="#145C2E" />
                   ) : isActive ? (
                     <Animated.View style={{ transform: [{ rotate: spinInterpolate }] }}>
-                      <MaterialCommunityIcons name="loading" size={18} color="#10B981" />
+                      <MaterialCommunityIcons name="loading" size={18} color="#145C2E" />
                     </Animated.View>
                   ) : (
                     <View style={styles.pendingDot} />
@@ -234,10 +234,10 @@ export default function AnalyzingCropView({
                 {/* Right Status Icon */}
                 <View style={styles.stepRightIcon}>
                   {isCompleted ? (
-                    <MaterialIcons name="check" size={18} color="#059669" />
+                    <MaterialIcons name="check" size={18} color="#145C2E" />
                   ) : isActive ? (
                     <Animated.View style={{ transform: [{ rotate: spinInterpolate }] }}>
-                      <MaterialCommunityIcons name="loading" size={16} color="#10B981" />
+                      <MaterialCommunityIcons name="loading" size={16} color="#145C2E" />
                     </Animated.View>
                   ) : null}
                 </View>
@@ -266,12 +266,12 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.full,
     backgroundColor: '#F0FDF4',
     borderWidth: 1,
-    borderColor: '#DCFCE7',
+    borderColor: '#145C2E',
   },
   headerBadgeText: {
     fontFamily: FontFamily.bold,
     fontSize: Typography.body.fontSize,
-    color: '#166534',
+    color: '#145C2E',
     fontWeight: '700',
   },
   card: {
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   stepLabelActive: {
-    color: '#047857',
+    color: '#145C2E',
     fontFamily: FontFamily.bold,
     fontWeight: '700',
   },

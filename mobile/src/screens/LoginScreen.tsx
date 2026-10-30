@@ -106,7 +106,7 @@ export default function LoginScreen({ navigation, route }: any) {
                 {showSuccess ? (
                   <Checkmark size={36} color="#FFFFFF" isVisible={showSuccess} />
                 ) : (
-                  <MaterialIcons name="eco" size={36} color={Colors.primaryDeep} />
+                  <MaterialIcons name="eco" size={36} color={Colors.textOnPrimary} />
                 )}
               </View>
               <Text style={styles.title}>Welcome Back</Text>

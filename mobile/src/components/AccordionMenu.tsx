@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bold,
     fontSize: 10.5,
     letterSpacing: 0.7,
-    color: '#1B7A3D',
+    color: '#145C2E',
     fontWeight: '700',
   },
   faqHeading: {

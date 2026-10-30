@@ -34,7 +34,6 @@ import { FadeIn, ScaleIn, MotionTokens } from '../components/Animations';
 import { useReducedMotion } from '../components/GlassPrimitives';
 import SwitchMode from '../components/SwitchMode';
 import { FarmerProfileCard, FarmerProfileData } from '../components/FarmerProfileCard';
-import { ShowQr } from '../components/ShowQr';
 import { FarmSatelliteFieldMap } from '../components/FarmSatelliteFieldMap';
 import { PrecisionAgriCommandDashboard } from '../components/PrecisionAgriCommandDashboard';
 import { hapticHeavy, hapticLight, hapticMedium } from '../utils/haptics';
@@ -243,16 +242,6 @@ export default function ProfileScreen({ navigation }: any) {
           />
         </FadeIn>
 
-        {/* Digital Kisan QR Passport */}
-        <FadeIn delay={75} duration={MotionTokens.duration.standard} direction="down" reducedMotion={reducedMotion}>
-          <View style={{ alignItems: 'center', marginVertical: 4 }}>
-            <ShowQr
-              value={`KISAN_ID:${farmerData.kisanId}|NAME:${farmerData.name}|LOC:${farmerData.farmLocation}|ACRES:${farmerData.totalAcreage}`}
-              buttonLabel="Show Kisan QR Passport"
-            />
-          </View>
-        </FadeIn>
-
         {/* 3 Core Farm KPI Badges */}
         <FadeIn delay={100} duration={MotionTokens.duration.standard} direction="up" reducedMotion={reducedMotion}>
           <View style={styles.farmSummaryGrid}>
@@ -312,7 +301,7 @@ export default function ProfileScreen({ navigation }: any) {
                       hapticLight();
                       setShowSatelliteDashboard(val);
                     }}
-                    trackColor={{ false: '#E5E7EB', true: '#C8E6C9' }}
+                    trackColor={{ false: '#E5E7EB', true: '#145C2E' }}
                     thumbColor={showSatelliteDashboard ? '#145C2E' : '#9CA3AF'}
                   />
                 </View>
@@ -614,7 +603,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#2E7D32',
+    backgroundColor: '#145C2E',
     marginTop: 4,
   },
   mapSection: {

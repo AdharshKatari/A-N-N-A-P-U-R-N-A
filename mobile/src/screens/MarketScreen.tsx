@@ -344,7 +344,7 @@ function MarketScreen({ navigation }: any) {
         color = '#D97706';
         icon = '👑';
       } else if (activeFilter === 'nearby' || isNear) {
-        color = '#2E7D32';
+        color = '#145C2E';
         icon = '🏪';
       } else if (p.isRecommended) {
         color = '#145C2E';
@@ -430,7 +430,7 @@ function MarketScreen({ navigation }: any) {
       const sortedByDist = [...prices].sort((a, b) => (a.distance || 999) - (b.distance || 999));
       targetMarket = sortedByDist.find((p) => (p.distance || 999) <= 25) || sortedByDist[0];
       labelPrefix = '📍 Local Mandi';
-      routeColor = '#2E7D32';
+      routeColor = '#145C2E';
     } else if (filter === 'premium') {
       // 2. Highest-paying terminal market (e.g. Vashi Navi Mumbai ~₹3,400)
       const sortedByPrice = [...prices].sort((a, b) => b.price - a.price);
@@ -584,7 +584,7 @@ function MarketScreen({ navigation }: any) {
               </Text>
             </View>
             <View style={styles.stableBadge}>
-              <MaterialIcons name="horizontal-rule" size={14} color={Colors.chipGreenDark} />
+              <MaterialIcons name="horizontal-rule" size={14} color={Colors.textOnPrimary} />
               <Text style={styles.stableBadgeText}>STABLE</Text>
             </View>
           </View>
@@ -725,12 +725,12 @@ function MarketScreen({ navigation }: any) {
 
           {/* Action 3: Side-by-Side Mandi Comparison (Arbitrage) */}
           <AnimatedPressable
-            style={[styles.actionCardSecondary, { backgroundColor: '#E8F5E9', borderColor: '#A7F3D0', borderWidth: 1 }]}
+            style={[styles.actionCardSecondary, { backgroundColor: '#E8F5E9', borderColor: '#F5F3ED', borderWidth: 1 }]}
             activeOpacity={0.85}
             onPress={() => setCompareModalVisible(true)}
             haptic="medium"
           >
-            <View style={[styles.actionIconCircle, { backgroundColor: '#C8E6C9' }]}>
+            <View style={[styles.actionIconCircle, { backgroundColor: '#F5F3ED' }]}>
               <MaterialIcons name="compare-arrows" size={24} color="#145C2E" />
             </View>
             <Text style={[styles.actionCardTitleSecondary, { color: '#145C2E', fontWeight: '800' }]}>
@@ -773,7 +773,7 @@ function MarketScreen({ navigation }: any) {
         <View style={styles.smartMoveBanner}>
           <View style={styles.smartMoveVisualRow}>
             <View style={styles.smartMoveIconWrap}>
-              <MaterialIcons name="lightbulb" size={24} color={Colors.successLight} />
+              <MaterialIcons name="lightbulb" size={24} color={Colors.primaryDark} />
             </View>
             <View style={styles.smartMoveContent}>
               <Text style={styles.smartMoveTitle}>Sell recommendation</Text>
@@ -882,7 +882,7 @@ function MarketScreen({ navigation }: any) {
 
                       {/* Net Return Bar Visual */}
                       <View style={styles.barTrack}>
-                        <View style={[styles.barFill, { width: `${barPct}%`, backgroundColor: isTop ? '#145C2E' : '#8BC34A' }]} />
+                        <View style={[styles.barFill, { width: `${barPct}%`, backgroundColor: isTop ? '#145C2E' : '#145C2E' }]} />
                       </View>
                     </TouchableOpacity>
                   );
@@ -950,8 +950,8 @@ function MarketScreen({ navigation }: any) {
               <View style={styles.graphCard}>
                 {[
                   { name: 'Vashi Mumbai APMC', price: 3350, pct: 100, tag: 'Premium (+40%)', tagColor: '#145C2E' },
-                  { name: 'Pune Gultekdi', price: 2800, pct: 84, tag: 'Above Avg', tagColor: '#2E7D32' },
-                  { name: 'Pimpalgaon Baswant', price: 2550, pct: 76, tag: 'Moderate', tagColor: '#558B2F' },
+                  { name: 'Pune Gultekdi', price: 2800, pct: 84, tag: 'Above Avg', tagColor: '#145C2E' },
+                  { name: 'Pimpalgaon Baswant', price: 2550, pct: 76, tag: 'Moderate', tagColor: '#145C2E' },
                   { name: 'Nashik APMC (Local)', price: 2400, pct: 72, tag: 'Local Benchmark', tagColor: '#6B7280' },
                   { name: 'Lasalgaon Mandi', price: 2300, pct: 68, tag: 'Standard', tagColor: '#9CA3AF' },
                 ].map((item, idx) => (
@@ -1112,7 +1112,7 @@ const styles = StyleSheet.create({
     lineHeight: Typography.label.lineHeight,
     letterSpacing: 0.6,
     fontWeight: '700',
-    color: Colors.chipGreenDark,
+    color: Colors.textOnPrimary,
     textTransform: 'uppercase',
   },
   updatedTimeRow: {
@@ -1214,7 +1214,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bold,
     fontSize: 11,
     fontWeight: '700',
-    color: Colors.chipGreenDark,
+    color: Colors.textOnPrimary,
   },
   mapSubtitle: {
     fontFamily: FontFamily.regular,
@@ -1315,7 +1315,9 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: Colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: Colors.primaryDeep,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1337,6 +1339,8 @@ const styles = StyleSheet.create({
   viewRecommendationButton: {
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.xl,
+    borderWidth: 1,
+    borderColor: Colors.primaryDeep,
     paddingVertical: Spacing.sm + 2,
     paddingHorizontal: Spacing.md,
     flexDirection: 'row',

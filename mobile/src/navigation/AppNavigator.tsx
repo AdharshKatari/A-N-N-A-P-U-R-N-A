@@ -23,6 +23,7 @@ import SpoilageScreen from '../screens/SpoilageScreen';
 import WhatIfScreen from '../screens/WhatIfScreen';
 import RecommendationScreen from '../screens/RecommendationScreen';
 import WeatherScreen from '../screens/WeatherScreen';
+import SoilReportScreen from '../screens/SoilReportScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import NotificationDetailScreen from '../screens/NotificationDetailScreen';
 
@@ -184,6 +185,11 @@ export default function AppNavigator() {
       <Stack.Screen
         name="Weather"
         component={WeatherScreen}
+        options={transitions.slideFromRight}
+      />
+      <Stack.Screen
+        name="SoilReport"
+        component={SoilReportScreen}
         options={transitions.slideFromRight}
       />
       <Stack.Screen

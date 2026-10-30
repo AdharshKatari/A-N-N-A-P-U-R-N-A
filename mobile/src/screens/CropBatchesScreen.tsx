@@ -16,7 +16,6 @@ import { api, Batch, DashboardStats } from '../lib/apiClient';
 import { withErrorBoundary } from '../components/ErrorBoundary';
 import { FadeIn, ScaleIn, MotionTokens } from '../components/Animations';
 import { useReducedMotion } from '../components/GlassPrimitives';
-import { QualityPassportModal } from '../components/QualityPassportModal';
 import { useLanguage } from '../context/LanguageContext';
 
 const DEFAULT_CROP_THUMB =
@@ -35,7 +34,6 @@ const FALLBACK_BATCHES: Batch[] = [
     micro_drone_modifier: 1.0,
     logistics_road_penalty: 1.0,
     current_status: 'ACTIVE',
-    qr_code_secure_token: 'QR-TOM-98234-PASSPORT',
   },
   {
     batch_id: 'BAT-2026-ONI-02',
@@ -49,7 +47,6 @@ const FALLBACK_BATCHES: Batch[] = [
     micro_drone_modifier: 1.0,
     logistics_road_penalty: 1.0,
     current_status: 'ACTIVE',
-    qr_code_secure_token: 'QR-ONI-44182-PASSPORT',
   },
   {
     batch_id: 'BAT-2026-PAD-03',
@@ -63,7 +60,6 @@ const FALLBACK_BATCHES: Batch[] = [
     micro_drone_modifier: 1.0,
     logistics_road_penalty: 1.0,
     current_status: 'ACTIVE',
-    qr_code_secure_token: 'QR-PAD-67812-PASSPORT',
   },
   {
     batch_id: 'BAT-2026-MAN-04',
@@ -77,7 +73,6 @@ const FALLBACK_BATCHES: Batch[] = [
     micro_drone_modifier: 1.0,
     logistics_road_penalty: 1.0,
     current_status: 'SOLD',
-    qr_code_secure_token: 'QR-MAN-11928-PASSPORT',
   },
 ];
 
@@ -86,7 +81,6 @@ function CropBatchesScreen({ navigation }: any) {
   const [activeFilter, setActiveFilter] = useState<'active' | 'completed' | 'all'>('active');
   const [batches, setBatches] = useState<Batch[]>(FALLBACK_BATCHES);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
-  const [selectedPassportBatch, setSelectedPassportBatch] = useState<Batch | null>(null);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -324,7 +318,7 @@ function CropBatchesScreen({ navigation }: any) {
                   )}
                   {batch.current_status === 'ACTIVE' ? (
                     <View style={styles.healthyPill}>
-                      <MaterialIcons name="check-circle" size={14} color="#005323" />
+                      <MaterialIcons name="check-circle" size={14} color="#145C2E" />
                       <Text style={styles.healthyText}>Active</Text>
                     </View>
                   ) : (
@@ -367,15 +361,7 @@ function CropBatchesScreen({ navigation }: any) {
                     onPress={() => navigation?.navigate('CropDetails', { batchId: batch.batch_id, crop: batch.field_id || 'Crop', field: batch.field_id || 'Field' })}
                     activeOpacity={0.85}
                   >
-                    <Text style={styles.viewCropText}>{t('view_passport', 'View Details')}</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={[styles.scanIconButton, { backgroundColor: '#E8F5E9', borderColor: '#A7F3D0', borderWidth: 1 }]}
-                    onPress={() => setSelectedPassportBatch(batch)}
-                    activeOpacity={0.85}
-                  >
-                    <MaterialIcons name="picture-as-pdf" size={20} color="#145C2E" />
+                    <Text style={styles.viewCropText}>{t('view_details', 'View Details')}</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
@@ -415,19 +401,6 @@ function CropBatchesScreen({ navigation }: any) {
         )}
       </ScrollView>
 
-      {/* Quality Passport PDF Certificate Modal */}
-      {selectedPassportBatch && (
-        <QualityPassportModal
-          visible={selectedPassportBatch !== null}
-          onClose={() => setSelectedPassportBatch(null)}
-          batchId={selectedPassportBatch.batch_id}
-          cropType={selectedPassportBatch.field_id}
-          weightKg={selectedPassportBatch.initial_weight_kg}
-          visualScore={selectedPassportBatch.initial_visual_score}
-          gradeTier={selectedPassportBatch.initial_visual_score >= 80 ? 'GRADE-A PRIME' : 'GRADE-B STANDARD'}
-          qrToken={selectedPassportBatch.qr_code_secure_token || `BID:${selectedPassportBatch.batch_id}|CRP:${selectedPassportBatch.field_id}|WGT:${selectedPassportBatch.initial_weight_kg}`}
-        />
-      )}
     </SafeAreaView>
   );
 }
@@ -549,7 +522,7 @@ const styles = StyleSheet.create({
     color: '#404940',
   },
   filterPillTextActive: {
-    color: '#8CD298',
+    color: '#145C2E',
   },
   batchesList: {
     gap: 16,
@@ -588,7 +561,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     right: 16,
-    backgroundColor: '#CCEAD0',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
@@ -599,7 +572,7 @@ const styles = StyleSheet.create({
   healthyText: {
     fontFamily: 'PlusJakartaSans_700Bold',
     fontSize: 11,
-    color: '#005323',
+    color: '#145C2E',
     textTransform: 'uppercase',
   },
   batchHeaderRow: {
@@ -682,7 +655,7 @@ const styles = StyleSheet.create({
   viewCropText: {
     fontFamily: 'PlusJakartaSans_600SemiBold',
     fontSize: 15,
-    color: '#8CD298',
+    color: '#145C2E',
   },
   scanIconButton: {
     width: 48,

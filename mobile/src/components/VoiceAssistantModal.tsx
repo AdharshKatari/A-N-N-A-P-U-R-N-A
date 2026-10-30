@@ -586,12 +586,12 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#2E7D32',
+    backgroundColor: '#145C2E',
   },
   liveStatusText: {
     fontFamily: FontFamily.medium,
     fontSize: 11,
-    color: '#2E7D32',
+    color: '#145C2E',
   },
   closeBtn: {
     width: 32,
@@ -846,7 +846,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#C62828',
   },
   micButtonActiveSpeaking: {
-    backgroundColor: '#2E7D32',
+    backgroundColor: '#145C2E',
   },
   bottomStatusText: {
     fontFamily: FontFamily.medium,

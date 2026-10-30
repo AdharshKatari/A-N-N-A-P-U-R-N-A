@@ -187,7 +187,7 @@ function SpoilageScreen({ navigation, route }: any) {
               <Text style={styles.riskLevelLabel}>High</Text>
             </View>
             <View style={styles.riskTrack}>
-              <View style={[styles.riskTrackSegment, { backgroundColor: '#B1CEB4' }]} />
+              <View style={[styles.riskTrackSegment, { backgroundColor: '#F5F3ED' }]} />
               <View style={[styles.riskTrackSegment, { backgroundColor: riskLevel === 'Moderate' ? '#F59E0B' : '#F2EDE4' }]} />
               <View style={[styles.riskTrackSegment, { backgroundColor: riskLevel === 'High' ? '#F59E0B' : '#F2EDE4' }]} />
             </View>
@@ -202,7 +202,7 @@ function SpoilageScreen({ navigation, route }: any) {
           <View style={styles.factorsList}>
             {/* Factor 1: Visual Score */}
             <View style={styles.factorCard}>
-              <View style={[styles.factorIconCircle, { backgroundColor: batchData?.initial_visual_score && batchData.initial_visual_score < 50 ? '#FFDAD6' : '#CCEAD0' }]}>
+              <View style={[styles.factorIconCircle, { backgroundColor: batchData?.initial_visual_score && batchData.initial_visual_score < 50 ? '#FFDAD6' : '#F5F3ED' }]}>
                 <MaterialCommunityIcons name="leaf" size={22} color={batchData?.initial_visual_score && batchData.initial_visual_score < 50 ? '#BA1A1A' : '#00431D'} />
               </View>
               <View>
@@ -215,7 +215,7 @@ function SpoilageScreen({ navigation, route }: any) {
 
             {/* Factor 2: Temperature */}
             <View style={styles.factorCard}>
-              <View style={[styles.factorIconCircle, { backgroundColor: analytics?.avg_temperature_c && analytics.avg_temperature_c > 30 ? '#FEF3C7' : '#CCEAD0' }]}>
+              <View style={[styles.factorIconCircle, { backgroundColor: analytics?.avg_temperature_c && analytics.avg_temperature_c > 30 ? '#FEF3C7' : '#F5F3ED' }]}>
                 <MaterialIcons name="water-drop" size={22} color={analytics?.avg_temperature_c && analytics.avg_temperature_c > 30 ? '#F59E0B' : '#00431D'} />
               </View>
               <View>
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
     color: '#00431D',
   },
   facilityCountBadge: {
-    backgroundColor: '#CCEAD0',
+    backgroundColor: '#F5F3ED',
     width: 24,
     height: 24,
     borderRadius: 12,
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
     color: '#707A6F',
   },
   actionWindowCard: {
-    backgroundColor: '#B1CEB4',
+    backgroundColor: '#F5F3ED',
     borderRadius: 24,
     padding: 20,
     flexDirection: 'row',
@@ -528,7 +528,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 14,
     letterSpacing: 0.8,
-    color: '#334C39',
+    color: '#145C2E',
     textTransform: 'uppercase',
   },
   actionWindowTitle: {

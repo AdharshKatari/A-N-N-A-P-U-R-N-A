@@ -902,7 +902,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   progressStepActive: {
-    borderColor: '#93F8A6',
+    borderColor: '#145C2E',
     borderWidth: 3,
   },
   progressStepNumber: {
@@ -1014,7 +1014,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   guideBottomPill: {
-    backgroundColor: '#93F8A6',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 999,
@@ -1035,7 +1035,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     letterSpacing: 0.6,
     fontWeight: '700',
-    color: '#007233',
+    color: '#145C2E',
     textTransform: 'uppercase',
   },
   gpsBadge: {
@@ -1166,7 +1166,7 @@ const styles = StyleSheet.create({
   },
   captureReady: {
     backgroundColor: Colors.primaryLight,
-    borderColor: '#93F8A6',
+    borderColor: '#145C2E',
   },
   captureProcessing: {
     backgroundColor: '#707A6F',
@@ -1201,7 +1201,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#CCEAD0',
+    backgroundColor: '#F5F3ED',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1271,7 +1271,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#CCEAD0',
+    backgroundColor: '#F5F3ED',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1343,7 +1343,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F3EA',
   },
   modalCropItemSelected: {
-    backgroundColor: '#CCEAD0',
+    backgroundColor: '#F5F3ED',
   },
   modalCropText: {
     fontFamily: 'PlusJakartaSans_600SemiBold',

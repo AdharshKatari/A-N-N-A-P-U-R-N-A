@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   section: { gap: 9 },
   headingRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   sectionTitle: { fontFamily: FontFamily.bold, fontSize: 11, letterSpacing: 1, color: Colors.textMuted },
-  count: { fontFamily: FontFamily.bold, fontSize: 11, color: Colors.primaryDeep, backgroundColor: Colors.successBg,
+  count: { fontFamily: FontFamily.bold, fontSize: 11, color: Colors.textOnPrimary, backgroundColor: Colors.successBg,
     paddingHorizontal: 7, paddingVertical: 2, borderRadius: 8 },
   card: { flexDirection: 'row', alignItems: 'center', gap: 11, padding: 11, borderRadius: BorderRadius.md,
     borderWidth: 1, borderColor: Colors.divider, backgroundColor: Colors.surfaceAlt, ...Shadows.button },

@@ -312,7 +312,7 @@ export default function CropCareStoresScreen({ navigation }: any) {
     longitude: store.longitude,
     title: store.name,
     subtitle: `⭐ ${store.rating} • ${store.distanceKm} km • ${store.products.length} products`,
-    color: store.id === selectedStoreId ? '#145C2E' : '#4A803D',
+    color: store.id === selectedStoreId ? '#145C2E' : '#145C2E',
     icon: '🧪',
   }));
 
@@ -474,7 +474,7 @@ export default function CropCareStoresScreen({ navigation }: any) {
                           <Text style={styles.storeName}>{store.name}</Text>
                           {store.isGovtLicensed && (
                             <View style={styles.licensedBadge}>
-                              <MaterialIcons name="verified" size={12} color="#15803D" />
+                              <MaterialIcons name="verified" size={12} color="#145C2E" />
                               <Text style={styles.licensedText}>Licensed</Text>
                             </View>
                           )}
@@ -494,15 +494,15 @@ export default function CropCareStoresScreen({ navigation }: any) {
 
                   <View style={styles.badgesRow}>
                     <View style={styles.distanceBadge}>
-                      <MaterialIcons name="near-me" size={14} color="#166534" />
+                      <MaterialIcons name="near-me" size={14} color="#145C2E" />
                       <Text style={styles.distanceText}>{store.distanceKm} km away</Text>
                     </View>
                     <View style={styles.ratingBadge}>
                       <MaterialIcons name="star" size={14} color="#D97706" />
                       <Text style={styles.ratingText}>{store.rating} ({store.reviewsCount})</Text>
                     </View>
-                    <View style={[styles.timingBadge, { backgroundColor: store.isOpen ? '#DCFCE7' : '#FEE2E2' }]}>
-                      <Text style={[styles.timingText, { color: store.isOpen ? '#15803D' : '#B91C1C' }]}>
+                    <View style={[styles.timingBadge, { backgroundColor: store.isOpen ? '#F5F3ED' : '#FEE2E2' }]}>
+                      <Text style={[styles.timingText, { color: store.isOpen ? '#145C2E' : '#B91C1C' }]}>
                         {store.isOpen ? '● Open Now' : '● Closed'}
                       </Text>
                     </View>
@@ -550,7 +550,7 @@ export default function CropCareStoresScreen({ navigation }: any) {
                       activeOpacity={0.8}
                       onPress={() => handleCallDealer(store.phone)}
                     >
-                      <MaterialIcons name="phone" size={18} color="#166534" />
+                      <MaterialIcons name="phone" size={18} color="#145C2E" />
                     </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
@@ -640,7 +640,7 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
   },
   storeCountBadge: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 12,
@@ -648,7 +648,7 @@ const styles = StyleSheet.create({
   storeCountText: {
     fontFamily: FontFamily.bold,
     fontSize: 11,
-    color: '#15803D',
+    color: '#145C2E',
   },
   mapHintText: {
     fontFamily: FontFamily.regular,
@@ -712,9 +712,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F5F9',
   },
   categoryPillActive: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     borderWidth: 1,
-    borderColor: '#86EFAC',
+    borderColor: '#145C2E',
   },
   categoryPillText: {
     fontFamily: FontFamily.medium,
@@ -722,7 +722,7 @@ const styles = StyleSheet.create({
     color: '#475569',
   },
   categoryPillTextActive: {
-    color: '#15803D',
+    color: '#145C2E',
     fontFamily: FontFamily.bold,
   },
   listSection: {
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
   licensedBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 8,
@@ -790,7 +790,7 @@ const styles = StyleSheet.create({
   licensedText: {
     fontFamily: FontFamily.bold,
     fontSize: 10,
-    color: '#15803D',
+    color: '#145C2E',
   },
   dealerType: {
     fontFamily: FontFamily.regular,
@@ -829,7 +829,7 @@ const styles = StyleSheet.create({
   distanceText: {
     fontFamily: FontFamily.semibold,
     fontSize: 11,
-    color: '#166534',
+    color: '#145C2E',
   },
   ratingBadge: {
     flexDirection: 'row',
@@ -891,7 +891,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontFamily: FontFamily.bold,
     fontSize: 12,
-    color: '#15803D',
+    color: '#145C2E',
   },
   productPack: {
     fontFamily: FontFamily.regular,
@@ -909,7 +909,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#15803D',
+    backgroundColor: '#145C2E',
     paddingVertical: 9,
     borderRadius: BorderRadius.md,
     gap: 6,
@@ -926,7 +926,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#F0FDF4',
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: '#145C2E',
     paddingVertical: 9,
     borderRadius: BorderRadius.md,
     gap: 5,
@@ -940,7 +940,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: BorderRadius.md,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     alignItems: 'center',
     justifyContent: 'center',
   },

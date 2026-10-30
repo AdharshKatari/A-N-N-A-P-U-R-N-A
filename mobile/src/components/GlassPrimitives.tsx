@@ -93,7 +93,7 @@ export const GlassButton = React.forwardRef<View, ButtonProps>(function GlassBut
         pressed && styles.pressed,
         (disabled || loading) && styles.disabled,
       ]}>
-      {loading ? <ActivityIndicator color={variant === 'primary' ? '#fff' : Colors.primaryDeep} /> : children}
+      {loading ? <ActivityIndicator color={variant === 'primary' || variant === 'secondary' ? '#fff' : Colors.primaryDeep} /> : children}
     </Pressable>
   );
 });

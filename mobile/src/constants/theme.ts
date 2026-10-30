@@ -9,23 +9,19 @@
  * Type scale:    14 / 16 / 18 / 24 / 28 / 32
  * Weights:       400 / 500 / 600 / 700
  * 
- * Color Philosophy: Soft green with warm yellow undertone
- * - Fresh leaves under warm sunlight
- * - Young crops, soft lime-green, muted yellow-green
- * - Light olive-lime accents
- * - Avoid: Dark forest green, blue-green, neon green, highly saturated lime
+ * Color Philosophy: Premium deep agricultural green with warm neutral surfaces.
  */
 
 // ============================================================================
 // COLORS — Soft Green Agricultural Palette (Semantic)
 // ============================================================================
 export const Colors = {
-  // Brand — Soft green with warm yellow undertone (agricultural, fresh, modern)
-  primary: '#6BA35A',        // Main brand — soft leaf green
-  primaryLight: '#8FC07E',   // Lighter variant for hover/active states
-  primarySoft: '#A8D5A0',    // Very soft — backgrounds, subtle fills
-  primaryMuted: '#7DB86E',   // Muted — secondary actions
-  primaryDeep: '#356B3F',    // Premium deep green — headings, key actions
+  // Brand — Premium deep green
+  primary: '#145C2E',
+  primaryLight: '#145C2E',
+  primarySoft: '#145C2E',
+  primaryMuted: '#145C2E',
+  primaryDeep: '#145C2E',    // Premium deep green — headings, key actions
 
   // Backgrounds & Surfaces — Warm off-white base
   background: '#FAF9F5',     // Warm off-white — screen background
@@ -39,21 +35,21 @@ export const Colors = {
   // Dividers & Borders — Very low contrast
   divider: '#E8E5DD',        // Subtle divider
   dividerLight: '#F0EDE6',   // Very light divider
-  borderGlass: 'rgba(107, 163, 90, 0.12)',      // Glass border — primary tinted
-  borderGlassStrong: 'rgba(107, 163, 90, 0.20)', // Stronger glass border
+  borderGlass: 'rgba(20, 92, 46, 0.12)',
+  borderGlassStrong: 'rgba(20, 92, 46, 0.20)',
 
   // Text — High readability
   textPrimary: '#1A1A18',    // Near-black — headings, card titles
   textSecondary: '#4A4F48',  // Dark grey — body text, metadata
   textMuted: '#8A8F87',      // Medium grey — captions, tertiary info
   textOnPrimary: '#FFFFFF',  // White — text on primary buttons
-  textOnGlass: '#2D3A28',    // Dark green — text on glass surfaces
+  textOnGlass: '#145C2E',    // Dark green — text on glass surfaces
   textPlaceholder: '#A8ADA5', // Input placeholders
 
   // Status / Semantic — Muted but clear
-  success: '#4E9B42',        // Healthy — softer green
-  successBg: '#E8F4E6',      // Light success background
-  successLight: '#8FD97A',   // Bright success — progress bars, accents
+  success: '#145C2E',
+  successBg: '#145C2E',
+  successLight: '#145C2E',
   warning: '#E8A317',        // Amber — warnings, alerts
   warningBg: '#FEF9E7',      // Light amber background
   warningIcon: '#F0A500',    // Warning icons
@@ -72,16 +68,16 @@ export const Colors = {
   highlightGlass: 'rgba(255, 255, 255, 0.4)', // Top edge highlight
 
   // Badge / Chip (updated for new palette)
-  chipGreen: '#B1CEB4',      // Stable badge background
-  chipGreenDark: '#334C39',  // Stable badge text
-  chipGreenBright: '#78DB8C', // Good option badge
-  chipGreenText: '#005323',  // Good option badge text
-  chipGreenLight: '#A4C1A8', // Support button background
+  chipGreen: '#145C2E',
+  chipGreenDark: '#145C2E',
+  chipGreenBright: '#145C2E',
+  chipGreenText: '#FFFFFF',
+  chipGreenLight: '#145C2E',
 
   // Legacy aliases for backward compatibility during migration
-  primaryDark: '#356B3F',    // Maps to primaryDeep
-  secondary: '#7DB86E',      // Maps to primaryMuted
-  textOnDark: '#2D3A28',     // Maps to textOnGlass
+  primaryDark: '#145C2E',    // Maps to primaryDeep
+  secondary: '#145C2E',      // Maps to primaryMuted
+  textOnDark: '#FFFFFF',    // High contrast on dark green surfaces
 } as const;
 
 // ============================================================================
@@ -138,6 +134,10 @@ export const BorderRadius = {
   xxxl: 32,
   /** 9999 — fully rounded (avatar circles, pill shapes) */
   full: 9999,
+
+  card: 20,
+  chip: 8,
+  button: 16,
 } as const;
 
 // ============================================================================
@@ -304,6 +304,13 @@ export const Typography = {
 // SHADOWS — Glass-appropriate elevations
 // ============================================================================
 export const Shadows = {
+  sm: {
+    shadowColor: '#2D3A28',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
   /** Standard card shadow — subtle elevation */
   card: {
     shadowColor: '#2D3A28',
@@ -403,7 +410,7 @@ export const GlassLevels = {
     background: 'rgba(255, 255, 255, 0.75)',
     backdropBlur: 20,
     backdropSaturate: 120,
-    borderColor: 'rgba(107, 163, 90, 0.12)',
+    borderColor: 'rgba(20, 92, 46, 0.12)',
     borderWidth: 1,
     borderRadius: 20,
     shadow: {
@@ -421,7 +428,7 @@ export const GlassLevels = {
     background: 'rgba(255, 255, 255, 0.85)',
     backdropBlur: 24,
     backdropSaturate: 130,
-    borderColor: 'rgba(107, 163, 90, 0.20)',
+    borderColor: 'rgba(20, 92, 46, 0.20)',
     borderWidth: 1,
     borderRadius: 24,
     shadow: {
@@ -439,7 +446,7 @@ export const GlassLevels = {
     background: 'rgba(255, 255, 255, 0.92)',
     backdropBlur: 28,
     backdropSaturate: 140,
-    borderColor: 'rgba(107, 163, 90, 0.20)',
+    borderColor: 'rgba(20, 92, 46, 0.20)',
     borderWidth: 1,
     borderRadius: 28,
     shadow: {
@@ -473,7 +480,7 @@ export const GlassLevels = {
     background: 'rgba(255, 255, 255, 0.92)',
     backdropBlur: 28,
     backdropSaturate: 140,
-    borderColor: 'rgba(107, 163, 90, 0.20)',
+    borderColor: 'rgba(20, 92, 46, 0.20)',
     borderWidth: 1,
     borderRadius: 28,
     shadow: {

@@ -56,7 +56,7 @@ const DEFAULT_EVENTS: EventsData = (() => {
 
   return {
     [format(d0)]: [
-      { title: 'Tomato Batch A — Morning Irrigation', time: '6:30 AM', category: 'irrigation', badgeColor: '#2E7D32' },
+      { title: 'Tomato Batch A — Morning Irrigation', time: '6:30 AM', category: 'irrigation', badgeColor: '#145C2E' },
       { title: 'Nashik APMC Price Check & Booking', time: '11:00 AM', category: 'mandi', badgeColor: '#145C2E' },
     ],
     [format(d1)]: [
@@ -67,7 +67,7 @@ const DEFAULT_EVENTS: EventsData = (() => {
       { title: 'Logistics Pickup by Smart Move Truck', time: '2:30 PM', category: 'mandi', badgeColor: '#145C2E' },
     ],
     [format(d5)]: [
-      { title: 'Soil Moisture Check & Weed Inspection', time: '9:00 AM', category: 'irrigation', badgeColor: '#2E7D32' },
+      { title: 'Soil Moisture Check & Weed Inspection', time: '9:00 AM', category: 'irrigation', badgeColor: '#145C2E' },
     ],
   };
 })();

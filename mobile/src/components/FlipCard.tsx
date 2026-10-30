@@ -81,7 +81,7 @@ export function CropFlipCard({
     <View style={styles.cropFront}>
       <Text style={styles.cropName}>{cropName}</Text>
       <View style={[styles.statusBadge, { backgroundColor: status === 'Healthy' ? Colors.successBg : Colors.warningBg }]}>
-        <Text style={[styles.statusText, { color: status === 'Healthy' ? Colors.primaryDark : Colors.warning }]}>
+        <Text style={[styles.statusText, { color: status === 'Healthy' ? Colors.textOnPrimary : Colors.warning }]}>
           {status}
         </Text>
       </View>

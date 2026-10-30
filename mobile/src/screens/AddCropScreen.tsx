@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
     fontSize: 21,
     lineHeight: 26,
     fontWeight: '700',
-    color: '#4A803D',
+    color: '#145C2E',
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#91F5A3',
+    backgroundColor: '#F5F3ED',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -618,7 +618,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#4A803D',
+    borderColor: '#145C2E',
     borderStyle: 'dashed',
     backgroundColor: '#F0FFF4',
   },
@@ -626,7 +626,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans_600SemiBold',
     fontSize: 13,
     fontWeight: '600',
-    color: '#4A803D',
+    color: '#145C2E',
   },
   saveButton: {
     backgroundColor: '#145C2E',
@@ -675,7 +675,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans_700Bold',
     fontSize: 18,
     fontWeight: '700',
-    color: '#4A803D',
+    color: '#145C2E',
   },
   modalClose: {
     width: 36,
@@ -704,7 +704,7 @@ const styles = StyleSheet.create({
   },
   modalItemTextSelected: {
     fontFamily: 'PlusJakartaSans_600SemiBold',
-    color: '#4A803D',
+    color: '#145C2E',
   },
   // Calendar picker styles
   // Map location picker styles

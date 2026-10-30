@@ -681,7 +681,7 @@ const styles = StyleSheet.create({
   optimalBadgeText: {
     fontFamily: FontFamily.semibold,
     fontSize: 11,
-    color: Colors.secondary,
+    color: Colors.textOnPrimary,
   },
   progressBarBg: {
     height: Spacing.xxs,

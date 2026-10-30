@@ -2,8 +2,8 @@
  * FreshGuard Glassmorphism Design System — Premium Soft Glass Tokens
  * 
  * Aligned with the new theme.ts color palette:
- * - Soft green with warm yellow undertone (agricultural, fresh, modern)
- * - Primary: #6BA35A (soft leaf green)
+ * - Premium deep agricultural green with warm neutral surfaces
+ * - Primary: #145C2E (premium deep green)
  * - Warm off-white base: #FAF9F5
  * - Glass surfaces with subtle frost effect
  * 
@@ -17,12 +17,12 @@
 // COLORS — Aligned with theme.ts
 // ============================================================================
 export const GlassColors = {
-  // Brand — Soft green with warm yellow undertone (from theme.ts)
-  primary: '#6BA35A',        // Main brand — soft leaf green
-  primaryLight: '#8FC07E',   // Lighter variant for hover/active
-  primarySoft: '#A8D5A0',    // Very soft — backgrounds, subtle fills
-  primaryMuted: '#7DB86E',   // Muted — secondary actions
-  primaryDeep: '#4A803D',    // Deep — headings, key actions
+  // Brand — Premium deep green (from theme.ts)
+  primary: '#145C2E',
+  primaryLight: '#145C2E',
+  primarySoft: '#145C2E',
+  primaryMuted: '#145C2E',
+  primaryDeep: '#145C2E',
 
   // Backgrounds & Surfaces — Warm off-white base (from theme.ts)
   background: '#FAF9F5',     // Warm off-white — screen background
@@ -35,21 +35,21 @@ export const GlassColors = {
   // Dividers & Borders — Very low contrast
   divider: '#E8E5DD',        // Subtle divider
   dividerLight: '#F0EDE6',   // Very light divider
-  borderGlass: 'rgba(107, 163, 90, 0.12)',      // Glass border — primary tinted
-  borderGlassStrong: 'rgba(107, 163, 90, 0.20)', // Stronger glass border
+  borderGlass: 'rgba(20, 92, 46, 0.12)',
+  borderGlassStrong: 'rgba(20, 92, 46, 0.20)',
 
   // Text — High readability (from theme.ts)
   textPrimary: '#1A1A18',    // Near-black — headings
   textSecondary: '#4A4F48',  // Dark grey — body text
   textMuted: '#8A8F87',      // Medium grey — captions
   textOnPrimary: '#FFFFFF',  // White — on primary
-  textOnGlass: '#2D3A28',    // Dark green — on glass surfaces
+  textOnGlass: '#145C2E',    // Dark green — on glass surfaces
   textPlaceholder: '#A8ADA5', // Input placeholders
 
   // Status / Semantic — Muted but clear (from theme.ts)
-  success: '#4E9B42',        // Healthy — softer green
-  successBg: '#E8F4E6',      // Light success background
-  successLight: '#8FD97A',   // Bright success — progress
+  success: '#145C2E',
+  successBg: '#145C2E',
+  successLight: '#145C2E',
   warning: '#E8A317',        // Amber — warnings
   warningBg: '#FEF9E7',      // Light amber background
   warningIcon: '#F0A500',    // Warning icons
@@ -77,7 +77,7 @@ export const GlassLevels = {
     background: 'rgba(255, 255, 255, 0.75)',
     backdropBlur: 20,
     backdropSaturate: 120,
-    borderColor: 'rgba(107, 163, 90, 0.12)',
+    borderColor: 'rgba(20, 92, 46, 0.12)',
     borderWidth: 1,
     borderRadius: 20,
     shadow: {
@@ -95,7 +95,7 @@ export const GlassLevels = {
     background: 'rgba(255, 255, 255, 0.85)',
     backdropBlur: 24,
     backdropSaturate: 130,
-    borderColor: 'rgba(107, 163, 90, 0.20)',
+    borderColor: 'rgba(20, 92, 46, 0.20)',
     borderWidth: 1,
     borderRadius: 24,
     shadow: {
@@ -113,7 +113,7 @@ export const GlassLevels = {
     background: 'rgba(255, 255, 255, 0.92)',
     backdropBlur: 28,
     backdropSaturate: 140,
-    borderColor: 'rgba(107, 163, 90, 0.20)',
+    borderColor: 'rgba(20, 92, 46, 0.20)',
     borderWidth: 1,
     borderRadius: 28,
     shadow: {
@@ -147,7 +147,7 @@ export const GlassLevels = {
     background: 'rgba(255, 255, 255, 0.92)',
     backdropBlur: 28,
     backdropSaturate: 140,
-    borderColor: 'rgba(107, 163, 90, 0.20)',
+    borderColor: 'rgba(20, 92, 46, 0.20)',
     borderWidth: 1,
     borderRadius: 28,
     shadow: {

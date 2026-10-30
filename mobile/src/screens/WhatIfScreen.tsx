@@ -127,7 +127,7 @@ function WhatIfScreen({ navigation, route }: any) {
         {!loading && !error && (
         <View style={styles.cardsStack}>
           {scenarios.map((scenario: any, index: number) => {
-            const riskColor = scenario.risk_level === 'LOW' ? '#4E9B42'
+            const riskColor = scenario.risk_level === 'LOW' ? '#145C2E'
               : scenario.risk_level === 'MEDIUM' ? '#E8A317' : '#D14343';
             const riskBackground = scenario.risk_level === 'LOW' ? '#E8F4E6'
               : scenario.risk_level === 'MEDIUM' ? '#FEF9E7' : '#FEF0F0';
@@ -417,7 +417,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#C8E6C9',
+    borderColor: '#145C2E',
     shadowColor: '#145C2E',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
@@ -510,7 +510,7 @@ const styles = StyleSheet.create({
     color: '#1D1C16',
   },
   lowRiskBadge: {
-    backgroundColor: '#A4C1A8',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 999,

@@ -13,7 +13,7 @@ export function ProtectedRoute({ children, fallback = null }: ProtectedRouteProp
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4A803D" />
+        <ActivityIndicator size="large" color="#145C2E" />
       </View>
     );
   }

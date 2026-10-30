@@ -83,9 +83,9 @@ export default function PestScreen({ navigation }: any) {
           {/* Pest Scanner Card */}
           <View style={styles.actionCard}>
             <View style={styles.pestIconCircle}>
-              <MaterialCommunityIcons name="leaf" size={28} color={Colors.secondary} />
+              <MaterialIcons name="bug-report" size={28} color={Colors.primaryDeep} />
             </View>
-            <Text style={styles.actionCardTitle}>{t('pest_scanner', 'Pest Scanner')}</Text>
+            <Text style={styles.actionCardTitle}>{t('best_choice', 'Best Choice')}</Text>
             <Text style={styles.actionCardDesc}>
               {t('pest_scanner_desc', 'Scan a leaf or crop problem for instant diagnosis')}
             </Text>
@@ -99,22 +99,30 @@ export default function PestScreen({ navigation }: any) {
             </TouchableOpacity>
           </View>
 
-          {/* Soil Scanner Card — Reduced padding */}
+          {/* Soil Report Analysis Card */}
           <View style={styles.actionCard}>
             <View style={styles.soilIconCircle}>
-              <MaterialIcons name="landscape" size={28} color={Colors.textOnDark} />
+              <MaterialIcons name="description" size={28} color={Colors.primaryDeep} />
             </View>
-            <Text style={styles.actionCardTitle}>{t('soil_scanner', 'Soil Scanner')}</Text>
+            <Text style={styles.actionCardTitle}>{t('soil_report_analysis', 'Soil Report Analysis')}</Text>
             <Text style={styles.actionCardDesc}>
-              {t('soil_scanner_desc', 'Check soil condition and moisture levels')}
+              {t('soil_report_analysis_desc', 'Upload and review a soil test report')}
             </Text>
             <TouchableOpacity
               style={styles.secondaryActionButton}
-              onPress={() => navigation?.navigate('Scan')}
+              onPress={() => navigation?.navigate('SoilReport')}
               activeOpacity={0.85}
             >
-              <MaterialIcons name="qr-code-scanner" size={20} color={Colors.primaryDark} />
-              <Text style={styles.secondaryActionButtonText}>{t('scan_soil_btn', 'Scan Soil')}</Text>
+              <MaterialIcons name="analytics" size={20} color={Colors.primaryDark} />
+              <Text style={styles.secondaryActionButtonText}>{t('analyze_soil_report_btn', 'Analyze Report')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.soilInsightsButton}
+              onPress={() => navigation?.navigate('Weather')}
+              activeOpacity={0.75}
+            >
+              <MaterialIcons name="water-drop" size={16} color={Colors.primaryDeep} />
+              <Text style={styles.soilInsightsButtonText}>{t('soil_insights_btn', 'View Soil Insights')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -159,8 +167,8 @@ export default function PestScreen({ navigation }: any) {
                     </View>
                   ) : (
                     <View style={[styles.issueBadge, { backgroundColor: Colors.successBg }]}>
-                      <MaterialIcons name="check-circle" size={14} color={Colors.success} />
-                      <Text style={[styles.issueBadgeText, { color: Colors.success }]}>{t('healthy', 'Healthy')}</Text>
+                      <MaterialIcons name="check-circle" size={14} color={Colors.textOnPrimary} />
+                      <Text style={[styles.issueBadgeText, { color: Colors.textOnPrimary }]}>{t('healthy', 'Healthy')}</Text>
                     </View>
                   )}
                 </View>
@@ -183,7 +191,7 @@ export default function PestScreen({ navigation }: any) {
           <View style={[styles.recentScanCard, { alignItems: 'center', paddingVertical: Spacing.xl }]}>
             <MaterialCommunityIcons name="line-scan" size={40} color={Colors.textMuted} />
             <Text style={{ fontFamily: FontFamily.semibold, fontSize: Typography.body.fontSize, color: Colors.textSecondary, marginTop: Spacing.sm }}>{t('no_recent_scans', 'No recent scans found')}</Text>
-            <Text style={{ fontFamily: FontFamily.regular, fontSize: Typography.small.fontSize, color: Colors.textMuted, marginTop: Spacing.xxs }}>Your pest and soil scans will appear here.</Text>
+            <Text style={{ fontFamily: FontFamily.regular, fontSize: Typography.small.fontSize, color: Colors.textMuted, marginTop: Spacing.xxs }}>{t('pest_scan_history_hint', 'Your pest scan results will appear here.')}</Text>
           </View>
         )}
         </FadeInUp>
@@ -423,7 +431,9 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: BorderRadius.full,
-    backgroundColor: Colors.successLight,
+    backgroundColor: '#E5E7EB',
+    borderWidth: 1,
+    borderColor: Colors.primaryDeep,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -433,7 +443,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.full,
     backgroundColor: Colors.surfaceAlt,
     borderWidth: 1,
-    borderColor: Colors.divider,
+    borderColor: Colors.primaryDeep,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -488,6 +498,18 @@ const styles = StyleSheet.create({
     fontSize: Typography.body.fontSize,
     fontWeight: '600',
     color: Colors.primaryDark,
+  },
+  soilInsightsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xxs,
+    paddingVertical: Spacing.xxs,
+  },
+  soilInsightsButtonText: {
+    fontFamily: FontFamily.semibold,
+    fontSize: Typography.small.fontSize,
+    color: Colors.primaryDeep,
   },
   sectionHeader: {
     flexDirection: 'row',

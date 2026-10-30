@@ -13,9 +13,8 @@ import {
   Alert,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { getBatch, getLogs, getLogAnalytics, getPassport, updateBatchStatus, deleteBatch } from '../services/api';
+import { getBatch, getLogs, getLogAnalytics, updateBatchStatus, deleteBatch } from '../services/api';
 import LeafletMap from '../components/LeafletMap';
-import { ShowQr } from '../components/ShowQr';
 import { withErrorBoundary } from '../components/ErrorBoundary';
 import MapSearchBar from '../components/MapSearchBar';
 import { GeocodingResult } from '../services/geocoding';
@@ -71,14 +70,12 @@ function CropDetailsScreen({ navigation, route }: any) {
     micro_drone_modifier: 1.0,
     logistics_road_penalty: 1.0,
     current_status: 'ACTIVE',
-    qr_code_secure_token: 'QR-TOM-98234-PASSPORT',
   }));
   const [logs, setLogs] = useState<any[]>([
     { timestamp: new Date(Date.now() - 3600000).toISOString(), temperature_c: 26.5, humidity_rh: 62.0, condition: 'Optimal' },
     { timestamp: new Date(Date.now() - 7200000).toISOString(), temperature_c: 28.1, humidity_rh: 58.4, condition: 'Normal' },
   ]);
   const [analytics, setAnalytics] = useState<any>({ thermal_degree_hours: 142.5, spoilage_risk_index: 12, cumulative_shelf_loss_days: 0.4 });
-  const [passportData, setPassportData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,17 +91,15 @@ function CropDetailsScreen({ navigation, route }: any) {
     try {
       if (!isRefresh) setLoading(true);
       setError(null);
-      const [batchRes, logsRes, analyticsRes, passportRes] = await Promise.allSettled([
+      const [batchRes, logsRes, analyticsRes] = await Promise.allSettled([
         getBatch(batchId),
         getLogs(batchId, 20),
         getLogAnalytics(batchId),
-        getPassport(batchId),
       ]);
       if (batchRes.status === 'fulfilled') setBatchData(batchRes.value?.batch);
       else setError('Failed to load batch details.');
       if (logsRes.status === 'fulfilled') setLogs(logsRes.value?.logs || []);
       if (analyticsRes.status === 'fulfilled') setAnalytics(analyticsRes.value?.analytics);
-      if (passportRes.status === 'fulfilled') setPassportData(passportRes.value);
     } catch (err) {
       setError('Network error. Please check your connection.');
       console.error('Failed to fetch batch details:', err);
@@ -324,7 +319,7 @@ function CropDetailsScreen({ navigation, route }: any) {
                 icon: '💡',
                 content: (
                   <View style={styles.recommendationBox}>
-                    <MaterialIcons name="tips-and-updates" size={19} color={Colors.primaryDeep} />
+                    <MaterialIcons name="tips-and-updates" size={19} color={Colors.textOnPrimary} />
                     <Text style={styles.recommendationText}>
                       {(analytics?.spoilage_risk_class === 'HIGH' || analytics?.spoilage_risk_class === 'CRITICAL')
                         ? 'High accumulated thermal exposure. Prioritize Smart Move route and prepare this batch for immediate dispatch.'
@@ -336,14 +331,6 @@ function CropDetailsScreen({ navigation, route }: any) {
                 ),
               },
             ]}
-          />
-        </FadeInUp>
-
-        {/* Digital QR Passport Section */}
-        <FadeInUp delay={260} duration={500}>
-          <ShowQr
-            value={passportData?.qr_passport_token || batchData?.qr_code_secure_token || `BID:${batchData?.batch_id || batchId}|CRP:${crop}|WGT:${batchData?.initial_weight_kg || 500}|VSC:${batchData?.initial_visual_score || 85}`}
-            buttonLabel="Digital QR Passport"
           />
         </FadeInUp>
 
@@ -669,7 +656,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     fontSize: 14,
     lineHeight: 21,
-    color: Colors.textPrimary,
+    color: Colors.textOnPrimary,
   },
   // Observation card
   observationCard: {

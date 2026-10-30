@@ -259,7 +259,7 @@ export const GlassCard = forwardRef<View, GlassCardProps>(
           onPressOut={handlePressOut}
           disabled={disabled}
           activeOpacity={0.98}
-          android_ripple={{ color: 'rgba(107, 163, 90, 0.15)' }}
+          android_ripple={{ color: 'rgba(20, 92, 46, 0.15)' }}
           style={({ pressed: isPressed }) => [
             { flex: 1 },
             isPressed && { opacity: 0.9 },
@@ -423,7 +423,7 @@ export const GlassButton = forwardRef<View, GlassButtonProps>(
       : variantConfig.background;
     
     const textColor = variant === 'ghost'
-      ? (pressed || hovered ? GlassColors.primary : GlassColors.textPrimary)
+      ? (pressed || hovered ? GlassColors.textOnPrimary : GlassColors.textPrimary)
       : variantConfig.textColor;
 
     const borderColor = variant === 'ghost' 
@@ -469,7 +469,7 @@ export const GlassButton = forwardRef<View, GlassButtonProps>(
           onPress={onPress}
           disabled={disabled || loading}
           activeOpacity={0.95}
-          android_ripple={{ color: 'rgba(107, 163, 90, 0.15)' }}
+          android_ripple={{ color: 'rgba(20, 92, 46, 0.15)' }}
           {...props}
         >
           <Animated.View
@@ -667,7 +667,7 @@ const CHIP_VARIANTS = {
     textColor: GlassColors.textPrimary,
     borderColor: GlassColors.borderGlass,
     selectedBackground: GlassColors.primarySoft,
-    selectedTextColor: GlassColors.primaryDeep,
+    selectedTextColor: GlassColors.textOnPrimary,
   },
   primary: {
     background: GlassLevels.level1.background,
@@ -759,8 +759,8 @@ GlassChip.displayName = 'GlassChip';
 
 const BADGE_VARIANTS = {
   default: { bg: GlassLevels.level1.background, color: GlassColors.textPrimary, border: GlassColors.borderGlass },
-  primary: { bg: GlassColors.primarySoft, color: GlassColors.primaryDeep, border: GlassColors.primarySoft },
-  success: { bg: GlassColors.successBg, color: GlassColors.success, border: GlassColors.successBg },
+  primary: { bg: GlassColors.primarySoft, color: GlassColors.textOnPrimary, border: GlassColors.primarySoft },
+  success: { bg: GlassColors.successBg, color: GlassColors.textOnPrimary, border: GlassColors.successBg },
   warning: { bg: GlassColors.warningBg, color: GlassColors.warning, border: GlassColors.warningBg },
   error: { bg: GlassColors.errorBg, color: GlassColors.error, border: GlassColors.errorBg },
   info: { bg: GlassColors.infoBg, color: GlassColors.info, border: GlassColors.infoBg },
@@ -952,7 +952,7 @@ export const GlassNavigation = ({
             styles.navIconContainer,
             activeTab === tab.id && styles.navIconContainerActive,
           ]}>
-            <Text style={{ fontSize: 22, color: activeTab === tab.id ? GlassColors.primary : GlassColors.textMuted }}>
+            <Text style={{ fontSize: 22, color: activeTab === tab.id ? GlassColors.textOnPrimary : GlassColors.textMuted }}>
               {tab.icon}
             </Text>
             {tab.badge && tab.badge > 0 && (
@@ -1163,7 +1163,7 @@ export const GlassToast = ({
 }: GlassToastProps) => {
   const variants = {
     default: { bg: GlassLevels.level2.background, color: GlassColors.textPrimary, icon: '📢' },
-    success: { bg: GlassColors.successBg, color: GlassColors.success, icon: '✅' },
+    success: { bg: GlassColors.successBg, color: GlassColors.textOnPrimary, icon: '✅' },
     error: { bg: GlassColors.errorBg, color: GlassColors.error, icon: '❌' },
     warning: { bg: GlassColors.warningBg, color: GlassColors.warning, icon: '⚠️' },
     info: { bg: GlassColors.infoBg, color: GlassColors.info, icon: 'ℹ️' },

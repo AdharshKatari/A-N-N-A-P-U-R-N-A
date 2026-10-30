@@ -267,7 +267,7 @@ export default function NurseriesScreen({ navigation }: any) {
     longitude: nursery.longitude,
     title: nursery.name,
     subtitle: `⭐ ${nursery.rating} • ${nursery.distanceKm} km • ${nursery.varieties.length} varieties`,
-    color: nursery.id === selectedNurseryId ? '#15803D' : '#166534',
+    color: nursery.id === selectedNurseryId ? '#145C2E' : '#145C2E',
     icon: '🌱',
   }));
 
@@ -315,7 +315,7 @@ export default function NurseriesScreen({ navigation }: any) {
           <View style={styles.mapCard}>
             <View style={styles.mapHeaderRow}>
               <View style={styles.mapTitleGroup}>
-                <MaterialIcons name="local-florist" size={20} color="#15803D" />
+                <MaterialIcons name="local-florist" size={20} color="#145C2E" />
                 <Text style={styles.mapTitle}>Live Nurseries & Seedling Hubs</Text>
               </View>
               <View style={styles.countBadge}>
@@ -422,14 +422,14 @@ export default function NurseriesScreen({ navigation }: any) {
                   <View style={styles.cardHeader}>
                     <View style={styles.cardHeaderLeft}>
                       <View style={styles.nurseryIconWrap}>
-                        <MaterialIcons name="eco" size={22} color="#15803D" />
+                        <MaterialIcons name="eco" size={22} color="#145C2E" />
                       </View>
                       <View style={{ flex: 1 }}>
                         <View style={styles.titleRow}>
                           <Text style={styles.nurseryName}>{nursery.name}</Text>
                           {nursery.isCertified && (
                             <View style={styles.certifiedBadge}>
-                              <MaterialIcons name="verified" size={12} color="#15803D" />
+                              <MaterialIcons name="verified" size={12} color="#145C2E" />
                               <Text style={styles.certifiedText}>Certified</Text>
                             </View>
                           )}
@@ -450,7 +450,7 @@ export default function NurseriesScreen({ navigation }: any) {
                   {/* Badges */}
                   <View style={styles.badgesRow}>
                     <View style={styles.distanceBadge}>
-                      <MaterialIcons name="near-me" size={14} color="#166534" />
+                      <MaterialIcons name="near-me" size={14} color="#145C2E" />
                       <Text style={styles.distanceText}>{nursery.distanceKm} km away</Text>
                     </View>
                     <View style={styles.ratingBadge}>
@@ -504,7 +504,7 @@ export default function NurseriesScreen({ navigation }: any) {
                       activeOpacity={0.8}
                       onPress={() => handleCallNursery(nursery.phone)}
                     >
-                      <MaterialIcons name="phone" size={18} color="#166534" />
+                      <MaterialIcons name="phone" size={18} color="#145C2E" />
                     </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
   },
   countBadge: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 12,
@@ -602,7 +602,7 @@ const styles = StyleSheet.create({
   countText: {
     fontFamily: FontFamily.bold,
     fontSize: 11,
-    color: '#15803D',
+    color: '#145C2E',
   },
   mapHintText: {
     fontFamily: FontFamily.regular,
@@ -643,8 +643,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.divider,
   },
   districtPillActive: {
-    backgroundColor: '#15803D',
-    borderColor: '#15803D',
+    backgroundColor: '#145C2E',
+    borderColor: '#145C2E',
   },
   districtPillText: {
     fontFamily: FontFamily.medium,
@@ -666,9 +666,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F5F9',
   },
   categoryPillActive: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     borderWidth: 1,
-    borderColor: '#86EFAC',
+    borderColor: '#145C2E',
   },
   categoryPillText: {
     fontFamily: FontFamily.medium,
@@ -676,7 +676,7 @@ const styles = StyleSheet.create({
     color: '#475569',
   },
   categoryPillTextActive: {
-    color: '#15803D',
+    color: '#145C2E',
     fontFamily: FontFamily.bold,
   },
   listSection: {
@@ -698,7 +698,7 @@ const styles = StyleSheet.create({
     ...Shadows.card,
   },
   nurseryCardSelected: {
-    borderColor: '#15803D',
+    borderColor: '#145C2E',
     borderWidth: 1.5,
     backgroundColor: '#FCFDFB',
   },
@@ -717,7 +717,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -735,7 +735,7 @@ const styles = StyleSheet.create({
   certifiedBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 8,
@@ -744,7 +744,7 @@ const styles = StyleSheet.create({
   certifiedText: {
     fontFamily: FontFamily.bold,
     fontSize: 10,
-    color: '#15803D',
+    color: '#145C2E',
   },
   nurseryType: {
     fontFamily: FontFamily.regular,
@@ -783,7 +783,7 @@ const styles = StyleSheet.create({
   distanceText: {
     fontFamily: FontFamily.semibold,
     fontSize: 11,
-    color: '#166534',
+    color: '#145C2E',
   },
   ratingBadge: {
     flexDirection: 'row',
@@ -847,7 +847,7 @@ const styles = StyleSheet.create({
   varietyPrice: {
     fontFamily: FontFamily.bold,
     fontSize: 12,
-    color: '#15803D',
+    color: '#145C2E',
   },
   varietyUnit: {
     fontFamily: FontFamily.regular,
@@ -865,7 +865,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#15803D',
+    backgroundColor: '#145C2E',
     paddingVertical: 9,
     borderRadius: BorderRadius.md,
     gap: 6,
@@ -882,7 +882,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#F0FDF4',
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: '#145C2E',
     paddingVertical: 9,
     borderRadius: BorderRadius.md,
     gap: 5,
@@ -896,7 +896,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: BorderRadius.md,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#F5F3ED',
     alignItems: 'center',
     justifyContent: 'center',
   },

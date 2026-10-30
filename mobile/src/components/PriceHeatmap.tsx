@@ -19,8 +19,8 @@ interface PriceHeatmapProps {
 
 function getPriceColor(price: number, min: number, max: number): string {
   const ratio = max === min ? 0.5 : (price - min) / (max - min);
-  if (ratio < 0.25) return '#1B7A3D';   // deep green — cheapest
-  if (ratio < 0.45) return '#4CAF50';   // green
+  if (ratio < 0.25) return '#145C2E';   // deep green — cheapest
+  if (ratio < 0.45) return '#145C2E';   // green
   if (ratio < 0.65) return '#FFA726';   // amber
   return '#E53935';                       // red — most expensive
 }
@@ -56,11 +56,11 @@ export default function PriceHeatmap({ prices }: PriceHeatmapProps) {
       {/* Legend */}
       <View style={styles.legendRow}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#1B7A3D' }]} />
+          <View style={[styles.legendDot, { backgroundColor: '#145C2E' }]} />
           <Text style={styles.legendText}>{t('risk_low', 'Low')}</Text>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#4CAF50' }]} />
+          <View style={[styles.legendDot, { backgroundColor: '#145C2E' }]} />
           <Text style={styles.legendText}>{t('mid_low', 'Mid-Low')}</Text>
         </View>
         <View style={styles.legendItem}>

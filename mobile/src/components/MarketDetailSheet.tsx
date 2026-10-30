@@ -145,9 +145,9 @@ export default function MarketDetailSheet({
                 <MaterialIcons
                   name={trendUp ? 'trending-up' : 'trending-down'}
                   size={16}
-                  color={trendUp ? Colors.success : Colors.error}
+                  color={trendUp ? Colors.textOnPrimary : Colors.error}
                 />
-                <Text style={[styles.trendText, { color: trendUp ? Colors.success : Colors.error }]}>
+                <Text style={[styles.trendText, { color: trendUp ? Colors.textOnPrimary : Colors.error }]}>
                   {trendUp ? '+2.1%' : '-1.3%'}
                 </Text>
               </View>

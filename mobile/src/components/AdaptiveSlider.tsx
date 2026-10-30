@@ -20,7 +20,7 @@ export default function AdaptiveSlider({
   label, value, min, max, step, unit, decimals = 0, onChange, markers,
 }: AdaptiveSliderProps) {
   const percentage = (value - min) / Math.max(1, max - min);
-  const color = percentage < .5 ? '#4E9B42' : percentage < .72 ? '#E8A317' : '#8A57C7';
+  const color = percentage < .5 ? '#145C2E' : percentage < .72 ? '#E8A317' : '#8A57C7';
   const ticks = useMemo(() => markers ?? [min, min + (max - min) / 3, min + (max - min) * 2 / 3, max], [markers, min, max]);
   return (
     <View style={styles.card}>

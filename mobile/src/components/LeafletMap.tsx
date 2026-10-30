@@ -161,10 +161,10 @@ function buildLeafletHTML(
 
     /* Custom cluster styles */
     .marker-cluster-small {
-      background-color: rgba(181, 226, 140, 0.7);
+      background-color: rgba(20, 92, 46, 0.7);
     }
     .marker-cluster-small div {
-      background-color: rgba(110, 204, 57, 0.7);
+      background-color: rgba(20, 92, 46, 0.7);
     }
     .marker-cluster-medium {
       background-color: rgba(240, 194, 120, 0.7);
@@ -243,7 +243,7 @@ function buildLeafletHTML(
             `var coords_${i} = ${JSON.stringify(r.coordinates.map((c) => [c.latitude, c.longitude]))};
             // 1. Route Glow Underlay
             L.polyline(coords_${i}, {
-              color: '#81C784',
+              color: '#145C2E',
               weight: 9,
               opacity: 0.4,
               lineCap: 'round',

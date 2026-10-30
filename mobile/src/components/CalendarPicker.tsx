@@ -90,7 +90,7 @@ export default function CalendarPicker({
 
           <View style={styles.datePreview}>
             <View style={styles.previewIcon}>
-              <MaterialIcons name="calendar-month" size={20} color={Colors.primaryDeep} />
+              <MaterialIcons name="calendar-month" size={20} color={Colors.textOnPrimary} />
             </View>
             <View style={styles.previewCopy}>
               <Text style={styles.previewLabel}>Selected date</Text>
@@ -212,11 +212,11 @@ const styles = StyleSheet.create({
   dayButton: { width: 44, height: 44, maxWidth: '94%', borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   dayText: { fontFamily: FontFamily.medium, fontSize: 14, color: Colors.textSecondary },
   today: { backgroundColor: Colors.successBg },
-  todayText: { color: Colors.primaryDeep, fontFamily: FontFamily.bold },
+  todayText: { color: Colors.textOnPrimary, fontFamily: FontFamily.bold },
   selectedDay: { backgroundColor: Colors.primaryDeep, ...Shadows.button },
   selectedDayText: { color: Colors.textOnPrimary, fontFamily: FontFamily.bold },
   disabledText: { color: Colors.divider },
-  selectionMark: { position: 'absolute', bottom: 5, width: 8, height: 2, borderRadius: 1, backgroundColor: '#BEE4B5' },
+  selectionMark: { position: 'absolute', bottom: 5, width: 8, height: 2, borderRadius: 1, backgroundColor: Colors.primaryDeep },
   footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1,
     borderTopColor: Colors.dividerLight, marginTop: 10, paddingTop: 14 },
   footerActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },

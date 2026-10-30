@@ -66,7 +66,7 @@ export default function FarmInsightsCarousel({ cards }: { cards: FarmInsight[] }
                   <MaterialIcons name={card.icon} size={38} color={Colors.primaryDeep} />
                 </View>
                 <View style={styles.trendBadge}>
-                  <MaterialIcons name="arrow-upward" size={13} color={Colors.primaryDeep} />
+                  <MaterialIcons name="arrow-upward" size={13} color={Colors.textOnPrimary} />
                   <Text style={styles.trendText}>{card.trend}</Text>
                 </View>
                 <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} style={styles.value}>{card.value}</Text>
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   iconBox: { width: 70, height: 70, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.surfaceAlt },
   trendBadge: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 3, borderRadius: 9,
     backgroundColor: Colors.successBg, paddingHorizontal: 9, paddingVertical: 4, marginTop: 22 },
-  trendText: { fontFamily: FontFamily.semibold, fontSize: 12, color: Colors.primaryDeep },
+  trendText: { fontFamily: FontFamily.semibold, fontSize: 12, color: Colors.textOnPrimary },
   value: { fontFamily: FontFamily.bold, fontSize: 38, lineHeight: 46, color: Colors.textPrimary, marginTop: 5 },
   label: { fontFamily: FontFamily.semibold, fontSize: 17, color: Colors.textSecondary },
   tint: { position: 'absolute', width: 130, height: 130, borderRadius: 65, right: -65, top: -55, opacity: .32 },
