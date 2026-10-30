@@ -41,7 +41,6 @@ import ActionAlert from '../components/ActionAlert';
 import VoiceAssistantModal from '../components/VoiceAssistantModal';
 import FloatingVoiceButton from '../components/FloatingVoiceButton';
 import { CalendarWidget } from '../components/CalendarWidget';
-import { FloatingDisclosure } from '../components/FloatingDisclosure';
 import { FARMER_AVATAR } from '../constants/farmer';
 
 import { getWeatherByCoords, getWeatherAlerts, getFaq } from '../services/api';
@@ -319,27 +318,17 @@ function HomeScreen({ navigation }: any) {
       
       {/* Top App Bar Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.headerLeft}
-          onPress={() => {
-            hapticLight();
-            navigation?.navigate('Profile');
-          }}
-          activeOpacity={0.7}
-          accessibilityRole="button"
-          accessibilityLabel="Open Farmer Profile"
-        >
-          <View style={styles.avatarContainer}>
-            <Image source={FARMER_AVATAR} style={styles.avatar} resizeMode="cover" />
-          </View>
+        <View style={styles.headerLeft}>
           <View style={styles.titleContainer}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <View style={styles.titleRow}>
+              <View style={styles.brandMark} accessibilityLabel="Annapurna farm logo">
+                <MaterialIcons name="eco" size={16} color={Colors.primaryDeep} />
+              </View>
               <Text style={styles.appTitle} numberOfLines={1}>Annapurna</Text>
-              <MaterialIcons name="chevron-right" size={16} color={Colors.primaryDeep} />
             </View>
             <Text style={styles.appSubtitle} numberOfLines={1}>{locationName}</Text>
           </View>
-        </TouchableOpacity>
+        </View>
 
         <View style={styles.headerActions}>
           <TouchableOpacity
@@ -589,9 +578,6 @@ function HomeScreen({ navigation }: any) {
             </FadeIn>
       </ScrollView>
 
-      {/* Floating Speed Dial Quick Action Button */}
-      <FloatingDisclosure navigation={navigation} />
-
       {/* Floating 1-Tap Multilingual Voice Assistant Button */}
       <FloatingVoiceButton
         onPress={() => setVoiceModalVisible(true)}
@@ -628,33 +614,35 @@ const styles = StyleSheet.create({
     zIndex: 40,
   },
   headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
     flex: 1,
+    minWidth: 0,
   },
   titleContainer: {
     justifyContent: 'center',
     flexShrink: 1,
   },
-  avatarContainer: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    overflow: 'hidden',
-    borderWidth: 1.5,
-    borderColor: Colors.primary,
-  },
-  avatar: {
-    width: '100%',
-    height: '100%',
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   appTitle: {
     fontFamily: FontFamily.bold,
-    fontSize: 20,
+    fontSize: 25,
+    lineHeight: 30,
     fontWeight: '700',
     color: Colors.primaryDeep,
     letterSpacing: -0.3,
+  },
+  brandMark: {
+    width: 23,
+    height: 23,
+    borderRadius: 12,
+    backgroundColor: '#E8F4E6',
+    borderWidth: 1,
+    borderColor: Colors.primaryDeep,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   appSubtitle: {
     fontFamily: FontFamily.regular,

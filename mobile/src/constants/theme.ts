@@ -25,7 +25,7 @@ export const Colors = {
   primaryLight: '#8FC07E',   // Lighter variant for hover/active states
   primarySoft: '#A8D5A0',    // Very soft — backgrounds, subtle fills
   primaryMuted: '#7DB86E',   // Muted — secondary actions
-  primaryDeep: '#4A803D',    // Deep — headings, key actions (darker but still soft)
+  primaryDeep: '#356B3F',    // Premium deep green — headings, key actions
 
   // Backgrounds & Surfaces — Warm off-white base
   background: '#FAF9F5',     // Warm off-white — screen background
@@ -79,7 +79,7 @@ export const Colors = {
   chipGreenLight: '#A4C1A8', // Support button background
 
   // Legacy aliases for backward compatibility during migration
-  primaryDark: '#4A803D',    // Maps to primaryDeep
+  primaryDark: '#356B3F',    // Maps to primaryDeep
   secondary: '#7DB86E',      // Maps to primaryMuted
   textOnDark: '#2D3A28',     // Maps to textOnGlass
 } as const;

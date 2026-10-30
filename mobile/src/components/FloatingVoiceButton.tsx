@@ -12,7 +12,6 @@ import {
   Text,
   Animated,
   Easing,
-  Platform,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { hapticMedium } from '../utils/haptics';
@@ -105,7 +104,7 @@ export default function FloatingVoiceButton({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 112 : 102,
+    bottom: 20,
     right: 20,
     alignItems: 'center',
     justifyContent: 'center',

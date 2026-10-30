@@ -17,7 +17,7 @@ const STORAGE_LANG_KEY = '@user_preferred_language';
 const STORAGE_COMPLETED_KEY = '@language_onboarding_completed';
 
 const LanguageContext = createContext<LanguageContextType>({
-  language: 'te',
+  language: 'en',
   setLanguage: async () => {},
   t: (key: string, defaultVal?: string) => defaultVal || key,
   hasSelectedLanguage: false,
@@ -28,7 +28,7 @@ const LanguageContext = createContext<LanguageContextType>({
 });
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<SupportedLanguage>('te');
+  const [language, setLanguageState] = useState<SupportedLanguage>('en');
   const [hasSelectedLanguage, setHasSelectedLanguage] = useState<boolean>(false);
   const [isLoadingLanguage, setIsLoadingLanguage] = useState<boolean>(true);
 
