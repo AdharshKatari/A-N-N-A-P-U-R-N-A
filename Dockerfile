@@ -1,3 +1,14 @@
+# Build the Expo web app so the API container can serve the frontend at /.
+FROM node:20-slim AS web-builder
+
+WORKDIR /app/mobile
+
+COPY mobile/package.json mobile/package-lock.json ./
+RUN npm ci
+
+COPY mobile/ ./
+RUN npm run export:web
+
 # Stage 1: Build virtual python environment dependencies cleanly
 FROM python:3.11-slim AS builder
 
@@ -35,6 +46,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Pull calibrated python dependencies safely from builder stage
 COPY --from=builder /opt/venv /opt/venv
 COPY . .
+COPY --from=web-builder /app/mobile/dist ./mobile/dist
 
 ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONDONTWRITEBYTECODE=1
